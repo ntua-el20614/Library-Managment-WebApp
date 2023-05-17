@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ntua-el19709/ntua_databases_project.git"
+    "url": "git+https://github.com/ChrisOPellouis/Papabases.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ntua-el19709/ntua_databases_project/issues"
+    "url": "https://github.com/ChrisOPellouis/Papabases/issues"
   },
-  "homepage": "https://github.com/ntua-el19709/ntua_databases_project#readme",
+  "homepage": "https://github.com/ChrisOPellouis/Papabases#readme",
   "dependencies": {
     "@json2csv/plainjs": "^6.1.2",
     "chai": "^4.3.7",
