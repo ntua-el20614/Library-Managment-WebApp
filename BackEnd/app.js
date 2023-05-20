@@ -134,7 +134,6 @@ app.use(baseurl + "/web/deletereview", deletereview);
 app.use(baseurl + "/web/notapprovedreviews", notapprovedreviews);
 app.use(baseurl + "/web/bookreviews", bookreviews);
 app.use(baseurl + "/web/booklikert", booklikert);
-// /*End of routes used by our project */
 
 // In case of an endpoint does not exist
 app.use((req, res, next) => {
