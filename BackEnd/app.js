@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 /* ROUTES and how to import routes */
+/*
 const allusers = require("./api/allusers");
 const allschools = require("./api/web/allschools");
 const validate = require("./api/web/validate");
@@ -55,6 +56,7 @@ const deletereview = require("./api/web/deletereview");
 const notapprovedreviews = require("./api/web/notapprovedreviews");
 const bookreviews = require("./api/web/bookreviews");
 const booklikert = require("./api/web/booklikert");
+*/
 //const { controleer } = require("./api/web/skotinos_arxontas");
 /* end of ROUTES and how to import routes */
 
@@ -81,6 +83,7 @@ app.use((req, res, next) => {
 // /* Routes used by our project */
 const baseurl = "/libraries";
 //app.route(`${baseurl}/demo`).get(controleer);
+/*
 app.use(baseurl + "/allusers", allusers);
 app.use(baseurl + "/web/allschools", allschools);
 app.use(baseurl + "/web/validate", validate);
@@ -134,7 +137,7 @@ app.use(baseurl + "/web/deletereview", deletereview);
 app.use(baseurl + "/web/notapprovedreviews", notapprovedreviews);
 app.use(baseurl + "/web/bookreviews", bookreviews);
 app.use(baseurl + "/web/booklikert", booklikert);
-
+*/
 // In case of an endpoint does not exist
 app.use((req, res, next) => {
   res.status(404).json({ message: "Endpoint not found!" });
