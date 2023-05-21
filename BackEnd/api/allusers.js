@@ -3,6 +3,8 @@ const apiutils = require("../apiutils");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
 
+
+/* DEN EINAI DIKO MAS PREPEI NA VALOUME TIN VASI PROTA */
 router.get("/", async (req, res) => {
   await apiutils.requestWrapper(
     true,
