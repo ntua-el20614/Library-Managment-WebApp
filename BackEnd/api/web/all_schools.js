@@ -17,14 +17,14 @@ async(conn) =>{//entoli gia na paw stin vasi na ferw ta sxolia
 
             //onomasies swstes apo tin vasi mas:
             schoolID: elem.school_id,
-            school_name: elem.school_name,
+            school_Name: elem.school_name,
         });
     }
 
     //to parakatw if gia na epistrepsume Comma-Separated-Values or Json
     if (req.query.format == "csv") {
         const opts = {
-          fields: ["schoolID", "school_name"],
+          fields: ["schoolID", "school_Name"],
         };
         return new Parser(opts).parse(json_res);
       } else {
