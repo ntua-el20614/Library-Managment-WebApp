@@ -1,6 +1,8 @@
 DROP DATABASE IF EXISTS biblio_project;
-
+CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 CREATE DATABASE biblio_project;
+GRANT ALL PRIVILEGES ON biblio_project.* TO 'papamaster'@'localhost';
+
 USE biblio_project;
  
  CREATE TABLE school(
