@@ -1,0 +1,80 @@
+const teacherList = [];
+
+// Retrieve teachers who borrowed books of the selected category in the last year
+const teacherQuery = `
+  SELECT DISTINCT u.user_id, u.user_name, u.user_surname
+  FROM users u
+  JOIN teacher t ON u.user_id = t.user_id
+  JOIN rent r ON u.user_id = r.user_id
+  JOIN book b ON r.isbn = b.isbn AND r.school_id = b.school_id
+  JOIN book_category bc ON b.isbn = bc.isbn AND b.school_id = bc.school_id
+  JOIN category c ON bc.category_id = c.category_id
+  WHERE c.category_name = ?
+    AND YEAR(r.date_of_rent) = YEAR(CURDATE()) - 1
+    
+`;
+
+// Execute the query
+connection.query(teacherQuery, [selectedCategory], (error, teacherResults) => {
+  if (error) throw error;
+
+  // Process the teacher results
+  teacherResults.forEach((teacher) => {
+    const { user_id, user_name, user_surname } = teacher;
+
+    // Create an object with the extracted data
+    const teacherData = {
+      user_id,
+      user_name,
+      user_surname,
+    };
+
+    // Push the teacher data object to the teacherList array
+    teacherList.push(teacherData);
+  });
+
+  // Close the connection
+  connection.end();
+
+});
+const authorList = [];
+
+// Retrieve authors belonging to the selected category
+const authorQuery = `
+  SELECT DISTINCT a.author_id, a.author_name, a.author_surname
+  FROM author a
+  JOIN book_author ba ON a.author_id = ba.author_id
+  JOIN book b ON ba.isbn = b.isbn AND ba.school_id = b.school_id
+  JOIN book_category bc ON b.isbn = bc.isbn AND b.school_id = bc.school_id
+  JOIN category c ON bc.category_id = c.category_id
+  WHERE c.category_name = ?
+`;
+
+// Execute the query
+connection.query(authorQuery, [selectedCategory], (error, authorResults) => {
+  if (error) throw error;
+
+  // Process the author results
+  authorResults.forEach((author) => {
+    const { author_id, author_name, author_surname } = author;
+
+    // Create an object with the extracted data
+    const authorData = {
+      author_id,
+      author_name,
+      author_surname,
+    };
+
+    // Push the author data object to the authorList array
+    authorList.push(authorData);
+  });
+
+  // Close the connection
+  connection.end();
+
+});
+
+
+
+
+
