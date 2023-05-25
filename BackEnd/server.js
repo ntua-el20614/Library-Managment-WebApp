@@ -13,7 +13,7 @@ app.get('/',(req,res) => {
 
 
 const port = process.env.PORT || 5000;//elegxos an mporoume sto 5000
-const baseurl = "/libraries";
+const baseurl = "/project_biblio";
 
 // const key = fs.readFileSync('./security/key.pem');
 // const cert = fs.readFileSync('./security/cert.pem');
