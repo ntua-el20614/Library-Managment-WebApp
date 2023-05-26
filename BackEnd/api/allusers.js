@@ -3,8 +3,8 @@ const apiutils = require("../request_handler");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
 
+const pool = require("../dbconnector.js");
 
-/* DEN EINAI DIKO MAS PREPEI NA VALOUME TIN VASI PROTA */
 router.get("/", async (req, res) => {
   await apiutils.requestWrapper(
     true,
