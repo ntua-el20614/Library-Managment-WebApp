@@ -2,14 +2,6 @@ const express=require("express");
 const bring=require("../../request_handler");
 const router= express.Router();
 
-
-
-const pool = require('mysql').createPool({//tuta alopos en xriazunte
-  host: 'your_database_host',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'your_database_name'
-});
 router.use(express.json());
 // Retrieve teachers who borrowed books of the selected category in the last year
 router.post("/:category", async(req, res)=>{

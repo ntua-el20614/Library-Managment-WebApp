@@ -12,7 +12,7 @@ app.get('/',(req,res) => {
 });
 
 
-const port = 5505;
+const port = 3306;
 const ipaddress = "192.168.1.31";
 //const baseurl = "/library_project";
 
