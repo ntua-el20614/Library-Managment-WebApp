@@ -2,8 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 /* ROUTES and how to import routes */
+
+const allusers = require("./api/all_users");
 /*
-const allusers = require("./api/allusers");
 const allschools = require("./api/web/allschools");
 const validate = require("./api/web/validate");
 const findtype = require("./api/web/findtype");
@@ -83,6 +84,7 @@ app.use((req, res, next) => {
 // /* Routes used by our project */
 const baseurl = "/libraries";
 //app.route(`${baseurl}/demo`).get(controleer);
+app.use(baseurl + "/all_users", all_users);
 /*
 app.use(baseurl + "/allusers", allusers);
 app.use(baseurl + "/web/allschools", allschools);
