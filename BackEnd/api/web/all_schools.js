@@ -1,10 +1,10 @@
 const express = require("express");
-const apiutils = require("../../request_handler");
+const apiutils = require("../../apiutils");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
 
 router.get("/",async(req,res) =>{
-await apiutils.requestWrapper(true,req,res,"Got all schools!",
+await apiutils.handleRequest(true,req,res,"Got all schools!",
 async(conn) =>{//entoli gia na paw stin vasi na ferw ta sxolia
     const return_schools = await conn.query(
         "SELECT * FROM school"

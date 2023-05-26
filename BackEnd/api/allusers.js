@@ -1,24 +1,24 @@
 const express = require("express");
-const apiutils = require("../request_handler");
+const apiutils = require("../apiutils");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
 
-const pool = require("../dbconnector.js");
+const conn = require("../dbconnector.js");
 
 router.get("/", async (req, res) => {
-  await apiutils.requestWrapper(
+  await apiutils.handleRequest(
     true,
     req,
     res,
     "Successful retrieval of all users!",
     async (conn) => {
-      const ans_list = await conn.query("SELECT * FROM users");
+      const ans_list = await conn.query("SELECT * FROM school");
 
       json_res = [];
       for (elem of ans_list) {
         json_res.push({
-          userID: elem.user_id,
-          username: elem.username,
+          userID: elem.school_id,//elem.user_id,
+          username: elem.school_name,//elem.username,
         });
       }
 

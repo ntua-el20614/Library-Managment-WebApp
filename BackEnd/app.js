@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 const allusers = require("./api/allusers.js");
 const all_books = require("./api/web/all_books.js");
-const all_schools = require("./api/web/allschools.js");
+const all_schools = require("./api/web/all_schools.js");
 
 /*
 const allschools = require("./api/web/allschools");

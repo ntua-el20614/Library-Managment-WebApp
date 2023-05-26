@@ -12,8 +12,9 @@ app.get('/',(req,res) => {
 });
 
 
-const port = process.env.PORT || 3306;//elegxos an mporoume sto 3306
-const baseurl = "/library_project";
+const port = 5505;
+const ipaddress = "192.168.1.31";
+//const baseurl = "/library_project";
 
 // const key = fs.readFileSync('./security/key.pem');
 // const cert = fs.readFileSync('./security/cert.pem');
@@ -21,6 +22,6 @@ const baseurl = "/library_project";
 // https.createServer({key, cert}, app).listen(port, () => {
 app.listen(port, () => {
   console.log(
-    `🚀 Server running at: https://localhost:${port}`//${baseurl}`
+    `🚀 Server running at: https://localhost:${ipaddress}:${port}`
   );
 });

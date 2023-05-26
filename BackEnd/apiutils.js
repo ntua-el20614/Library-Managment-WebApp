@@ -1,3 +1,4 @@
+
 const db = require("./dbconnector.js");
 
 async function handleRequest(expectsData, req, res, successMsg, funcBody) {
@@ -33,4 +34,4 @@ async function handleRequest(expectsData, req, res, successMsg, funcBody) {
   }
 }
 
-module.exports = handleRequest;
+module.exports.handleRequest = handleRequest; 

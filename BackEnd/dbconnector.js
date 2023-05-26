@@ -1,10 +1,10 @@
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 const pool = mysql.createPool({
   host: "localhost",
   user: "papamaster",
   password: "password",
-  database: "library_project",
+  database: "vasi",
   charset: "utf8mb4",
   connectionLimit: 50,
   multipleStatements: true,
