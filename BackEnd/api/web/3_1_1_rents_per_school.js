@@ -1,13 +1,13 @@
 const express = require("express");
-const apiutils = require("../../apiutils");
+const bring = require("../../request_handler");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
 
-router.get("/:id",async(req,res) =>{//kathe sxolio exei diki tou viviliothiki
+/*router.get("/:id",async(req,res) =>{//kathe sxolio exei diki tou viviliothiki
 //ara to id tou sxoliou tha mas dinei tin lista me ta vivlia pou exei
 const express = require('express');
 const app = express();
-const mysql = require('mysql');
+const mysql = require('mysql');*/
 
 // Create a MySQL connection pool
 const pool = mysql.createPool({
@@ -17,21 +17,39 @@ const pool = mysql.createPool({
   database: 'your_database_name'
 });
 
-app.use(express.json());
-
-app.post('/api/loans', (req, res) => {
-  const { year, month } = req.body;
+router.use(express.json());
+router.post("/:year/:month", async (req, res) => {
+await bring.handleRequest(true,req,res,"Got all rents from each school!",
+async(conn) =>{
+//app.post('/api/loans', (req, res) => {
+  //const { year, month } = req.body;
 
   // Perform database queries and calculations to get the total number of loans per school
-  const queryString = `
-    SELECT s.school_name, COUNT(*) AS total_loans
-    FROM rent AS r
-    JOIN school AS s ON r.school_id = s.school_id
-    WHERE YEAR(r.date_of_rent) = ? AND MONTH(r.date_of_rent) = ?
-    GROUP BY r.school_id
+  const ans = await connection.query`(
+    "SELECT s.school_id, s.school_name, COUNT(*) AS total_loans" +
+    "FROM rent AS r" +
+    "JOIN school AS s ON r.school_id = s.school_id" +
+    "WHERE YEAR(r.date_of_rent) = ? AND MONTH(r.date_of_rent) = ?" +
+    "GROUP BY r.school_id",
+    [req.params.year,req.params.month])
   `;
-
-  pool.query(queryString, [year, month], (error, results) => {
+let json_list=[];
+for(elem of ans){
+  json_list.push({
+    school_id: elem.school_id,
+  school_name: elem.school_name,
+  total_loans: elem.total_loans,
+  });
+}
+if (req.query.format == "csv") {
+  const opts = {
+    fields: ["school_id", "school_name", "total_loans"],
+  };
+  return new Parser(opts).parse(json_res);
+} else {
+  return json_res;
+}
+  /*pool.query(queryString, [year, month], (error, results) => {
     if (error) {
       console.error('Error executing database query:', error);
       res.status(500).json({ error: 'An error occurred while retrieving the data' });
@@ -41,7 +59,7 @@ app.post('/api/loans', (req, res) => {
         totalLoans: row.total_loans
       }));
       res.json(loanList);
-    }
+    }*/
   });
 });
 
