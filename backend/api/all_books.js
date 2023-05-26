@@ -1,7 +1,19 @@
-const express = require("express");
+/*const express = require("express");
 const apiutils = require("../apiutils");
 const Parser = require("@json2csv/plainjs").Parser;
 const router = express.Router();
+
+router.get("/", async (req, res) => {
+  fetchBooks((err, results) => {
+    if (err) {
+      console.error('Error fetching Book data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 router.get("/:id",async(req,res) =>{//kathe sxolio exei diki tou viviliothiki
 //ara to id tou sxoliou tha mas dinei tin lista me ta vivlia pou exei
@@ -23,7 +35,6 @@ async(conn) =>{//entoli gia na paw stin vasi na ferw ta vivlia
         json_res.push({//vazw 1-1 ola ta vivlia sto json
 
             //onomasies swstes apo tin vasi mas:
-
             isbn: elem.isbn,
             schoolID: elem.school_id,
             title: elem.title,
@@ -44,4 +55,38 @@ async(conn) =>{//entoli gia na paw stin vasi na ferw ta vivlia
 ); 
 });
 
-module.exports = router;
+module.exports = router;*/
+
+const pool = require('../dbconnector');
+
+// Function to fetch data from the database
+
+const fetchData = (schoolId, callback) => {
+  // Get a connection from the pool
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error connecting to the database:', err);
+      callback(err, null);
+      return;
+    }
+
+    // Execute a SQL query to fetch data
+    const query = 'SELECT * FROM book WHERE school_id = '+ schoolId;
+    connection.query(query, [schoolId], (err, results) => {
+      // Release the connection back to the pool
+      connection.release();
+
+      if (err) {
+        console.error('Error executing query:', err);
+        callback(err, null);
+        return;
+      }
+
+      // Pass the retrieved data to the callback function
+      callback(null, results);
+    });
+  });
+};
+
+ 
+module.exports = { fetchData };
