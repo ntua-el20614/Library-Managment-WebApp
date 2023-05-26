@@ -1,5 +1,5 @@
 const express = require("express");
-const app = require("./app");
+const app = require();//./app");
 //const chalk = require("chalk");
 //const https = require('https');
 //const fs = require('fs');
@@ -21,6 +21,6 @@ const baseurl = "/libraries";
 // https.createServer({key, cert}, app).listen(port, () => {
 app.listen(port, () => {
   console.log(
-    `🚀 Server running at: https://localhost:${port}${baseurl}`
+    `🚀 Server running at: https://localhost:${port}`//${baseurl}`
   );
 });
