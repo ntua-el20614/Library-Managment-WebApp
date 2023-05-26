@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS library_project;
-CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED WITH mySQL_native_password BY 'password';
 
 CREATE DATABASE library_project;
 GRANT ALL PRIVILEGES ON library_project.* TO 'papamaster'@'localhost';
@@ -76,6 +76,7 @@ CREATE TABLE users(
     user_name varchar(30) NOT NULL,
     user_surname varchar(30) NOT NULL,
     birthday date NOT NULL,
+    age	integer(3) NOT NULL,
     email varchar(30) NOT NULL,
     approved boolean NOT NULL,
     PRIMARY KEY (user_id)
