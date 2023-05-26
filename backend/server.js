@@ -2,14 +2,26 @@ const express = require('express');
 
 
 
-const { fetchData } = require('./api/allusers'); // Assuming both files are in the same directory
-const { fetchData } = require('./api/web/all_schools'); // Assuming both files are in the same directory
+const { fetchData } = require('./api/all_schools'); 
 
- 
 const app = express();
 
 // Define a route handler for fetching data
-app.get('/allusers', (req, res) => {
+app.get('/all_schools', (req, res) => {
+  // Fetch data from the database
+  fetchData((err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    // Send the retrieved data as a JSON response
+    res.json(results);
+  });
+});
+
+app.get('/all_users', (req, res) => {
   // Fetch data from the database
   fetchData((err, results) => {
     if (err) {
