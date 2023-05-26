@@ -11,7 +11,7 @@ const fetchData = (callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT * FROM school';
+    const query = 'SELECT * FROM users';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
