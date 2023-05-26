@@ -1,37 +1,32 @@
-const express = require("express");
-const apiutils = require("../apiutils");
-const Parser = require("@json2csv/plainjs").Parser;
-const router = express.Router();
+const pool = require('../dbconnector');
+const  eimai_vlakas = require('../app');
 
-const conn = require("../dbconnector.js");
-
-router.get("/", async (req, res) => {
-  await apiutils.handleRequest(
-    true,
-    req,
-    res,
-    "Successful retrieval of all users!",
-    async (conn) => {
-      const ans_list = await conn.query("SELECT * FROM school");
-
-      json_res = [];
-      for (elem of ans_list) {
-        json_res.push({
-          userID: elem.school_id,//elem.user_id,
-          username: elem.school_name,//elem.username,
-        });
-      }
-
-      if (req.query.format == "csv") {
-        const opts = {
-          fields: ["userID", "username"],
-        };
-        return new Parser(opts).parse(json_res);
-      } else {
-        return json_res;
-      }
+// Function to fetch data from the database
+const fetchData = (callback) => {
+  // Get a connection from the pool
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error connecting to the database:', err);
+      callback(err, null);
+      return;
     }
-  );
-});
 
-module.exports = router;
+    // Execute a SQL query to fetch data
+    const query = 'SELECT * FROM school';
+    connection.query(query, (err, results) => {
+      // Release the connection back to the pool
+      connection.release();
+
+      if (err) {
+        console.error('Error executing query:', err);
+        callback(err, null);
+        return;
+      }
+
+      // Pass the retrieved data to the callback function
+      callback(null, results);
+    });
+  });
+};
+
+module.exports = { fetchData };

@@ -3,9 +3,9 @@ const bodyParser = require("body-parser");
 
 /* ROUTES and how to import routes */
 
-const allusers = require("./api/allusers.js");
-const all_books = require("./api/web/all_books.js");
-const all_schools = require("./api/web/all_schools.js");
+const allusers = require("./api/allusers");
+const all_books = require("./api/web/all_books");
+const all_schools = require("./api/web/all_schools");
 
 /*
 const allschools = require("./api/web/allschools");
