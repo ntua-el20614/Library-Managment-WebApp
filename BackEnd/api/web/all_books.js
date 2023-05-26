@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/:id",async(req,res) =>{//kathe sxolio exei diki tou viviliothiki
 //ara to id tou sxoliou tha mas dinei tin lista me ta vivlia pou exei
 
-await apiutils.requestWrapper(true,req,res,"Got all books!",
+await apiutils.handleRequest(true,req,res,"Got all books!",
 async(conn) =>{//entoli gia na paw stin vasi na ferw ta vivlia
     const return_books = await conn.query(
 

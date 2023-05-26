@@ -1,4 +1,5 @@
-const db = require("./database");
+
+const db = require("./dbconnector.js");
 
 async function handleRequest(expectsData, req, res, successMsg, funcBody) {
   let errorReason = "Failed to connect to the database";
@@ -33,4 +34,4 @@ async function handleRequest(expectsData, req, res, successMsg, funcBody) {
   }
 }
 
-module.exports = handleRequest;
+module.exports.handleRequest = handleRequest; 
