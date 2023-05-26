@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 /* ROUTES and how to import routes */
 
 const allusers = require("./api/allusers");
+const all_books = require("./api/all_books");
 /*
 const allschools = require("./api/web/allschools");
 const validate = require("./api/web/validate");
@@ -85,6 +86,7 @@ app.use((req, res, next) => {
 const baseurl = "/libraries";
 //app.route(`${baseurl}/demo`).get(controleer);
 app.use(baseurl + "/allusers", allusers);
+app.use(baseurl + "/all_books", all_books);
 /*
 app.use(baseurl + "/allusers", allusers);
 app.use(baseurl + "/web/allschools", allschools);
