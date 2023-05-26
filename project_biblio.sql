@@ -1,9 +1,10 @@
-DROP DATABASE IF EXISTS biblio_project;
-CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-CREATE DATABASE biblio_project;
-GRANT ALL PRIVILEGES ON biblio_project.* TO 'papamaster'@'localhost';
+DROP DATABASE IF EXISTS library_project;
+CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED BY 'password';
 
-USE biblio_project;
+CREATE DATABASE library_project;
+GRANT ALL PRIVILEGES ON library_project.* TO 'papamaster'@'localhost';
+
+USE library_project;
  
  CREATE TABLE school(
 	school_id integer(10) NOT NULL auto_increment,
