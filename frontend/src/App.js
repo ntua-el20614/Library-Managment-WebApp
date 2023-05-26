@@ -1,39 +1,31 @@
-import React from "react";
-import Home from "./components/Home";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState} from 'react'
+import { response } from '../../backend/app'
 
 function App() {
+  
+  const [backendData, setBackendData] = useState([{}])
+  
+  useEffect(() =>{
+    fetch("/api").then(
+      response => response.json()
+    ).then(
+      data => {
+        setBackendData(data)
+      }
+    )
+  },[])
+
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route exact path="/" element={<Home />}></Route>
-        </Routes>
-      </div>
-    </Router>
-  );
+    <div>
+        {(typeof backendData.users === 'undefined')? (
+          <p>Loading...</p>
+        ):(
+          backendData.users.map((user,i) =>(
+            <p key={i}>{user}</p>
+          ))
+        )}
+    </div>
+  )
 }
 
-/*
-function App() {
-  return (
-    <Router>
-      <div>
-        <Routes>
-          <Route exact path="/ans/:QID" element={<Questionnaire />}></Route>
-          <Route
-            exact
-            path="/stats/:QID"
-            element={<Statquestionnaire />}
-          ></Route>
-          <Route exact path="/stats" element={<AllStats />}></Route>
-          <Route exact path="/" element={<Home />}></Route>
-          <Route exact path="/:incorrect" element={<Incorrect />}></Route>
-        </Routes>
-      </div>
-    </Router>
-  );
-}
-*/
-
-export default App;
+export default App
