@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 /* ROUTES and how to import routes */
- 
+ ////////////////////////////////////////////////////////////////
 app.use("/all_users", allusers);
-app.use("all_books", all_books);
+app.use("/all_books", all_books);
 app.use("/all_schools", all_schools);
 ////////////////////////////////////////////////////////////////
 const app = express();
