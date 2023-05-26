@@ -1,5 +1,4 @@
 const pool = require('../dbconnector');
-const  eimai_vlakas = require('../app');
 
 // Function to fetch data from the database
 const fetchData = (callback) => {

@@ -2,13 +2,10 @@ const express = require('express');
 
 
 
-//const { fetchData } = require('./api/allusers'); // Assuming both files are in the same directory
+const { fetchData } = require('./api/allusers'); // Assuming both files are in the same directory
+const { fetchData } = require('./api/web/all_schools'); // Assuming both files are in the same directory
 
-
-
-
-
-
+ 
 const app = express();
 
 // Define a route handler for fetching data
@@ -25,7 +22,6 @@ app.get('/allusers', (req, res) => {
     res.json(results);
   });
 });
-
 
 
 // Define a route handler for the root URL
