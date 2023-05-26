@@ -1,13 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-/* ROUTES and how to import routes */
- ////////////////////////////////////////////////////////////////
-app.use("/all_users", allusers);
-app.use("/all_books", all_books);
-app.use("/all_schools", all_schools);
-////////////////////////////////////////////////////////////////
 const app = express();
+
+
+
+const allusers = require("./api/allusers");
+const all_books = require("./api/all_books");
+const all_schools = require("./api/all_schools");
+
+
+/* ROUTES and how to import routes */
 
 console.log(`NODE_ENV = |${process.env.NODE_ENV}|`);
 
@@ -27,35 +30,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// /* Routes used by our project */
+// /* Routes used by our project */ 
 
-//app.route(`${baseurl}/demo`).get(controleer);
+ ////////////////////////////////////////////////////////////////
+app.use("/all_users", allusers);
+app.use("/all_books", all_books);
+app.use("/all_schools", all_schools);
 ////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
 // Define a route handler for fetching data
-app.get("/all_users", (req, res) => {
-  fetchUsers((err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
 
-    res.json(results);
-  });
-});
-
-
-app.get("/all_schools", (req, res) => {
-  fetchSchools((err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-
-    res.json(results);
-  });
-});
 
 
 
