@@ -6,7 +6,7 @@ const app = express();
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-const allusers = require("./api/allusers");
+const all_users = require("./api/all_users");
 const all_schools = require("./api/all_schools");
 const all_schools = require("./api/all_authors");
 const all_books = require("./api/all_books");
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 // /* Routes used by our project */ 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-app.use("/all_users", allusers);
+app.use("/all_users", all_users);
 app.use("/all_schools", all_schools);
 app.use("/all_schools", all_authors);
 app.use("/all_books/:id", all_books);
