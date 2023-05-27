@@ -11,6 +11,7 @@ const { fetchData: fetchRents } = require('./api/all_rents');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
 const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
+const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -125,6 +126,19 @@ app.get('/zero_rent_authors', (req, res) => {
   fetchZeroRentAuthors((err, results) => {
     if (err) {
       console.error('Error fetching author and rent data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /top_category_combos
+app.get('/top_category_combos', (req, res) => {
+  fetchTopCategoryCombos((err, results) => {
+    if (err) {
+      console.error('Error fetching category data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
