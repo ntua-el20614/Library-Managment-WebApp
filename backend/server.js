@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const { fetchData: fetchUsers } = require('./api/allusers');
+const { fetchData: fetchUsers } = require('./api/all_users');
 const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors'); 
 const { fetchData: fetchBooks } = require('./api/all_books'); 
