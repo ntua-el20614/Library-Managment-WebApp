@@ -10,6 +10,7 @@ const all_users = require("./api/all_users");
 const all_schools = require("./api/all_schools");
 const all_schools = require("./api/all_authors");
 const all_books = require("./api/all_books");
+const all_rents = require("./api/all_rents");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -39,6 +40,7 @@ app.use("/all_users", all_users);
 app.use("/all_schools", all_schools);
 app.use("/all_schools", all_authors);
 app.use("/all_books/:id", all_books);
+app.use("/all_rents/:year/:month", all_rents);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
