@@ -8,6 +8,7 @@ const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors'); 
 const { fetchData: fetchBooks } = require('./api/all_books'); 
 const { fetchData: fetchRents } = require('./api/all_rents');
+const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -88,6 +89,19 @@ app.get('/all_rents/:year/:month', (req, res) => {
   });
 });
 
+
+// Define a route handler for /teacher_loans
+app.get('/teacher_loans', (req, res) => {
+  fetchTeacherLoans((err, results) => {
+    if (err) {
+      console.error('Error fetching school data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 
 // Start the server
