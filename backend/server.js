@@ -12,6 +12,7 @@ const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
 const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
 const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos');
+const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_five');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -139,6 +140,19 @@ app.get('/top_category_combos', (req, res) => {
   fetchTopCategoryCombos((err, results) => {
     if (err) {
       console.error('Error fetching category data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /authors_less_than_five
+app.get('/authors_less_than_five', (req, res) => {
+  fetchAuthLessThanFive((err, results) => {
+    if (err) {
+      console.error('Error fetching author data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
