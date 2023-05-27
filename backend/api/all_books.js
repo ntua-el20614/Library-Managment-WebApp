@@ -12,7 +12,10 @@ const fetchData = (schoolId, callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT * FROM book b JOIN book_school bs ON b.isbn = bs.isbn JOIN school s ON bs.school_id = s.school_id WHERE bs.school_id =  '+ schoolId;
+    const query = 'SELECT * FROM book b ' +
+    'JOIN book_school bs ON b.isbn = bs.isbn ' +
+    'JOIN school s ON bs.school_id = s.school_id ' +
+    'WHERE bs.school_id =  '+ schoolId;
     connection.query(query, [schoolId], (err, results) => {
       // Release the connection back to the pool
       connection.release();
