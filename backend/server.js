@@ -10,6 +10,7 @@ const { fetchData: fetchBooks } = require('./api/all_books');
 const { fetchData: fetchRents } = require('./api/all_rents');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
+const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -48,7 +49,7 @@ app.get('/all_schools', (req, res) => {
 app.get('/all_authors', (req, res) => {
   fetchAuthors((err, results) => {
     if (err) {
-      console.error('Error fetching school data:', err);
+      console.error('Error fetching author data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
@@ -95,7 +96,7 @@ app.get('/all_rents/:year/:month', (req, res) => {
 app.get('/teacher_loans', (req, res) => {
   fetchTeacherLoans((err, results) => {
     if (err) {
-      console.error('Error fetching school data:', err);
+      console.error('Error fetching user and rent data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
@@ -110,7 +111,20 @@ app.get('/teachers_authors/:category', (req, res) => {
 
   fetchTeachersAuthors(Category, (err, results) => {
     if (err) {
-      console.error('Error fetching Book data:', err);
+      console.error('Error fetching authors, teachers and category data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /zero_rent_authors
+app.get('/zero_rent_authors', (req, res) => {
+  fetchZeroRentAuthors((err, results) => {
+    if (err) {
+      console.error('Error fetching author and rent data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }

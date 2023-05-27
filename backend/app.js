@@ -13,6 +13,7 @@ const all_books = require("./api/all_books");
 const all_rents = require("./api/all_rents");
 const teacher_loans = require("./api/teacher_loans");
 const teachers_authors = require("./api/authors_teachers_category");
+const zero_rent_authors = require("./api/zero_rent_authors");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -44,7 +45,8 @@ app.use("/all_schools", all_authors);
 app.use("/all_books/:id", all_books);
 app.use("/all_rents/:year/:month", all_rents);
 app.use("/teacher_loans", teacher_loans);
-app.use("//teachers_authors/:category", authors_teachers_category);
+app.use("/teachers_authors/:category", teachers_authors);
+app.use("/zero_rent_authors", zero_rent_authors);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
