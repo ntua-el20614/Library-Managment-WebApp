@@ -7,6 +7,7 @@ const { fetchData: fetchUsers } = require('./api/all_users');
 const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors'); 
 const { fetchData: fetchBooks } = require('./api/all_books'); 
+const { fetchData: fetchRents } = require('./api/all_rents');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -71,7 +72,21 @@ app.get('/all_books/:id', (req, res) => {
   });
 });
 
+// Define a route handler for /all_rents
+app.get('/all_rents/:year/:month', (req, res) => {
+  const rent_year = req.params.year; // Get the year and month from the request parameters
+  const rent_month = req.params.month;
 
+  fetchRents([rent_year, rent_month], (err, results) => {
+    if (err) {
+      console.error('Error fetching Rent data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 
 
