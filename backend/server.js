@@ -9,6 +9,7 @@ const { fetchData: fetchAuthors } = require('./api/all_authors');
 const { fetchData: fetchBooks } = require('./api/all_books'); 
 const { fetchData: fetchRents } = require('./api/all_rents');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
+const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -103,6 +104,20 @@ app.get('/teacher_loans', (req, res) => {
   });
 });
 
+// Define a route handler for /authors_teachers_category
+app.get('/teachers_authors/:category', (req, res) => {
+  const Category = req.params.category; // Get the category from the request parameters
+
+  fetchTeachersAuthors(Category, (err, results) => {
+    if (err) {
+      console.error('Error fetching Book data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 // Start the server
 const port = 3305;
