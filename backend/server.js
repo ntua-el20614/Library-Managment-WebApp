@@ -215,6 +215,7 @@ app.get('/addstudent/:userid/:schoolid', (req, res) => {
   });
 });
 
+// Define a route handler for adding a teacher
 app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke school id mesa sto teacher table 
   const { userid, schoolid } = req.params; // Get the user data from the request body
   addTeacher(userid, schoolid, (err, result) => {
