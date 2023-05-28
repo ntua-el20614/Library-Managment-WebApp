@@ -22,6 +22,12 @@ def signup_teacher():
 def signup_student():
     return render_template("/signuppages/signupstudents.html", pageTitle="Sign up Student")
 
+@app.route("/wait_for_approval.html")
+def wait_for_approval():
+    return render_template("/signuppages/wait_for_approval.html", pageTitle="Wait up")
+
+
+
 @app.route("/adduser/<username>/<password>/<user_name>/<birthday>/<email>",methods=["POST"])
 def signup_user_to_db(username,password,user_name,birthday,email):
     url = request.args.get('http://localhost:3305/adduser/{}/{}/{}/{}/{}'.format(username,password,user_name,birthday,email)) 
