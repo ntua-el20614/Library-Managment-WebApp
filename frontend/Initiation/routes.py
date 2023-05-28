@@ -7,3 +7,5 @@ from .forms import *
 @app.route("/")
 def index():
     return render_template("landing.html", pageTitle="Landing Page")
+
+
