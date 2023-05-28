@@ -7,6 +7,9 @@ const app = express();
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 const all_users = require("./api/all_users");
+const allstudents = require("./api/allstudents");
+const allteachers = require("./api/allteachers");
+const allhandlers = require("./api/allhandlers");
 const all_schools = require("./api/all_schools");
 const all_schools = require("./api/all_authors");
 const all_books = require("./api/all_books");
@@ -49,6 +52,9 @@ app.use((req, res, next) => {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 app.use("/all_users", all_users);
+app.use("/allstudents", allstudents);
+app.use("/allteachers", allteachers);
+app.use("/allhandlers", allhandlers);
 app.use("/all_schools", all_schools);
 app.use("/all_schools", all_authors);
 app.use("/all_books/:id", all_books);
