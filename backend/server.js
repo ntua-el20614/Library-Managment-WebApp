@@ -18,6 +18,7 @@ const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_fi
 const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
+const { addData: addTeacher } = require('./api/addteacher');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -188,7 +189,7 @@ app.get('/adduser/:username/:password/:user_name/:birthday/:email', (req, res) =
 
   addUser(username, password, user_name, birthday, email, (err, result) => {
     if (err) {
-      console.error('Error adding user:', err);
+      console.error('Error adding teacher:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
@@ -197,7 +198,19 @@ app.get('/adduser/:username/:password/:user_name/:birthday/:email', (req, res) =
   });
 });
 
+app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke school id mesa sto teacher table 
+  const { userid, schoolid } = req.params; // Get the user data from the request body
 
+  addTeacher(userid, schoolid, (err, result) => {
+    if (err) {
+      console.error('Error adding user:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('Teacher added successfully');
+  });
+});
 
 // Start the server
 const port = 3305;
