@@ -1,40 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Log-in</title>
-    <link rel="stylesheet" href="css/form.css" />
-  </head>
-  <body>
-    <div class="alert-box">
-      <p class="alert">msg</p>
-    </div>
-    <div class="form">
-      <h1 class="heading">login</h1>
-      <input
-        type="text"
-        placeholder="username"
-        autocomplete="off"
-        class="username"
-        required
-      />
-      <input
-        type="password"
-        placeholder="password"
-        autocomplete="off"
-        class="password"
-        required
-      />
-      <form action="index.php">
-        <button class="submit-btn" onclick="click">Log in</button>
-      </form>
-      <a href="register.html" class="link"
-        >don't have an account? register here</a
-      >
+<html>
+<head>
+    <title>My Website</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'http://localhost:3305/all_users',  // Replace with your backend URL
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    data.forEach(function(user) {
+                        var userId = user.user_id;
+                        var username = user.username;
+                        var passcode = user.passcode;
+                        var userName = user.user_name;
+                        var birthday = user.birthday;
+                        var email = user.email;
+                        var approved = user.approved;
 
-      <script src="js/form.js"></script>
-    </div>
-  </body>
+                        console.log("User ID: " + userId);
+                        console.log("Username: " + username);
+                        console.log("Passcode: " + passcode);
+                        console.log("User Name: " + userName);
+                        console.log("Birthday: " + birthday);
+                        console.log("Email: " + email);
+                        console.log("Approved: " + approved);
+                        console.log();
+                    });
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Your HTML content goes here -->
+</body>
 </html>
