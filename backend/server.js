@@ -13,6 +13,7 @@ const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_cate
 const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
 const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos');
 const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_five');
+const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -153,6 +154,21 @@ app.get('/authors_less_than_five', (req, res) => {
   fetchAuthLessThanFive((err, results) => {
     if (err) {
       console.error('Error fetching author data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /books rented by user
+app.get('/books_rented_by_user/:id', (req, res) => {
+  const userid = req.params.id; // Get the school ID from the request parameters
+
+  fetchBooksRentedByUser(userid, (err, results) => {
+    if (err) {
+      console.error('Error fetching Book data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
