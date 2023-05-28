@@ -6,6 +6,9 @@ app.use(cors());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { fetchData: fetchUsers } = require('./api/all_users');
+const { fetchData: fetchStudents } = require('./api/allstudents');
+const { fetchData: fetchTeachers } = require('./api/allteachers');
+const { fetchData: fetchHandlers } = require('./api/allhandlers');
 const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors'); 
 const { fetchData: fetchBooks } = require('./api/all_books'); 
@@ -32,6 +35,45 @@ app.get('/', (req, res) => {
 // Define a route handler for /all_users
 app.get('/all_users', (req, res) => {
   fetchUsers((err, results) => {
+    if (err) {
+      console.error('Error fetching user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /allstudents
+app.get('/allstudents', (req, res) => {
+  fetchStudents((err, results) => {
+    if (err) {
+      console.error('Error fetching user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /allteachers
+app.get('/allteachers', (req, res) => {
+  fetchTeachers((err, results) => {
+    if (err) {
+      console.error('Error fetching user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /allhandlers
+app.get('/allhandlers', (req, res) => {
+  fetchHandlers((err, results) => {
     if (err) {
       console.error('Error fetching user data:', err);
       res.status(500).send('Internal Server Error');
