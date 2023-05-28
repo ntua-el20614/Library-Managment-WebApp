@@ -17,6 +17,7 @@ const zero_rent_authors = require("./api/zero_rent_authors");
 const top_category_combos = require("./api/top_category_combos");
 const authors_less_than_five = require("./api/authors_less_than_five");
 const books_rented_by_user = require("./api/books_rented_by_user");
+const books_school_by_title = require("./api/books_school_by_title");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -53,6 +54,7 @@ app.use("/zero_rent_authors", zero_rent_authors);
 app.use("/top_category_combos", top_category_combos);
 app.use("/authors_less_than_five", authors_less_than_five);
 app.use("/books_rented_by_user/:id" , books_rented_by_user)
+app.use("/books_school_by_title/:id/:title" , books_school_by_title)
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
