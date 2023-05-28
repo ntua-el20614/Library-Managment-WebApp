@@ -16,3 +16,4 @@ six==1.16.0
 Werkzeug==2.1.1
 WTForms==3.0.1
 zipp==3.8.0
+requests==23.1.2

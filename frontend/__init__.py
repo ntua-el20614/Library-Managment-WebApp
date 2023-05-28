@@ -21,4 +21,4 @@ app.config["WTF_CSRF_SECRET_KEY"] = '' ## token for csrf protection of forms.
 db = MySQL(app)
 
 ## routes must be imported after the app object has been initialized
-from . import routes
+from frontend import routes

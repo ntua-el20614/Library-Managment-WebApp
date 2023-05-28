@@ -40,22 +40,21 @@
   </style>
 </head>
 <body>
-  <form>
-    <h2>Student Signup</h2>
+  <form action="http://localhost:3305/adduser/{username}/{password}/{user_name}/{birthday}/{email}" method="GET">    
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
     
-    <label for="passcode">Passcode:</label>
-    <input type="password" id="passcode" name="passcode" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
     
-    <label for="name-surname">Name and Surname:</label>
-    <input type="text" id="name-surname" name="name-surname" required>
+    <label for="user_name">Name and Surname:</label>
+    <input type="text" id="user_name" name="user_name" required>
     
     <label for="birthday">Birthday:</label>
     <input type="date" id="birthday" name="birthday" required>
     
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email" required> 
     
     <label for="school">School:</label>
     <select id="school" name="school" required>
@@ -81,6 +80,23 @@
         });
       })
       .catch(error => console.error('Error fetching schools:', error));
+
+ 
+      document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('signupForm');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the form from submitting normally
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const user_name = document.getElementById('user_name').value;
+      const birthday = document.getElementById('birthday').value;
+      const email = document.getElementById('email').value;
+
+      const actionUrl = `/adduser/${username}/${password}/${user_name}/${birthday}/${email}`;
+      window.location.href = actionUrl; // Redirect to the generated URL
+    });
+  });
   </script>
 </body>
 </html>
