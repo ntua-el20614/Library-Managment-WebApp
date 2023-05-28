@@ -23,6 +23,8 @@ const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_use
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
 const { addData: addStudent } = require('./api/addstudent');
+const { addData: addAuthor } = require('./api/addauthor');
+const { addData: addCategory } = require('./api/addcategory');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -268,6 +270,36 @@ app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke sc
     }
 
     res.status(200).send('Teacher added successfully');
+  });
+});
+
+// Define a route handler for adding an author
+app.get('/addauthor/:authorname', (req, res) => {
+  const { authorname } = req.params; // Get the user data from the request body
+
+  addAuthor(authorname, (err, result) => {
+    if (err) {
+      console.error('Error adding author:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('Author added successfully');
+  });
+});
+
+// Define a route handler for adding an author
+app.get('/addcategory/:categoryname', (req, res) => {
+  const { categoryname } = req.params; // Get the user data from the request body
+
+  addCategory(categoryname, (err, result) => {
+    if (err) {
+      console.error('Error adding category:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('Category added successfully');
   });
 });
 
