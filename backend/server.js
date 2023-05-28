@@ -15,6 +15,8 @@ const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos
 const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_five');
 const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
 const { fetchData: fetchBooksSchoolByTitle } = require('./api/books_school_by_title');
+const { fetchData: fetchBooksSchoolByCategory } = require('./api/books_school_by_category');
+const { fetchData: fetchBooksSchoolByAuthor } = require('./api/books_school_by_author');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -180,12 +182,44 @@ app.get('/books_rented_by_user/:id', (req, res) => {
 
 // Define a route handler for /books_school_by_title
 app.get('/books_school_by_title/:id/:title', (req, res) => {
-  const Userid = req.params.id; // Get the year and month from the request parameters
+  const Userid = req.params.id; // Get the id and title from the request parameters
   const Title = req.params.title;
 
   fetchBooksSchoolByTitle([Title, Userid], (err, results) => {
     if (err) {
-      console.error('Error fetching Rent data:', err);
+      console.error('Error fetching category and user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /books_school_by_category
+app.get('/books_school_by_category/:id/:category', (req, res) => {
+  const Userid = req.params.id; // Get the category and id from the request parameters
+  const Category = req.params.category;
+
+  fetchBooksSchoolByCategory([Category, Userid], (err, results) => {
+    if (err) {
+      console.error('Error fetching category and user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /books_school_by_author
+app.get('/books_school_by_author/:id/:author', (req, res) => {
+  const Userid = req.params.id; // Get the author and id from the request parameters
+  const Author = req.params.author;
+
+  fetchBooksSchoolByAuthor([Author, Userid], (err, results) => {
+    if (err) {
+      console.error('Error fetching category and user data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
