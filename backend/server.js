@@ -25,6 +25,7 @@ const { addData: addTeacher } = require('./api/addteacher');
 const { addData: addStudent } = require('./api/addstudent');
 const { addData: addAuthor } = require('./api/addauthor');
 const { addData: addCategory } = require('./api/addcategory');
+const { addData: addReview } = require('./api/addreview');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -280,6 +281,12 @@ app.get('/addauthor/:authorname', (req, res) => {
   addAuthor(authorname, (err, result) => {
     if (err) {
       console.error('Error adding author:', err);
+// Define a route handler for adding a teacher
+app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {//vazume to userid,school id ke isbn mesa sto review table 
+  const { userid, schoolid, isbn, comments, likert} = req.params; // Get the user data from the request body
+  addReview(userid, schoolid, isbn, comments, likert,  (err, result) => {
+    if (err) {
+      console.error('Error adding user:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
@@ -300,6 +307,7 @@ app.get('/addcategory/:categoryname', (req, res) => {
     }
 
     res.status(200).send('Category added successfully');
+    res.status(200).send('Review added successfully');
   });
 });
 

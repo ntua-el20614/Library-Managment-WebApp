@@ -28,6 +28,7 @@ const addteacher = require("./api/addteacher");
 const addstudent = require("./api/addstudent");
 const addauthor = require("./api/addauthor");
 const addcategory = require("./api/addcategory");
+const addreview = require("./api/addreview");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -76,6 +77,7 @@ app.use("/addteacher/:userid/:schoolid", addteacher);
 app.use("/addstudent/:userid/:schoolid", addstudent);
 app.use("/addauthor/:authorname", addauthor);
 app.use("/addcategory/:categoryname", addcategory);
+app.use("/addreview/:userid/:schoolid/:isbn/:comments/:likert", addreview);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
