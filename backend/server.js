@@ -19,6 +19,7 @@ const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_use
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
+const { addData: addStudent } = require('./api/addstudent');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -198,9 +199,24 @@ app.get('/adduser/:username/:password/:user_name/:birthday/:email', (req, res) =
   });
 });
 
-app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke school id mesa sto teacher table 
+
+// Define a route handler for adding a student
+app.get('/addstudent/:userid/:schoolid', (req, res) => {
   const { userid, schoolid } = req.params; // Get the user data from the request body
 
+  addStudent(userid, schoolid, (err, result) => {
+    if (err) {
+      console.error('Error adding student:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('Student added successfully');
+  });
+});
+
+app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke school id mesa sto teacher table 
+  const { userid, schoolid } = req.params; // Get the user data from the request body
   addTeacher(userid, schoolid, (err, result) => {
     if (err) {
       console.error('Error adding user:', err);
