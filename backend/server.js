@@ -17,6 +17,9 @@ const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos
 const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_five');
 const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const { addData: addUser } = require('./api/adduser');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
   res.send('Hello, world!');
@@ -179,10 +182,26 @@ app.get('/books_rented_by_user/:id', (req, res) => {
   });
 });
 
+// Define a route handler for adding a user
+app.get('/adduser/:username/:password/:user_name/:birthday/:email', (req, res) => {
+  const { username, password, user_name, birthday, email } = req.params; // Get the user data from the request body
+
+  addUser(username, password, user_name, birthday, email, (err, result) => {
+    if (err) {
+      console.error('Error adding user:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('User added successfully');
+  });
+});
+
+
 
 // Start the server
 const port = 3305;
-const ipAddress = '192.168.1.31';
-app.listen(port, () => {//ipAddress, 
-  console.log(`Server is running on ${port}`);//${ipAddress}:
+const ipAddress = '192.168.2.142';
+app.listen(port, ipAddress,() => {// 
+  console.log(`Server is running on ${ipAddress}:${port}`);//
 });
