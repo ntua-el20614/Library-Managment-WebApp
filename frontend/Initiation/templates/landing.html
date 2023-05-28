@@ -128,15 +128,16 @@ async function fetchUserData() {
     let user;
 
     for (const userDataItem of userData) {
-        console.log(username_current, userDataItem.username);
-        if (userDataItem.username === username_current ){// && userDataItem.passcode === password_current) {
+        if (userDataItem.username === username_current && userDataItem.passcode === password_current) {
             user = userDataItem;
             break; // Exit the loop if a match is found
         }
     }
     if (user) {
         
-
+      if(userType === 'student'){//fere data gia students
+        console.log("2");
+      }
         
 
       // Login successful
@@ -146,6 +147,10 @@ async function fetchUserData() {
     } else {
       // Invalid credentials
       console.log('Invalid credentials!');
+      alert('Invalid credentials!'); // Display an alert with the desired message
+      location.reload(); // Reload the page
+
+      
     }
   }
 }
