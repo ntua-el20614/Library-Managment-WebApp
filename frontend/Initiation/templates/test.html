@@ -1,0 +1,86 @@
+<html>
+
+  <head>
+    <title>Test remember password</title>
+    <script
+      type="text/javascript"
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"
+    ></script>
+    <script type="text/javascript">
+      function display_login_form_good() {
+        // dyamically add the form -
+        // for simplicity it's hardcoded here, but it can be loaded by AJAX
+        // note the placeholders for login/password fields
+        $("#login").html(
+          "<h3>Remember password should WORK</h3>" +
+            "Email:<br/>" +
+            '<span id="email_place_holder"/><br/>' +
+            "Password:<br/>" +
+            '<span id="password_place_holder"/><br/>' +
+            '<input id="login-button" type="submit" value="Login"/>'
+        );
+
+        // replace placeholders with the actual fields from hidden div
+        $("#email_place_holder").replaceWith($("#email"));
+        $("#password_place_holder").replaceWith($("#password"));
+
+        // this is not required, just cleaning up
+        $("#dont_forget").remove();
+
+        // suppose our login is handled via AJAX
+        // so there is no direct submit
+        $("#login-button").click(function (ev) {
+          // do NOT call ev.preventDefault() or return false
+          // otherwise you will not get Remember Password prompt in IE and Chrome
+          alert("AJAX login...");
+        });
+      }
+
+      // This form will not work, since the fields are created dynamically
+      // and browsers don't offer saved passwords for such fields
+      function display_login_form_bad() {
+        $("#dont_forget").remove();
+        $("#login").html(
+          "<h3>Remember password should NOT work</h3>" +
+            "Email:<br/>" +
+            '<input type="text" name="email" id="email"/><br/>' +
+            "Password:<br/>" +
+            '<input type="password" name="password" id="password"/><br/>' +
+            '<input type="submit" value="Login"/>'
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <input
+      type="button"
+      value="Show good form"
+      onclick="display_login_form_good()"
+    />
+    <input
+      type="button"
+      value="Show bad form"
+      onclick="display_login_form_bad()"
+    />
+
+    <!-- Our dummy iframe where the form submits to -->
+    <iframe src="dummy.html" name="dummy" style="display: none"></iframe>
+    <form action="" method="post" target="dummy">
+      <div id="login"></div>
+    </form>
+
+    <!-- 
+		This hidden div should be included in static page content.
+		Currently, browsers check for fields suitable for remembered passwords 
+		only when page initially loads. 
+		Later we simply move the fields from this div to actual form, where required
+	-->
+    <div id="dont_forget" style="display: none">
+      <form action="" method="post">
+        <input type="text" name="email" id="email" />
+        <input type="password" name="password" id="password" />
+        <input type="submit" value="Login" id="dummy_submit" />
+      </form>
+    </div>
+  </body>
+</html>
