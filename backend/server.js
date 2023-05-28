@@ -277,28 +277,20 @@ app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke sc
 // Define a route handler for adding an author
 app.get('/addauthor/:authorname', (req, res) => {
   const { authorname } = req.params; // Get the user data from the request body
-
   addAuthor(authorname, (err, result) => {
     if (err) {
       console.error('Error adding author:', err);
-// Define a route handler for adding a teacher
-app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {//vazume to userid,school id ke isbn mesa sto review table 
-  const { userid, schoolid, isbn, comments, likert} = req.params; // Get the user data from the request body
-  addReview(userid, schoolid, isbn, comments, likert,  (err, result) => {
-    if (err) {
-      console.error('Error adding user:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
-
+    
     res.status(200).send('Author added successfully');
   });
 });
 
-// Define a route handler for adding an author
+// Define a route handler for adding an category
 app.get('/addcategory/:categoryname', (req, res) => {
   const { categoryname } = req.params; // Get the user data from the request body
-
   addCategory(categoryname, (err, result) => {
     if (err) {
       console.error('Error adding category:', err);
@@ -307,6 +299,18 @@ app.get('/addcategory/:categoryname', (req, res) => {
     }
 
     res.status(200).send('Category added successfully');
+  });
+});
+
+// Define a route handler for adding a review
+app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {//vazume to userid,school id ke isbn mesa sto review table 
+  const { userid, schoolid, isbn, comments, likert} = req.params; // Get the user data from the request body
+  addReview(userid, schoolid, isbn, comments, likert,  (err, result) => {
+    if (err) {
+      console.error('Error adding review:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
     res.status(200).send('Review added successfully');
   });
 });

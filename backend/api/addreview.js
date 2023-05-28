@@ -11,7 +11,7 @@ const addData = (userid, schoolid, isbn, comments, likert, callback) => {
     }
 
     // Execute a SQL query to add a user
-    const query = 'INSERT INTO review (user_id, school_id, isbn, comments, likert, aproved) VALUES (?, ?, ?, ?, ?, 0)';
+    const query = 'INSERT INTO review (user_id, school_id, isbn, comments, likert, approved) VALUES (?, ?, ?, ?, ?, 0)';
     const values = [userid, schoolid, isbn, comments, likert];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool
