@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Page</title>
+
+  <style>
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 50px;
+    }
+
+    .rectangle {
+      width: 250px;
+      height: 300px;
+      border: 1px solid black;
+      padding: 10px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 95%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"],
+    input[type="button"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50; /* Green */
+    }
+
+    input[type="button"] {
+      background-color: #808080; /* Gray */
+      margin-top: 10px;
+    }
+
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <div class="rectangle">
+    <h2>Handlers</h2>
+    <form>
+      <label for="handler-username">Username:</label>
+      <input type="text" id="handler-username" name="handler-username" required>
+      <label for="handler-password">Password:</label>
+      <input type="password" id="handler-password" name="handler-password" required>
+      <input type="submit" value="Login" onclick="checkCredentials(event, 'handlers')">
+      <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signuphandlers.html';">
+    </form>
+  </div>
+
+  <div class="rectangle">
+    <h2>Teachers</h2>
+    <form>
+        <label for="teacher-username">Username:</label>
+        <input type="text" id="teacher-username" name="teacher-username" required>
+        <label for="teacher-password">Password:</label>
+        <input type="password" id="teacher-password" name="teacher-password" required>
+        <input type="submit" value="Login" onclick="checkCredentials(event, 'teachers')">
+        <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signupteachers.html';">
+    </form>
+  </div>
+
+  <div class="rectangle">
+    <h2>Students</h2>
+    <form>
+        <label for="student-username">Username:</label>
+        <input type="text" id="student-username" name="student-username" required>
+        <label for="student-password">Password:</label>
+        <input type="password" id="student-password" pass="student-password" required>
+        <input type="submit" value="Login" onclick="checkCredentials(event, 'student')">        
+        <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signupstudents.html';">
+    </form>
+  </div>
+</div>
+
+<script>
+
+
+async function fetchUserData() {
+  try {
+    const response = await fetch('http://localhost:3305/all_users');
+    const userData = await response.json();
+
+    return userData;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    return null;
+  }
+}
+
+
+  async function checkCredentials(event, userType) {
+  event.preventDefault();
+
+  const username_current = document.getElementById(userType+'-username').value;
+  const password_current = document.getElementById(userType+'-password').value;
+
+  
+  const userData = await fetchUserData();
+
+  if (userData) {
+    
+    let user;
+
+    for (const userDataItem of userData) {
+        if (userDataItem.username === username_current && userDataItem.passcode === password_current) {
+            user = userDataItem;
+            break; // Exit the loop if a match is found
+        }
+    }
+    if (user) {
+        
+      if(userType === 'student'){//fere data gia students
+        console.log("2");
+      }
+        
+
+      // Login successful
+      console.log('Login successful!');
+      // Redirect to the appropriate page based on userType
+      window.location.href = `${userType}.html`;
+    } else {
+      // Invalid credentials
+      console.log('Invalid credentials!');
+      alert('Invalid credentials!'); // Display an alert with the desired message
+      location.reload(); // Reload the page
+
+      
+    }
+  }
+}
+
+</script>
+</body>
+</html>
