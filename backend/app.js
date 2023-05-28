@@ -7,6 +7,9 @@ const app = express();
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 const all_users = require("./api/all_users");
+const allstudents = require("./api/allstudents");
+const allteachers = require("./api/allteachers");
+const allhandlers = require("./api/allhandlers");
 const all_schools = require("./api/all_schools");
 const all_schools = require("./api/all_authors");
 const all_books = require("./api/all_books");
@@ -50,6 +53,9 @@ app.use((req, res, next) => {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 app.use("/all_users", all_users);
+app.use("/allstudents", allstudents);
+app.use("/allteachers", allteachers);
+app.use("/allhandlers", allhandlers);
 app.use("/all_schools", all_schools);
 app.use("/all_schools", all_authors);
 app.use("/all_books/:id", all_books);
@@ -64,6 +70,8 @@ app.use("/books_school_by_title/:id/:title", books_school_by_title);
 app.use("/books_school_by_category/:id/:category", books_school_by_category);
 app.use("/books_school_by_author/:id/:author", books_school_by_author);
 app.use("/addteacher/:userid/:schoolid", addteacher);
+////////////////////////////////////////////////////////////////
+app.use("/addteacher/:userid/:schoolid", addteacher)
 app.use("/adduser/:username/:password/:user_name/:birthday/:email", adduser);
 app.use("/addstudent/:userid/:schoolid", addstudent);
 app.use("/addreview/:userid/:schoolid/:isbn/:comments/:likert", addreview);
