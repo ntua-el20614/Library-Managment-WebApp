@@ -275,6 +275,7 @@ app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke sc
   });
 });
 
+// Define a route handler for adding a handler
 app.get('/addhandler/:userid/:schoolid', (req, res) => {
   const { userid, schoolid } = req.params; // Get the user data from the request body
 
@@ -285,7 +286,7 @@ app.get('/addhandler/:userid/:schoolid', (req, res) => {
       return;
     }
 
-    res.status(200).send('Hnadler added successfully');
+    res.status(200).send('Handler added successfully');
   });
 });
 
