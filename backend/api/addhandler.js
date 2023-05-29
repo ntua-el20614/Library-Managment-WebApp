@@ -10,7 +10,7 @@ const addData = (userid, schoolid, callback) => {
       return;
     }
 
-    // Execute a SQL query to add a user
+    // Execute a SQL query to add a handler
     const query = 'INSERT INTO handlers (user_id, school_id) VALUES (?, ?)';
     const values = [userid, schoolid];
     connection.query(query, values, (err, result) => {
