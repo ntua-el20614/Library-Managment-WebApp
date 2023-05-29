@@ -2,62 +2,7 @@
 <html>
 <head>
   <title>Home Page</title>
-
-  <style>
-    .container {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 50px;
-    }
-
-    .rectangle {
-      width: 250px;
-      height: 300px;
-      border: 1px solid black;
-      padding: 10px;
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    form {
-      margin-top: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      width: 95%;
-      padding: 5px;
-      margin-bottom: 10px;
-    }
-
-    input[type="submit"],
-    input[type="button"] {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    input[type="submit"] {
-      background-color: #4CAF50; /* Green */
-    }
-
-    input[type="button"] {
-      background-color: #808080; /* Gray */
-      margin-top: 10px;
-    }
-
-  </style>
-
+  <link rel="stylesheet" href="/static/css/LandingPage.css">
 </head>
 <body>
 <div class="container">
@@ -68,8 +13,8 @@
       <input type="text" id="handler-username" name="handler-username" required>
       <label for="handler-password">Password:</label>
       <input type="password" id="handler-password" name="handler-password" required>
-      <input type="submit" value="Login" onclick="checkCredentials(event, 'handler')">
-      <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signuphandlers.html';">
+      <input type="submit" class="button" value="Login" onclick="checkCredentials(event, 'handler')">
+      <input type="button" value="Sign Up" onclick="window.location.href='SignUpHandlers';">
     </form>
   </div>
 
@@ -80,8 +25,8 @@
         <input type="text" id="teacher-username" name="teacher-username" required>
         <label for="teacher-password">Password:</label>
         <input type="password" id="teacher-password" name="teacher-password" required>
-        <input type="submit" value="Login" onclick="checkCredentials(event, 'teacher')">
-        <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signupteachers.html';">
+        <input type="submit" class="button" value="Login" onclick="checkCredentials(event, 'teacher')">
+        <input type="button" value="Sign Up" onclick="window.location.href='SignUpTeachers';">
     </form>
   </div>
 
@@ -92,8 +37,8 @@
         <input type="text" id="student-username" name="student-username" required>
         <label for="student-password">Password:</label>
         <input type="password" id="student-password" pass="student-password" required>
-        <input type="submit" value="Login" onclick="checkCredentials(event, 'student')">        
-        <input type="button" value="Sign Up" onclick="window.location.href='signuppages/signupstudents.html';">
+        <input type="submit" class="button" value="Login" onclick="checkCredentials(event, 'student')">        
+        <input type="button" value="Sign Up" onclick="window.location.href='SignUpStudents';">
     </form>
   </div>
 </div>
@@ -102,55 +47,52 @@
 
 
 async function fetchUserData() {
-  try {
-    const response = await fetch('http://localhost:3305/all_users');
-    const userData = await response.json();
-
-    return userData;
-  } catch (error) {
-    console.error('Error fetching users info:', error);
-    return null;
+    try {
+      const response = await fetch('http://localhost:3305/all_users');
+      const userData = await response.json();
+  
+      return userData;
+    } catch (error) {
+      console.error('Error fetching users info:', error);
+      return null;
+    }
   }
-}
-
-
-
-
-async function fetchHandlers() {
-  try {
-    const response = await fetch('http://localhost:3305/allhandlers');
-    const handlersData = await response.json();
-
-    return handlersData;
-  } catch (error) {
-    console.error('Error fetching handler info:', error);
-    return null;
+  
+  
+  async function fetchHandlers() {
+    try {
+      const response = await fetch('http://localhost:3305/allhandlers');
+      const handlersData = await response.json();
+  
+      return handlersData;
+    } catch (error) {
+      console.error('Error fetching handler info:', error);
+      return null;
+    }
   }
-}
-async function fetchTeachers() {
-  try {
-    const response = await fetch('http://localhost:3305/allteachers');
-    const teachersData = await response.json();
-
-    return teachersData;
-  } catch (error) {
-    console.error('Error fetching teacher info:', error);
-    return null;
+  async function fetchTeachers() {
+    try {
+      const response = await fetch('http://localhost:3305/allteachers');
+      const teachersData = await response.json();
+  
+      return teachersData;
+    } catch (error) {
+      console.error('Error fetching teacher info:', error);
+      return null;
+    }
   }
-}
-
-async function fetchStudents() {
-  try {
-    const response = await fetch('http://localhost:3305/allstudents');
-    const studentsData = await response.json();
-
-    return studentsData;
-  } catch (error) {
-    console.error('Error fetching student info:', error);
-    return null;
+  
+  async function fetchStudents() {
+    try {
+      const response = await fetch('http://localhost:3305/allstudents');
+      const studentsData = await response.json();
+  
+      return studentsData;
+    } catch (error) {
+      console.error('Error fetching student info:', error);
+      return null;
+    }
   }
-}
-
 
   async function checkCredentials(event, userType) {
   event.preventDefault();
@@ -162,9 +104,9 @@ async function fetchStudents() {
   const userData = await fetchUserData();
   
   if (userData) {
-    let user;
+    let user; 
 
-    for (const userDataItem of userData) {
+    for (const userDataItem of userData) { 
         if (userDataItem.username === username_current && userDataItem.passcode === password_current) {
             user = userDataItem;
             break; // Exit the loop if a match is found
@@ -172,66 +114,84 @@ async function fetchStudents() {
     }
     console.log(user);
     if (user) {//an mpw edw, simenei uparxei o user
+      localStorage.setItem("user", JSON.stringify(user));//COOKIES
 
-      if(user.username === 'Mastoras' && user.passcode === 'password'){
-        if(userType != "handler"){
-            alert('You are not a Handler!');
-            location.reload();
-        }
-        
+      
+      if(user.username === 'Mastoras' && user.passcode === 'password'){ 
         window.location.href = `mastoras.html`;
 
       }
         
       if(userType === 'student'){//fere data gia students
         const studentsData = await fetchStudents();
+        let flag = false;
         for (const studentsDataItem of studentsData) {
         if (studentsDataItem.user_id === user.user_id) {
 
-          if(studentsDataItem.approved === 1){
+          flag=true;
+          if(user.approved === 1){
+            document.cookie = "user=" + user;
             console.log('Login successful!');
-            window.location.href = `${userType}.html`;}
+            window.location.href = `${userType}`;}
+          else{
           alert("You are not approved yet")
-          location.reload();
+          window.location.href = '/wait_for_approval';
+        }
         }
     }
+    if (!flag){
     alert('You are not a Student!');
     location.reload();
+  }
   }
       
 
 
   if(userType === 'teacher'){//fere data gia teacher
         const teachersData = await fetchTeachers();
+        let flag = false;
         for (const teachersDataItem of teachersData) {
         if (teachersDataItem.user_id === user.user_id) {
-          if(teachersDataItem.approved === 1){
+
+          flag = true;
+          if(user.approved === 1){
+            document.cookie = "user=" + user;
             console.log('Login successful!');
-            window.location.href = `${userType}.html`;}
-            
-          alert("You are not approved yet");
-          location.reload();
+            window.location.href = `${userType}`;}
+            else{
+            alert("You are not approved yet");
+            window.location.href = '/wait_for_approval';
+          }
+
         }
     }
+    if (!flag){
     alert('You are not a Teacher!');
-    location.reload();
+    location.reload();}
   }
 
   
-  if(userType === 'handler'){//fere data gia students
+  if(userType === 'handler'){//fere data gia handlers
         const handlersData = await fetchHandlers();
+        let flag = false;
         for (const handlersDataItem of handlersData) {
         if (handlersDataItem.user_id === user.user_id) {
-          
-          if(handlersDataItem.approved === 1){
+
+          flag=true;
+          if(user.approved === 1){
+            document.cookie = "user=" + user;
             console.log('Login successful!');
-            window.location.href = `${userType}.html`;}
-          alert("You are not approved yet")
-          location.reload();
+            window.location.href = `${userType}`;}
+          else{
+          alert("You are not approved yet");
+            window.location.href = '/wait_for_approval';
+
+        }
         }
     }
+    if (!flag){
     alert('You are not a Handler!');
-    location.reload();
+    location.reload();}
   }
       
 
