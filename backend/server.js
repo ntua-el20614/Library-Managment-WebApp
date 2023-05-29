@@ -332,7 +332,7 @@ app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {/
 
 // Start the server
 const port = 3305;
-const ipAddress = '192.168.1.31';
+//const ipAddress = '192.168.1.31';
 app.listen(port, () => {//ipAddress, 
   console.log(`Server is running on ${port}`);//${ipAddress}:
 });
