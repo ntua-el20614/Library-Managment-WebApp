@@ -30,6 +30,7 @@ const { addData: addHandler } = require('./api/addhandler');
 const { addData: addAuthor } = require('./api/addauthor');
 const { addData: addCategory } = require('./api/addcategory');
 const { addData: addReview } = require('./api/addreview');
+const { addData: addSchool } = require('./api/addschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -376,6 +377,19 @@ app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {/
       return;
     }
     res.status(200).send('Review added successfully');
+  });
+});
+
+// Define a route handler for adding a school
+app.get('/addschool/:school_name/:address/:city/:telephone/:email/:principal_fullname', (req, res) => {
+  const { school_name, address, city, telephone, email, principal_fullname} = req.params; // Get the user data from the request body
+  addSchool(school_name, address, city, telephone, email, principal_fullname,  (err, result) => {
+    if (err) {
+      console.error('Error adding school:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('School added successfully');
   });
 });
 
