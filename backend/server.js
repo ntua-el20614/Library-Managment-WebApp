@@ -21,7 +21,7 @@ const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_fi
 const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
 const { fetchData: fetchStudentFromUserSchool } = require('./api/allstudents_fromusers_school');
 const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fromusers_school');
-const { fetchData: fetchHandlersFromUserSchool } = require('./api/allstudents_fromusers_school');
+const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
