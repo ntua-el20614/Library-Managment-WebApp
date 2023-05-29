@@ -32,6 +32,8 @@ const { addData: addCategory } = require('./api/addcategory');
 const { addData: addReview } = require('./api/addreview');
 const { addData: addSchool } = require('./api/addschool');
 const { addData: addBook } = require('./api/addbook');
+const { addData: addAuthorToBook } = require('./api/addauthortobook');
+const { addData: addCategoryToBook } = require('./api/addcategorytobook');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -404,6 +406,32 @@ app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/
       return;
     }
     res.status(200).send('Book added successfully');
+  });
+});
+
+// Define a route handler for adding an author to a book
+app.get('/addauthortobook/:isbn/:authorid', (req, res) => {
+  const { isbn, authorid} = req.params; // Get the user data from the request body
+  addAuthorToBook(isbn, authorid,  (err, result) => {
+    if (err) {
+      console.error('Error adding author to book:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Author added to book successfully');
+  });
+});
+
+// Define a route handler for adding a category to a book
+app.get('/addcategorytobook/:isbn/:categoryid', (req, res) => {
+  const { isbn, categoryid} = req.params; // Get the user data from the request body
+  addCategoryToBook(isbn, categoryid,  (err, result) => {
+    if (err) {
+      console.error('Error adding category to book:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Category added to book successfully');
   });
 });
 

@@ -35,6 +35,8 @@ const addcategory = require("./api/addcategory");
 const addreview = require("./api/addreview");
 const addschool = require("./api/addschool");
 const addbook = require("./api/addbook");
+const addauthortobook = require("./api/addauthortobook");
+const addcategorytobook = require("./api/addcategorytobook");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -90,6 +92,8 @@ app.use("/addcategory/:categoryname", addcategory);
 app.use("/addreview/:userid/:schoolid/:isbn/:comments/:likert", addreview);
 app.use("/addschool/:school_name/:address/:city/:telephone/:email/:principal_fullname", addschool);
 app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords", addbook);
+app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
+app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
