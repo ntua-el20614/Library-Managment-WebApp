@@ -33,7 +33,8 @@ const addhandler = require("./api/addhandler");
 const addauthor = require("./api/addauthor");
 const addcategory = require("./api/addcategory");
 const addreview = require("./api/addreview");
-const addreview = require("./api/addschool");
+const addschool = require("./api/addschool");
+const addbook = require("./api/addbook");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -88,6 +89,7 @@ app.use("/addauthor/:authorname", addauthor);
 app.use("/addcategory/:categoryname", addcategory);
 app.use("/addreview/:userid/:schoolid/:isbn/:comments/:likert", addreview);
 app.use("/addschool/:school_name/:address/:city/:telephone/:email/:principal_fullname", addschool);
+app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords", addbook);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 

@@ -31,6 +31,7 @@ const { addData: addAuthor } = require('./api/addauthor');
 const { addData: addCategory } = require('./api/addcategory');
 const { addData: addReview } = require('./api/addreview');
 const { addData: addSchool } = require('./api/addschool');
+const { addData: addBook } = require('./api/addbook');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -390,6 +391,19 @@ app.get('/addschool/:school_name/:address/:city/:telephone/:email/:principal_ful
       return;
     }
     res.status(200).send('School added successfully');
+  });
+});
+
+// Define a route handler for adding a book
+app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords', (req, res) => {
+  const { isbn, title, publisher, pages, summary, image, book_language, keywords} = req.params; // Get the user data from the request body
+  addBook(isbn, title, publisher, pages, summary, image, book_language, keywords,  (err, result) => {
+    if (err) {
+      console.error('Error adding book:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Book added successfully');
   });
 });
 
