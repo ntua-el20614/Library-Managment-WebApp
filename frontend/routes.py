@@ -62,5 +62,5 @@ def page_for_mastoras():
 
 @app.route("/student/books")
 def all_books_in_school_x():
-    return render_template("/books.html", pageTitle="Library's books")
+    return render_template("/books1.html", pageTitle="Library's books")
 

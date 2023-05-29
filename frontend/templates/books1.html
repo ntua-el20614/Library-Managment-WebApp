@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* CSS styles */
+        .book-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .book-item h2 {
+            cursor: pointer;
+        }
+
+        .book-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book List</h1>
+    <div id="book-list"></div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+        (async () => {
+            const studentsData = await fetchStudents();
+            let schoolID;
+            let flag = false;
+
+            for (const studentsDataItem of studentsData) {
+                if (studentsDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = studentsDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+
+            if (!flag) {
+                alert("You shouldn't be here!");
+                window.location.href = '/';
+            }
+
+            const booksData = await fetchBooksData(schoolID);
+            const bookList = document.getElementById('book-list');
+
+            booksData.forEach((book) => {
+                // Create book item container
+                const bookItem = document.createElement('div');
+                bookItem.classList.add('book-item');
+
+                // Create book title with toggle functionality
+                const title = document.createElement('h2');
+                title.textContent = book.title;
+                title.addEventListener('click', () => {
+                    const details = bookItem.querySelector('.book-details');
+                    details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                });
+
+                // Create book details container
+                const detailsContainer = document.createElement('div');
+                detailsContainer.classList.add('book-details');
+
+                // Add book details
+                detailsContainer.innerHTML = `<b>ISBN:</b> ${book.isbn}<br>
+                                              <b>Title:</b> ${book.title}<br>
+                                              <b>Publisher:</b> ${book.publisher}<br>
+                                              <b>Pages:</b> ${book.pages}<br>
+                                              <b>Summary:</b> ${book.summary}<br>
+                                              <b>Language:</b> ${book.book_language}<br>
+                                              <b>Keywords:</b> ${book.keywords}<br>
+                                              <b>School ID:</b> ${book.school_id}<br>
+                                              <b>Copies:</b> ${book.copys}<br>
+                                              <b>Available Copies:</b> ${book.available_copys}<br>
+                                              <b>School Name:</b> ${book.school_name}<br>`;
+
+                // Append title and details to the book item
+                bookItem.appendChild(title);
+                bookItem.appendChild(detailsContainer);
+
+                // Append book item to the book list
+                bookList.appendChild(bookItem);
+            });
+        })();
+    </script>
+</body>
+</html>
