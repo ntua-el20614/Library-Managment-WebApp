@@ -24,6 +24,8 @@ const books_school_by_title = require("./api/books_school_by_title");
 const books_school_by_category = require("./api/books_school_by_category");
 const books_school_by_author = require("./api/books_school_by_author");
 const allstudents_fromusers_school = require("./api/allstudents_fromusers_school");
+const allteachers_fromusers_school = require("./api/allteachers_fromusers_school");
+const allhandlers_fromusers_school = require("./api/allhandlers_fromusers_school");
 const adduser = require("./api/adduser");
 const addteacher = require("./api/addteacher");
 const addstudent = require("./api/addstudent");
@@ -74,6 +76,8 @@ app.use("/books_school_by_title/:id/:title", books_school_by_title);
 app.use("/books_school_by_category/:id/:category", books_school_by_category);
 app.use("/books_school_by_author/:id/:author", books_school_by_author);
 app.use("/allstudents_fromusers_school/:id", allstudents_fromusers_school);
+app.use("/allteachers_fromusers_school/:id", allteachers_fromusers_school);
+app.use("/allhandlers_fromusers_school/:id", allhandlers_fromusers_school);
 ////////////////////////////////////////////////////////////////
 app.use("/adduser/:username/:password/:user_name/:birthday/:email", adduser);
 app.use("/addteacher/:userid/:schoolid", addteacher);
