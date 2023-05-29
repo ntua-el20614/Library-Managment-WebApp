@@ -36,6 +36,7 @@ const { addData: addAuthorToBook } = require('./api/addauthortobook');
 const { addData: addCategoryToBook } = require('./api/addcategorytobook');
 const { addData: addRent } = require('./api/addrent');
 const { addData: addReservation } = require('./api/addreservation');
+const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -460,6 +461,19 @@ app.get('/addreservation/:user_id/:isbn/:school_id/:date_of_reservation', (req, 
       return;
     }
     res.status(200).send('Reservation added successfully');
+  });
+});
+
+// Define a route handler for adding a book to school
+app.get('/addbooktoschool/:isbn/:school_id/:copys/:available_copys', (req, res) => {
+  const { isbn, school_id, copys, available_copys} = req.params; // Get the user data from the request body
+  addBookToSchool(isbn, school_id, copys, available_copys, (err, result) => {
+    if (err) {
+      console.error('Error adding book to school:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Book added to school successfully');
   });
 });
 
