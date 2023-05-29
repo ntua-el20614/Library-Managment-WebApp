@@ -11,26 +11,22 @@ const fetchData = (userid, callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT * ' +
-    'FROM student ' +
-    'WHERE school_id = ( ' +
-      'SELECT school_id ' +
-      'FROM student ' +
-      'WHERE user_id =' + userid + ') ' +
-    'UNION ' +
-    'SELECT * ' +
-    'FROM teacher ' +
-    'WHERE school_id = ( ' +
-      'SELECT school_id ' +
-      'FROM teacher ' +
-      'WHERE user_id = ' + userid + ') ' +
-    'UNION ' +
-    'SELECT * '+
-    'FROM handlers '+
-    'WHERE school_id = ( ' + 
-      'SELECT school_id ' +
-      'FROM handlers ' +
-      'WHERE user_id = ' + userid + ') ';
+    const query = 
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'FROM student s ' +
+      'JOIN users u ON s.user_id = u.user_id ' +
+      'WHERE s.school_id = (SELECT school_id FROM student WHERE user_id = ' + userid  + ') ' +
+      'UNION ' +
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'FROM student s ' +
+      'JOIN users u ON s.user_id = u.user_id ' +
+      'WHERE s.school_id = (SELECT school_id FROM teacher WHERE user_id = ' + userid + ') ' +
+      'UNION ' +
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'FROM student s ' +
+      'JOIN users u ON s.user_id = u.user_id ' +
+      'WHERE s.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ')';
+
     connection.query(query,[userid],  (err, results) => {
       // Release the connection back to the pool
       connection.release();
