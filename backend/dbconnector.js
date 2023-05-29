@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   user: 'papamaster',
   password: 'password',
   database: 'library_project',
-  connectionLimit: 10 // Adjust the limit as per your requirements
+  connectionLimit: 100 // Adjust the limit as per your requirements
 });
 
 module.exports = pool;

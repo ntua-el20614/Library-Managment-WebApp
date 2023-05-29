@@ -23,6 +23,7 @@ const books_rented_by_user = require("./api/books_rented_by_user");
 const books_school_by_title = require("./api/books_school_by_title");
 const books_school_by_category = require("./api/books_school_by_category");
 const books_school_by_author = require("./api/books_school_by_author");
+const allstudents_fromusers_school = require("./api/allstudents_fromusers_school");
 const adduser = require("./api/adduser");
 const addteacher = require("./api/addteacher");
 const addstudent = require("./api/addstudent");
@@ -72,6 +73,7 @@ app.use("/books_rented_by_user/:id", books_rented_by_user);
 app.use("/books_school_by_title/:id/:title", books_school_by_title);
 app.use("/books_school_by_category/:id/:category", books_school_by_category);
 app.use("/books_school_by_author/:id/:author", books_school_by_author);
+app.use("/allstudents_fromusers_school/:id", allstudents_fromusers_school);
 ////////////////////////////////////////////////////////////////
 app.use("/adduser/:username/:password/:user_name/:birthday/:email", adduser);
 app.use("/addteacher/:userid/:schoolid", addteacher);
