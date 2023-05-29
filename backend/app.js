@@ -37,6 +37,8 @@ const addschool = require("./api/addschool");
 const addbook = require("./api/addbook");
 const addauthortobook = require("./api/addauthortobook");
 const addcategorytobook = require("./api/addcategorytobook");
+const addrent = require("./api/addrent");
+const addreservation = require("./api/addreservation");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -94,6 +96,8 @@ app.use("/addschool/:school_name/:address/:city/:telephone/:email/:principal_ful
 app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords", addbook);
 app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
 app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
+app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);
+app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addreservation);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
