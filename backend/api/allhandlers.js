@@ -11,7 +11,7 @@ const fetchData = (callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT user_id FROM handlers';
+    const query = 'SELECT * FROM handlers';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();

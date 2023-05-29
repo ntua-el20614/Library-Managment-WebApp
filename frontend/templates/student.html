@@ -13,7 +13,7 @@
       </div>
       <div class="profile-item">
           <label>School:</label>
-          <span id="School"></span>
+          <span id="school"></span>
       </div>
         <div class="profile-item">
             <label>User ID:</label>
@@ -96,7 +96,6 @@
       
               if (user.approved === 1) {
                 flag = true;
-                console.log(studentsDataItem);
                 schoolID = studentsDataItem.school_id;
                 console.log('You are allowed to stay here!');
               } else {
@@ -111,8 +110,8 @@
           }
           
           const schoolsData = await fetchSchoolsData();
-          //console.log(schoolID);
-          for (const schoolsDataItem of studentsData){
+          let schoolsname;
+          for (const schoolsDataItem of schoolsData){
             if (schoolsDataItem.school_id === schoolID) {
               schoolsname = schoolsDataItem.school_name;
             }
