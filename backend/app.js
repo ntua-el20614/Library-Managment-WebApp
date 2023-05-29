@@ -39,6 +39,7 @@ const addauthortobook = require("./api/addauthortobook");
 const addcategorytobook = require("./api/addcategorytobook");
 const addrent = require("./api/addrent");
 const addreservation = require("./api/addreservation");
+const addbooktoschool = require("./api/addbooktoschool");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -98,6 +99,7 @@ app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
 app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);
 app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addreservation);
+app.use("/addbooktoschool/:isbn/:school_id/:copys/:available_copys", addbooktoschool);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
