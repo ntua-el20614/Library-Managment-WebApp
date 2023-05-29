@@ -23,6 +23,7 @@ const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_use
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
 const { addData: addStudent } = require('./api/addstudent');
+const { addData: addHandler } = require('./api/addhandler');
 const { addData: addAuthor } = require('./api/addauthor');
 const { addData: addCategory } = require('./api/addcategory');
 const { addData: addReview } = require('./api/addreview');
@@ -271,6 +272,20 @@ app.get('/addteacher/:userid/:schoolid', (req, res) => {//vazume to userid ke sc
     }
 
     res.status(200).send('Teacher added successfully');
+  });
+});
+
+app.get('/addhandler/:userid/:schoolid', (req, res) => {
+  const { userid, schoolid } = req.params; // Get the user data from the request body
+
+  addHandler(userid, schoolid, (err, result) => {
+    if (err) {
+      console.error('Error adding handler:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.status(200).send('Hnadler added successfully');
   });
 });
 
