@@ -48,6 +48,8 @@ const { deleteData: deleteUser } = require('./api/delete_user');
 const { deleteData: deleteSchool } = require('./api/delete_school');
 const { deleteData: deleteBookFromSchool } = require('./api/delete_book_from_school');
 const { deleteData: deleteReview } = require('./api/delete_review');
+const { deleteData: deleteRent } = require('./api/delete_rent');
+const { deleteData: deleteReservation } = require('./api/delete_reservation');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -602,6 +604,32 @@ app.get('/delete_review/:reviewid', (req, res) => {
       return;
     }
     res.status(200).send('Review deleted successfully');
+  });
+});
+
+// Define a route handler to delete rent
+app.get('/delete_rent/:rentid', (req, res) => {
+  const { rentid} = req.params; // Get the user data from the request body
+  deleteRent(rentid, (err, result) => {
+    if (err) {
+      console.error('Error deleting rent:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Rent deleted successfully');
+  });
+});
+
+// Define a route handler to delete reservation
+app.get('/delete_reservation/:reservationid', (req, res) => {
+  const { reservationid} = req.params; // Get the user data from the request body
+  deleteReservation(reservationid, (err, result) => {
+    if (err) {
+      console.error('Error deleting reservation:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Reservation deleted successfully');
   });
 });
 

@@ -52,6 +52,8 @@ const delete_user = require("./api/delete_user");
 const delete_school = require("./api/delete_school");
 const delete_book_from_school = require("./api/delete_book_from_school");
 const delete_review = require("./api/delete_review");
+const delete_rent = require("./api/delete_rent");
+const delete_reservation = require("./api/delete_reservation");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -123,6 +125,8 @@ app.use("/delete_user/:userid", delete_user);
 app.use("/delete_school/:schoolid", delete_school);
 app.use("/delete_book_from_school/:schoolid/:isbn", delete_book_from_school);
 app.use("/delete_review/:reviewid", delete_review);
+app.use("/delete_rent/:rentid", delete_rent);
+app.use("/delete_reservation/:reservationid", delete_reservation);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
