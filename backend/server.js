@@ -50,6 +50,7 @@ const { deleteData: deleteBookFromSchool } = require('./api/delete_book_from_sch
 const { deleteData: deleteReview } = require('./api/delete_review');
 const { deleteData: deleteRent } = require('./api/delete_rent');
 const { deleteData: deleteReservation } = require('./api/delete_reservation');
+const { deleteData: deleteBook } = require('./api/delete_book');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -578,6 +579,19 @@ app.get('/delete_school/:schoolid', (req, res) => {
       return;
     }
     res.status(200).send('School deleted successfully');
+  });
+});
+
+// Define a route handler to delete book
+app.get('/delete_book/:isbn', (req, res) => {
+  const { isbn} = req.params; // Get the user data from the request body
+  deleteBook(isbn, (err, result) => {
+    if (err) {
+      console.error('Error deleting book:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Book deleted successfully');
   });
 });
 
