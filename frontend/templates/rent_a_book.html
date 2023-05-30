@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: lightyellow;
+        }
+
+        #book-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .book-item {
+            padding: 10px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            position: relative;
+            background-color: rgba(56, 56, 56, 0.21);
+        }
+
+        .book-item h2 {
+            cursor: pointer;
+        }
+
+        .expand-button {
+            position: absolute;
+            top: 70%;
+            right: 10px;
+            transform: translateY(-50%);
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-color: gray;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-button.expanded {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .expand-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid white;
+        }
+
+
+        .book-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f55d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .back-button::before {
+            content: "Home";
+            transform: translateY(-50%) rotate(90deg);
+            margin-right: 5px;
+        }
+
+        /* Media queries */
+        @media (min-width: 400px) {
+            #book-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 600px) {
+            #book-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 800px) {
+            #book-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1000px) {
+            #book-list {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            #book-list {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .rent-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: green;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rent-button.max-rented {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <a>
+            Book list
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+    <div id="book-list"></div>
+
+    <script>
+        let rentedBooksCount = 0;
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
+                const rentsData = await response.json();
+                return rentsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchStuds() {
+            try {
+                const response = await fetch(`http://localhost:3305/allstudents`);
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            window.location.href = '/handlers';
+        });
+
+        (async () => {
+            const studentsData = await fetchStudents();
+            let schoolID;
+            let flag = false;
+
+            for (const studentsDataItem of studentsData) {
+                if (studentsDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = studentsDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+
+            if (!flag) {
+                alert("You shouldn't be here!");
+                window.location.href = '/';
+            }
+
+            const rents = await fetchRents();
+            for (const curr_rent of rents) {
+                if(curr_rent.approved === 0)
+                rentedBooksCount++;
+
+            }
+
+
+
+            const booksData = await fetchBooksData(schoolID);
+            const bookList = document.getElementById('book-list');
+
+            booksData.forEach((book) => {
+                // Create book item container
+                const bookItem = document.createElement('div');
+                bookItem.classList.add('book-item');
+
+                const rentButton = document.createElement('button');
+                rentButton.textContent = 'Rent';
+                rentButton.classList.add('rent-button');
+                rentButton.style.backgroundColor = 'green';
+                rentButton.addEventListener('click', () => {
+                    if (rentedBooksCount < 2) {
+                        rentBook(book);
+                    } else {
+                        alert("You have already rented 2 books. You can't rent more.");
+                    }
+                });
+
+                // Create book title with toggle functionality
+                const title = document.createElement('h2');
+                title.textContent = book.title;
+                bookItem.appendChild(title);
+
+                // Create expand button
+                const expandButton = document.createElement('span');
+                expandButton.classList.add('expand-button');
+                expandButton.textContent = '▼';
+                expandButton.addEventListener('click', () => {
+                    const details = bookItem.querySelector('.book-details');
+                    const isExpanded = details.style.display === 'block';
+                    details.style.display = isExpanded ? 'none' : 'block';
+                    expandButton.classList.toggle('expanded', !isExpanded);
+                });
+
+                // Create book details container
+                const detailsContainer = document.createElement('div');
+                detailsContainer.classList.add('book-details');
+
+                // Create book details
+                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                                              <b>ISBN:</b> ${book.isbn}<br>
+                                              <b>Publisher:</b> ${book.publisher}<br>
+                                              <b>Pages:</b> ${book.pages}<br>
+                                              <b>Summary:</b> ${book.summary}<br>
+                                              <b>Language:</b> ${book.book_language}<br>
+                                              <b>Keywords:</b> ${book.keywords}<br>
+                                              <b>Copies:</b> ${book.copys}<br>
+                                              <b>Available Copies:</b> ${book.available_copys}<br>
+                                              <b>Author:</b> ${book.authors}<br>
+                                              <b>Category:</b> ${book.categories}<br>`;
+
+                // Append expand button and details to the book item
+                bookItem.appendChild(expandButton);
+                bookItem.appendChild(detailsContainer);
+                bookItem.appendChild(rentButton);
+                // Append book item to the book list
+                bookList.appendChild(bookItem);
+            });
+        })();
+
+        async function rentBook(book) {
+            console.log('Renting book:', book);
+
+            const studs = await fetchStuds();
+            let schoolID;
+            for (const curr_user of studs) {
+                //console.log(curr_user.user_id, user.user_id);
+                if (curr_user.user_id === user.user_id) {
+                    //console.log(curr_user.school_id);
+                    schoolID = curr_user.school_id;
+                    break;
+                }
+
+            }
+            console.log(schoolID);
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const currentDate = `${year}-${month}-${day}`;
+
+            const rent_req = `http://localhost:3305/addrent/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
+
+            try {
+                const response = await fetch(rent_req);
+
+                if (response.ok) {
+                    console.log("Pending approval to rent the book!");
+                    alert("You just rented the book!\nPlease wait for the approval from a handler")
+                    
+                    if (rentedBooksCount >= 2) {
+                        rentButton.disabled = true;
+                        rentButton.textContent = 'Max Rented';
+                        rentButton.classList.add('max-rented');
+                    }
+
+                } else {
+                    console.log("could not rent the book!");
+                    alert("You cant rent this book!");
+                }
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>

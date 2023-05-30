@@ -70,16 +70,21 @@ def all_books_in_school_x():
 
 @app.route("/approve/students")
 def approve_students():
-    return render_template("/approvestudents.html", pageTitle="Approve Students")
+    return render_template("/approves/approvestudents.html", pageTitle="Approve Students")
 
 @app.route("/approve/teachers")
 def approve_teachers():
-    return render_template("/approveteachers.html", pageTitle="Approve Teachers")
+    return render_template("/approves/approveteachers.html", pageTitle="Approve Teachers")
 
 @app.route("/approve/handlers")
 def approve_handlers():
-    return render_template("/approvehandlers.html", pageTitle="Approve Handlers")
+    return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
 
 @app.route("/rents")
 def show_rents():
     return render_template("/rents.html", pageTitle="My rents")
+
+
+@app.route("/rent_a_book")
+def rent_a_book():
+    return render_template("/rent_a_book.html", pageTitle="My rents")
