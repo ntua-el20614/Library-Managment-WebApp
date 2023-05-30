@@ -84,6 +84,22 @@ h1 {
     background-color: #45a049;
 }
 
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#backButton:hover {
+    background-color: #aaa;
+} 
+
     </style>
 
 </head>
@@ -91,6 +107,9 @@ h1 {
     <h1>Pending Students</h1>
 
     <div class="user-container" id="userContainer"></div>
+    <a id="backButton" href="/handler">
+        <span>&#8617;</span>
+    </a> 
 
     <script action="http://localhost:3305/update_approves/1/{user_id}" method="GET">        
         
@@ -98,6 +117,11 @@ h1 {
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
+
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            window.location.href = '/handlers';
+        });
 
         async function fetchHandlers() {
             try {

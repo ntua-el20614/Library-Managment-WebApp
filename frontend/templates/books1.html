@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>books</title>
     <meta charset="UTF-8">
@@ -58,7 +59,7 @@
             border-right: 5px solid transparent;
             border-top: 7px solid white;
         }
-         
+
 
         .book-details {
             display: none;
@@ -88,6 +89,7 @@
             transform: translateY(-50%) rotate(90deg);
             margin-right: 5px;
         }
+
         /* Media queries */
         @media (min-width: 400px) {
             #book-list {
@@ -106,30 +108,52 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
+
         @media (min-width: 1000px) {
             #book-list {
                 grid-template-columns: repeat(5, 1fr);
             }
         }
+
         @media (min-width: 1200px) {
             #book-list {
                 grid-template-columns: repeat(6, 1fr);
             }
         }
+
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
     </style>
 </head>
+
 <body>
     <h1>
-      <a >
-          Book list
-      </a>
-      <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
-          <button type="button" class="back-button"></button>
-      </a>
-  </h1>
-  <div id="book-list"></div>
+        <a>
+            Book list
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+    <div id="book-list"></div>
 
-    <script> 
+    <script>
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
@@ -156,6 +180,14 @@
                 return null;
             }
         }
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            window.location.href = '/handlers';
+        });
 
         (async () => {
             const studentsData = await fetchStudents();
@@ -231,4 +263,5 @@
         })();
     </script>
 </body>
+
 </html>
