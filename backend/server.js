@@ -40,6 +40,7 @@ const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { updateData: updatePassword } = require('./api/updatepassword');
 const { updateData: updateApproves } = require('./api/update_approves');
+const { updateData: updateTeacher } = require('./api/update_teacher');
 
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -502,6 +503,19 @@ app.get('/update_approves/:approved/:userid', (req, res) => {
       return;
     }
     res.status(200).send('Approved status changed successfully');
+  });
+});
+
+// Define a route handler for teacher update
+app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) => {
+  const { userid, name, username, birthday, email} = req.params; // Get the user data from the request body
+  updateTeacher(userid,name, username, birthday, email, (err, result) => {
+    if (err) {
+      console.error('Error changing teacher data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Data changed successfully');
   });
 });
 
