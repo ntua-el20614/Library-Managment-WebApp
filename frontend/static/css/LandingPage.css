@@ -1,4 +1,10 @@
 
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgba(234, 234, 185, 0.848);
+  padding: 20px;
+}
+
 .container {
     display: flex;
     justify-content: space-around;

@@ -6,6 +6,8 @@
 </head>
 <body>
     <h1>My Profile</h1>
+    <button class="logout-button" onclick="logout()">Logout</button>
+
     <div class="profile">
         <div class="profile-item">
             <label>User Type:</label>
@@ -34,6 +36,11 @@
     </div>
 
     <script>
+        function logout() {
+          user=undefined;
+          localStorage.removeItem("user");
+          window.location.href = '/';
+        }
 
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);

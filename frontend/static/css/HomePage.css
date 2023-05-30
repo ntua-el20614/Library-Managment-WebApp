@@ -19,9 +19,7 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.profile-item {
-    margin-bottom: 10px;
-}
+
 
 .profile-item label {
     font-weight: bold;
@@ -33,7 +31,47 @@ h1 {
 .profile-item span {
     color: #333;
 }
+.edit-button {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+}
+.edit-button:hover {
+    color: #333;
+}
 
+.edit-icon {
+    margin-right: 5px;
+}
+ 
+.profile-item {
+    position: relative;
+    padding-right: 30px; /* To create space for the edit button */
+    margin-bottom: 10px; 
+
+}
+
+.red-circle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    border: solid 1.5px black;
+}
 
 .rectangle {
     width: 200px;
@@ -109,3 +147,14 @@ h1 {
     align-items: center;
     font-size: 12px;
 }
+
+.editable {
+    border: 1px solid #999;
+    background-color: #f9f9f9;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  #passcode {
+    display: none;
+  }

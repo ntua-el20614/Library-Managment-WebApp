@@ -92,7 +92,9 @@ h1 {
 
     <div class="user-container" id="userContainer"></div>
 
-    <script>
+    <script>        
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
         async function fetchUserData() {
             try {
                 const response = await fetch('http://localhost:3305/all_users');
@@ -101,6 +103,27 @@ h1 {
                 return userData;
             } catch (error) {
                 console.error('Error fetching users info:', error);
+                return null;
+            }
+        }
+        async function fetchStudents() {
+          try {
+            const response = await fetch('http://localhost:3305/allstudents');
+            const studentsData = await response.json();
+      
+            return studentsData;
+          } catch (error) {
+            console.error('Error fetching student info:', error);
+            return null;
+          }
+        }
+        async function fetchStuds() {
+            try {
+                const response = await fetch(`http://localhost:3305/allstudents_fromusers_school/${user.user_id}`);
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
                 return null;
             }
         }
@@ -113,62 +136,58 @@ h1 {
             // Code to approve the user with the given userId
         }
         (async () => {
-            const userData = await fetchUserData();
-
+            const userData = await fetchStuds();
             const userContainer = document.getElementById('userContainer');
 
             userData.forEach(user => {
 
                 if (user.approved === 0) {
-    const userContainer = document.getElementById('userContainer');
+                    const userContainer = document.getElementById('userContainer');
 
-    const userDiv = document.createElement('div');
-    userDiv.classList.add('user');
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
 
-    const name = document.createElement('h3');
-    name.textContent = user.username;
-    userDiv.appendChild(name);
+                    const name = document.createElement('h3');
+                    name.textContent = user.username;
+                    userDiv.appendChild(name);
 
-    const username = document.createElement('p');
-    username.textContent = 'Name - Surname: ' + user.user_name;
-    userDiv.appendChild(username);
+                     const username = document.createElement('p');
+                    username.textContent = 'Name - Surname: ' + user.user_name;
+                    userDiv.appendChild(username);
 
-    const birthday = document.createElement('p');
-    birthday.textContent = 'Birthday: ' + user.birthday;
-    userDiv.appendChild(birthday);
+                    const birthday = document.createElement('p');
+                    birthday.textContent = 'Birthday: ' + user.birthday;
+                    userDiv.appendChild(birthday);
 
-    const email = document.createElement('p');
-    email.textContent = 'Email: ' + user.email;
-    userDiv.appendChild(email);
+                    const email = document.createElement('p');
+                    email.textContent = 'Email: ' + user.email;
+                    userDiv.appendChild(email);
 
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.classList.add('buttons-container');
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.classList.add('buttons-container');
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('delete-button');
-    deleteButton.addEventListener('click', () => {
-        deleteUser(user.user_id);
-    });
-    buttonsContainer.appendChild(deleteButton);
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', () => {
+                    deleteUser(user.user_id);
+                });
+                buttonsContainer.appendChild(deleteButton);
 
-    const approveButton = document.createElement('button');
-    approveButton.textContent = 'Approve';
-    approveButton.classList.add('approve-button');
-    approveButton.addEventListener('click', () => {
-        approveUser(user.user_id);
-    });
-    buttonsContainer.appendChild(approveButton);
-
-    userDiv.appendChild(buttonsContainer);
-
-    userContainer.appendChild(userDiv);
-}
-
-
-
+                const approveButton = document.createElement('button');
+                approveButton.textContent = 'Approve';
+                approveButton.classList.add('approve-button');
+                approveButton.addEventListener('click', () => {
+                approveUser(user.user_id);
             });
-        })();
+            buttonsContainer.appendChild(approveButton);
+
+            userDiv.appendChild(buttonsContainer);
+
+            userContainer.appendChild(userDiv);
+        }
+    });
+})();
     </script>
 </body>
 </html>
