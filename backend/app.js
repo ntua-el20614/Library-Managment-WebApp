@@ -56,6 +56,7 @@ const delete_review = require("./api/delete_review");
 const delete_rent = require("./api/delete_rent");
 const delete_reservation = require("./api/delete_reservation");
 const delete_book = require("./api/delete_book");
+const delete_author = require("./api/delete_author");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -131,6 +132,7 @@ app.use("/delete_review/:reviewid", delete_review);
 app.use("/delete_rent/:rentid", delete_rent);
 app.use("/delete_reservation/:reservationid", delete_reservation);
 app.use("/delete_book/:isbn", delete_book);
+app.use("/delete_author/:authorid", delete_author);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
