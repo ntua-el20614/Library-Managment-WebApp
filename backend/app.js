@@ -26,6 +26,7 @@ const books_school_by_author = require("./api/books_school_by_author");
 const allstudents_fromusers_school = require("./api/allstudents_fromusers_school");
 const allteachers_fromusers_school = require("./api/allteachers_fromusers_school");
 const allhandlers_fromusers_school = require("./api/allhandlers_fromusers_school");
+////////////////////////////////////////////////////////////////
 const adduser = require("./api/adduser");
 const addteacher = require("./api/addteacher");
 const addstudent = require("./api/addstudent");
@@ -40,11 +41,14 @@ const addcategorytobook = require("./api/addcategorytobook");
 const addrent = require("./api/addrent");
 const addreservation = require("./api/addreservation");
 const addbooktoschool = require("./api/addbooktoschool");
+////////////////////////////////////////////////////////////////
 const updatepassword = require("./api/updatepassword");
 const update_approves = require("./api/update_approves");
 const update_teacher = require("./api/update_teacher");
 const update_copys = require("./api/update_copys");
 const updatebook = require("./api/updatebook");
+////////////////////////////////////////////////////////////////
+const delete_user = require("./api/delete_user");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -111,6 +115,8 @@ app.use("/update_approves/:approved/:userid", update_approves);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email", update_teacher);
 app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
 app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image", updatebook);
+////////////////////////////////////////////////////////////////
+app.use("/delete_user/:userid", delete_user);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
