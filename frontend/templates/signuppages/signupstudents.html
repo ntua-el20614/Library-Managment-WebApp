@@ -154,17 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log(user);
         const addStudent = `http://localhost:3305/addstudent/${user.user_id}/${users_school_id}`;
-        try {
-          const response = await fetch(addStudent);
+
+        const response = await fetch(addStudent);
           if (response.ok) {
             console.log("Added as a student");
           } else {
             console.log("Couldn't add you as a user");
           }
-        } catch (error) {
-          console.error('Error adding user:', error);
-          // Handle the error or show an error message to the user
-        }
+          
 
         setTimeout(() => {
           // Redirect to the home page

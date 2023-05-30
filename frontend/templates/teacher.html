@@ -65,6 +65,10 @@ async function fetchTeachers() {
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
+        
+        if(user === undefined || user === null) 
+            window.location.href = '/';
+
         (async () => {
           const teachersData = await fetchTeachers(); 
       

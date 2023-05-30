@@ -6,30 +6,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* CSS styles */
+        body {
+            background-color: lightyellow;
+        }
+
+        #book-list {
+            display: grid;
+            gap: 20px;
+        }
+
         .book-item {
-            margin-bottom: 20px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid gray;
             border-radius: 5px;
+            position: relative;
+            background-color: rgba(56, 56, 56, 0.21);
         }
 
         .book-item h2 {
             cursor: pointer;
         }
 
+        .expand-button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-color: gray;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-button.expanded {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .expand-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid white;
+        }
+         
+
         .book-details {
             display: none;
             margin-top: 10px;
             padding: 10px;
-            background-color: #f5f5f5;
+            background-color: #f5f5f55d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .back-button::before {
+            content: "Home";
+            transform: translateY(-50%) rotate(90deg);
+            margin-right: 5px;
+        }
+        /* Media queries */
+        @media (min-width: 400px) {
+            #book-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 600px) {
+            #book-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 800px) {
+            #book-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (min-width: 1000px) {
+            #book-list {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        @media (min-width: 1200px) {
+            #book-list {
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Book List</h1>
-    <div id="book-list"></div>
+    <h1>
+      <a >
+          Book list
+      </a>
+      <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+          <button type="button" class="back-button"></button>
+      </a>
+  </h1>
+  <div id="book-list"></div>
 
-    <script>
+    <script> 
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
@@ -91,30 +191,36 @@
                 // Create book title with toggle functionality
                 const title = document.createElement('h2');
                 title.textContent = book.title;
-                title.addEventListener('click', () => {
+                bookItem.appendChild(title);
+
+                // Create expand button
+                const expandButton = document.createElement('span');
+                expandButton.classList.add('expand-button');
+                expandButton.textContent = '▼';
+                expandButton.addEventListener('click', () => {
                     const details = bookItem.querySelector('.book-details');
-                    details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                    const isExpanded = details.style.display === 'block';
+                    details.style.display = isExpanded ? 'none' : 'block';
+                    expandButton.classList.toggle('expanded', !isExpanded);
                 });
 
                 // Create book details container
                 const detailsContainer = document.createElement('div');
                 detailsContainer.classList.add('book-details');
 
-                // Add book details
-                detailsContainer.innerHTML = `<b>ISBN:</b> ${book.isbn}<br>
-                                              <b>Title:</b> ${book.title}<br>
+                // Create book details
+                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                                              <b>ISBN:</b> ${book.isbn}<br>
                                               <b>Publisher:</b> ${book.publisher}<br>
                                               <b>Pages:</b> ${book.pages}<br>
                                               <b>Summary:</b> ${book.summary}<br>
                                               <b>Language:</b> ${book.book_language}<br>
                                               <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>School ID:</b> ${book.school_id}<br>
                                               <b>Copies:</b> ${book.copys}<br>
-                                              <b>Available Copies:</b> ${book.available_copys}<br>
-                                              <b>School Name:</b> ${book.school_name}<br>`;
+                                              <b>Available Copies:</b> ${book.available_copys}<br>`;
 
-                // Append title and details to the book item
-                bookItem.appendChild(title);
+                // Append expand button and details to the book item
+                bookItem.appendChild(expandButton);
                 bookItem.appendChild(detailsContainer);
 
                 // Append book item to the book list

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pending Users</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(234, 234, 185, 0.848);
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.user-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.user {
+    width: 300px;
+    height: 200px;
+    background-color: rgba(211, 211, 211, 0.595);
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    position: relative;
+}
+
+.user h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.user p {
+    margin: 5px 0;
+}
+.buttons-container {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.delete-button {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.approve-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.delete-button:hover {
+    background-color: #ff4242;
+}
+
+.approve-button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+
+</head>
+<body>
+    <h1>Pending Users</h1>
+
+    <div class="user-container" id="userContainer"></div>
+
+    <script>
+        async function fetchUserData() {
+            try {
+                const response = await fetch('http://localhost:3305/all_users');
+                const userData = await response.json();
+        
+                return userData;
+            } catch (error) {
+                console.error('Error fetching users info:', error);
+                return null;
+            }
+        }
+
+        function deleteUser(userId) {
+            // Code to delete the user with the given userId
+        }
+
+        function approveUser(userId) {
+            // Code to approve the user with the given userId
+        }
+        (async () => {
+            const userData = await fetchUserData();
+
+            const userContainer = document.getElementById('userContainer');
+
+            userData.forEach(user => {
+
+                if (user.approved === 0) {
+    const userContainer = document.getElementById('userContainer');
+
+    const userDiv = document.createElement('div');
+    userDiv.classList.add('user');
+
+    const name = document.createElement('h3');
+    name.textContent = user.username;
+    userDiv.appendChild(name);
+
+    const username = document.createElement('p');
+    username.textContent = 'Name - Surname: ' + user.user_name;
+    userDiv.appendChild(username);
+
+    const birthday = document.createElement('p');
+    birthday.textContent = 'Birthday: ' + user.birthday;
+    userDiv.appendChild(birthday);
+
+    const email = document.createElement('p');
+    email.textContent = 'Email: ' + user.email;
+    userDiv.appendChild(email);
+
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.classList.add('buttons-container');
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete-button');
+    deleteButton.addEventListener('click', () => {
+        deleteUser(user.user_id);
+    });
+    buttonsContainer.appendChild(deleteButton);
+
+    const approveButton = document.createElement('button');
+    approveButton.textContent = 'Approve';
+    approveButton.classList.add('approve-button');
+    approveButton.addEventListener('click', () => {
+        approveUser(user.user_id);
+    });
+    buttonsContainer.appendChild(approveButton);
+
+    userDiv.appendChild(buttonsContainer);
+
+    userContainer.appendChild(userDiv);
+}
+
+
+
+            });
+        })();
+    </script>
+</body>
+</html>

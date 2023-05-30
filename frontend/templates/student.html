@@ -6,6 +6,8 @@
 </head>
 <body>
     <h1>My Profile</h1>
+    <button class="logout-button" onclick="logout()">Logout</button>
+
     <div class="profile">
       <div class="profile-item">
           <label>User Type:</label>
@@ -46,17 +48,17 @@
     
         <div class="rectangle">
             <button class="rectangle-button">Review</button>
-            <p class="rectangle-content">Review of a book thats in my school's library</p>
+            <p class="rectangle-content">Review of a book</p>
         </div>
 
         <div class="rectangle">
           <button class="rectangle-button">Rent</button>
-          <p class="rectangle-content">Rent a book from my school's library</p>
+          <p class="rectangle-content">Rent a book</p>
       </div>
   
       <div class="rectangle">
         <button class="rectangle-button">Reserve</button>
-        <p class="rectangle-content">Reserve a book from my school's library</p>
+        <p class="rectangle-content">Reserve a book</p>
       </div>
 
     <script>
@@ -82,6 +84,11 @@
             return null;
           }
         }
+        function logout() {
+          user=undefined;
+          localStorage.removeItem("user");
+          window.location.href = '/';
+        }
        
       
         let user = JSON.parse(localStorage.getItem("user"));
@@ -91,6 +98,10 @@
           const studentsData = await fetchStudents(); 
       
           let flag = false;
+
+          if(user === undefined || user === null) 
+            window.location.href = '/';
+
           for (const studentsDataItem of studentsData) {
             if (studentsDataItem.user_id === user.user_id) { 
       

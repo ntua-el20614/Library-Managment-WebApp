@@ -38,6 +38,10 @@
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
+        
+        if(user === undefined || user === null) 
+            window.location.href = '/';
+
         (async () => { 
 
             if(user.username === 'Mastoras' && user.passcode === 'password'){ 

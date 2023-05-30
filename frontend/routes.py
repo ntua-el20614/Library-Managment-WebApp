@@ -64,3 +64,10 @@ def page_for_mastoras():
 def all_books_in_school_x():
     return render_template("/books1.html", pageTitle="Library's books")
 
+
+
+
+
+@app.route("/approve/students")
+def approve_students():
+    return render_template("/approvestudents.html", pageTitle="Approve Students")

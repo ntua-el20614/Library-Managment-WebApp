@@ -3,9 +3,27 @@
 <head>
     <title>Home</title>
     <link rel="stylesheet" href="/static/css/HomePage.css">
+    <style>
+        .red-circle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
     <h1>My Profile</h1>
+    <button class="logout-button" onclick="logout()">Logout</button>
+
     <div class="profile">
         <div class="profile-item">
             <label>User Type:</label>
@@ -37,74 +55,101 @@
         </div>
     </div>
 
+    <div class="rectangle-container">
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/approve/students';">Show</button>
+            <p class="rectangle-content">Approve Students</p>
+            <div id="notApprovedCount" class="red-circle"></div>
+        </div>
+        <!-- Other rectangles -->
+    </div>
+
     <script>
+        async function fetchUserData() {
+            try {
+                const response = await fetch('http://localhost:3305/all_users');
+                const userData = await response.json();
+                return userData;
+            } catch (error) {
+                console.error('Error fetching users info:', error);
+                return null;
+            }
+        }
+
         async function fetchSchoolsData() {
-          try {
-            const response = await fetch('http://localhost:3305/all_schools');
-            const userSchool = await response.json();
-  
-            return userSchool;
-          } catch (error) {
-            console.error('Error fetching schools info:', error);
-            return null;
-          }
+            try {
+                const response = await fetch('http://localhost:3305/all_schools');
+                const userSchool = await response.json();
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching schools info:', error);
+                return null;
+            }
         }
 
         async function fetchHandlers() {
-          try {
-            const response = await fetch('http://localhost:3305/allhandlers');
-            const handlersData = await response.json();
-      
-            return handlersData;
-          } catch (error) {
-            console.error('Error fetching handlers info:', error);
-            return null;
-          }
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
         }
-       
-      
+        function logout() {
+          user=undefined;
+          localStorage.removeItem("user");
+          window.location.href = '/';
+        }
+
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
-      
-        (async () => {
-          const handlersData = await fetchHandlers(); 
-      
-          let flag = false;
-          for (const handlersDataItem of handlersData) {
-            if (handlersDataItem.user_id === user.user_id) { 
-      
-              if (user.approved === 1) {
-                flag = true;
-                schoolID = handlersDataItem.school_id;
-                console.log('You are allowed to stay here!');
-              } else {
-                alert("You are not approved yet");
-                window.location.href = '/';
-              }
-            }
-          }
-          if (!flag) {
-            alert('You are not a Handler!');
+
+        if (user === undefined || user === null)
             window.location.href = '/';
-          }
-          const schoolsData = await fetchSchoolsData();
-          let schoolsname;
-          for (const schoolsDataItem of schoolsData){
-            if (schoolsDataItem.school_id === schoolID) {
-              schoolsname = schoolsDataItem.school_name;
+
+        (async () => {
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
             }
 
-          }
-      
-          document.getElementById("userType").textContent = "Handler";
-          document.getElementById("school").textContent = schoolsname;
-          document.getElementById("user-id").textContent = user.user_id;
-          document.getElementById("username").textContent = user.username;
-          document.getElementById("user-name").textContent = user.user_name;
-          document.getElementById("email").textContent = user.email;
-          document.getElementById("birthday").textContent = user.birthday;
+            const userData = await fetchUserData();
+            const notApprovedUsers = userData.filter(user => user.approved === 0);
+            const notApprovedCount = notApprovedUsers.length;
+
+            const schoolsData = await fetchSchoolsData();
+            let schoolsname;
+            for (const schoolsDataItem of schoolsData) {
+                if (schoolsDataItem.school_id === schoolID) {
+                    schoolsname = schoolsDataItem.school_name;
+                }
+            }
+
+            document.getElementById("userType").textContent = "Handler";
+            document.getElementById("school").textContent = schoolsname;
+            document.getElementById("user-id").textContent = user.user_id;
+            document.getElementById("username").textContent = user.username;
+            document.getElementById("user-name").textContent = user.user_name;
+            document.getElementById("email").textContent = user.email;
+            document.getElementById("birthday").textContent = user.birthday;
+            document.getElementById("notApprovedCount").textContent = notApprovedCount;
         })();
-      </script>
-      
+    </script>
 </body>
 </html>
