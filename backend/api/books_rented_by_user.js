@@ -12,7 +12,7 @@ const fetchData = (userid, callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT b.isbn, b.title ' +
+    const query = 'SELECT * ' +
     'FROM rent AS r ' +
     'JOIN book_school AS bs ON r.isbn = bs.isbn AND r.school_id = bs.school_id ' +
     'JOIN book AS b ON bs.isbn = b.isbn ' +
