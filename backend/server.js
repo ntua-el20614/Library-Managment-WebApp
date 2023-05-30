@@ -22,6 +22,7 @@ const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_use
 const { fetchData: fetchStudentFromUserSchool } = require('./api/allstudents_fromusers_school');
 const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fromusers_school');
 const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
+const { fetchData: fetchUsersSchool } = require('./api/users_school');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -290,6 +291,21 @@ app.get('/books_rented_by_user/:id', (req, res) => {
   fetchBooksRentedByUser(userid, (err, results) => {
     if (err) {
       console.error('Error fetching Book data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for users school
+app.get('/users_school/:userid', (req, res) => {
+  const userid = req.params.userid; // Get the school ID from the request parameters
+
+  fetchUsersSchool(userid, (err, results) => {
+    if (err) {
+      console.error('Error fetching Users data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
