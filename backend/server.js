@@ -45,6 +45,7 @@ const { updateData: updateCopys } = require('./api/update_copys');
 const { updateData: updateBook } = require('./api/updatebook');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { deleteData: deleteUser } = require('./api/delete_user');
+const { deleteData: deleteSchool } = require('./api/delete_school');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -560,6 +561,19 @@ app.get('/delete_user/:userid', (req, res) => {
       return;
     }
     res.status(200).send('User deleted successfully');
+  });
+});
+
+// Define a route handler to delete school
+app.get('/delete_school/:schoolid', (req, res) => {
+  const { schoolid} = req.params; // Get the user data from the request body
+  deleteSchool(schoolid, (err, result) => {
+    if (err) {
+      console.error('Error deleting school:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('School deleted successfully');
   });
 });
 
