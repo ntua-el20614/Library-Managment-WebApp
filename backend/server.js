@@ -41,6 +41,8 @@ const { addData: addBookToSchool } = require('./api/addbooktoschool');
 const { updateData: updatePassword } = require('./api/updatepassword');
 const { updateData: updateApproves } = require('./api/update_approves');
 const { updateData: updateTeacher } = require('./api/update_teacher');
+const { updateData: updateBook } = require('./api/updatebook');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -516,6 +518,19 @@ app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) =
       return;
     }
     res.status(200).send('Data changed successfully');
+  });
+});
+
+// Define a route handler for book update
+app.get('/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image', (req, res) => {
+  const { isbn, title, publisher, page, summary, language, keywords, image} = req.params; // Get the user data from the request body
+  updateBook(isbn, title, publisher, page, summary, language, keywords, image, (err, result) => {
+    if (err) {
+      console.error('Error changing book data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Book changed successfully');
   });
 });
 
