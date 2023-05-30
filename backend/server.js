@@ -497,11 +497,11 @@ app.get('/update_approves/:approved/:userid', (req, res) => {
   const { approved, userid} = req.params; // Get the user data from the request body
   updateApproves(approved, userid, (err, result) => {
     if (err) {
-      console.error('Error changing approved:', err);
+      console.error('Error changing approved status:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
-    res.status(200).send('Approved status successfully');
+    res.status(200).send('Approved status changed successfully');
   });
 });
 
