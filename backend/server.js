@@ -471,9 +471,9 @@ app.get('/addreservation/:user_id/:isbn/:school_id/:date_of_reservation', (req, 
 });
 
 // Define a route handler for adding a book to school
-app.get('/addbooktoschool/:isbn/:school_id/:copys/:available_copys', (req, res) => {
-  const { isbn, school_id, copys, available_copys} = req.params; // Get the user data from the request body
-  addBookToSchool(isbn, school_id, copys, available_copys, (err, result) => {
+app.get('/addbooktoschool/:isbn/:school_id/:copys', (req, res) => {
+  const { isbn, school_id, copys} = req.params; // Get the user data from the request body
+  addBookToSchool(isbn, school_id, copys, (err, result) => {
     if (err) {
       console.error('Error adding book to school:', err);
       res.status(500).send('Internal Server Error');
