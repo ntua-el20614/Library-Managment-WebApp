@@ -40,6 +40,7 @@ const addcategorytobook = require("./api/addcategorytobook");
 const addrent = require("./api/addrent");
 const addreservation = require("./api/addreservation");
 const addbooktoschool = require("./api/addbooktoschool");
+const updatepassword = require("./api/updatepassword");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -100,6 +101,8 @@ app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);
 app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addreservation);
 app.use("/addbooktoschool/:isbn/:school_id/:copys/:available_copys", addbooktoschool);
+////////////////////////////////////////////////////////////////
+app.use("/updatepassword/:password/:userid", updatepassword);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 

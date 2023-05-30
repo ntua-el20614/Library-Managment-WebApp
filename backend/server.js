@@ -38,6 +38,7 @@ const { addData: addRent } = require('./api/addrent');
 const { addData: addReservation } = require('./api/addreservation');
 const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const { updateData: updatePassword } = require('./api/updatepassword');
 
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -474,6 +475,19 @@ app.get('/addbooktoschool/:isbn/:school_id/:copys/:available_copys', (req, res) 
       return;
     }
     res.status(200).send('Book added to school successfully');
+  });
+});
+
+// Define a route handler for password update
+app.get('/updatepassword/:password/:userid', (req, res) => {
+  const { password, userid} = req.params; // Get the user data from the request body
+  updatePassword(password, userid, (err, result) => {
+    if (err) {
+      console.error('Error changing password:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Password changed successfully');
   });
 });
 
