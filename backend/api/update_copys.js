@@ -1,7 +1,7 @@
 const pool = require('../dbconnector');
 
 // Function to add a user to the database
-const addData = (isbn, school_id, copys, callback) => {
+const updateData = (schoolid, isbn, copys, callback) => {
   // Get a connection from the pool
   pool.getConnection((err, connection) => {
     if (err) {
@@ -10,9 +10,18 @@ const addData = (isbn, school_id, copys, callback) => {
       return;
     }
 
-    // Execute a SQL query to add a user 
-    const query = 'INSERT INTO book_school (isbn, school_id, copys, available_copys) VALUES (?, ?,' + copys +', ' + copys + ')';
-    const values = [isbn, school_id, copys];
+    // Execute a SQL query to update users password
+    const query = 
+    'UPDATE book_school ' +
+    'SET available_copys = available_copys  +  ( ' +
+        'SELECT (' + copys + ' - copys ) AS copy_difference ' +
+        'FROM book_school ' +
+        'WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid +
+    ' ) ' + ', ' +
+    ' copys = ' + copys + 
+    ' WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid;
+    
+    const values = [schoolid, isbn, copys];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool
       connection.release();
@@ -29,4 +38,4 @@ const addData = (isbn, school_id, copys, callback) => {
   });
 };
 
-module.exports = { addData };
+module.exports = { updateData };

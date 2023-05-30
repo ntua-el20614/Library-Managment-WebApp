@@ -41,6 +41,7 @@ const { addData: addBookToSchool } = require('./api/addbooktoschool');
 const { updateData: updatePassword } = require('./api/updatepassword');
 const { updateData: updateApproves } = require('./api/update_approves');
 const { updateData: updateTeacher } = require('./api/update_teacher');
+const { updateData: updateCopys } = require('./api/update_copys');
 const { updateData: updateBook } = require('./api/updatebook');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -470,9 +471,9 @@ app.get('/addreservation/:user_id/:isbn/:school_id/:date_of_reservation', (req, 
 });
 
 // Define a route handler for adding a book to school
-app.get('/addbooktoschool/:isbn/:school_id/:copys/:available_copys', (req, res) => {
-  const { isbn, school_id, copys, available_copys} = req.params; // Get the user data from the request body
-  addBookToSchool(isbn, school_id, copys, available_copys, (err, result) => {
+app.get('/addbooktoschool/:isbn/:school_id/:copys', (req, res) => {
+  const { isbn, school_id, copys} = req.params; // Get the user data from the request body
+  addBookToSchool(isbn, school_id, copys, (err, result) => {
     if (err) {
       console.error('Error adding book to school:', err);
       res.status(500).send('Internal Server Error');
@@ -492,6 +493,19 @@ app.get('/updatepassword/:password/:userid', (req, res) => {
       return;
     }
     res.status(200).send('Password changed successfully');
+  });
+});
+
+// Define a route handler for copys update
+app.get('/update_copys/:schoolid/:isbn/:copys', (req, res) => {
+  const { schoolid, isbn, copys} = req.params; // Get the user data from the request body
+  updateCopys(schoolid, isbn, copys, (err, result) => {
+    if (err) {
+      console.error('Error changing copys:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Copys changed successfully');
   });
 });
 

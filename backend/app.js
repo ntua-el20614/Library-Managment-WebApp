@@ -43,6 +43,7 @@ const addbooktoschool = require("./api/addbooktoschool");
 const updatepassword = require("./api/updatepassword");
 const update_approves = require("./api/update_approves");
 const update_teacher = require("./api/update_teacher");
+const update_copys = require("./api/update_copys");
 const updatebook = require("./api/updatebook");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -103,11 +104,12 @@ app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
 app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);
 app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addreservation);
-app.use("/addbooktoschool/:isbn/:school_id/:copys/:available_copys", addbooktoschool);
+app.use("/addbooktoschool/:isbn/:school_id/:copys", addbooktoschool);
 ////////////////////////////////////////////////////////////////
 app.use("/updatepassword/:password/:userid", updatepassword);
 app.use("/update_approves/:approved/:userid", update_approves);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email", update_teacher);
+app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
 app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image", updatebook);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
