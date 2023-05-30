@@ -51,6 +51,7 @@ const updatebook = require("./api/updatebook");
 const delete_user = require("./api/delete_user");
 const delete_school = require("./api/delete_school");
 const delete_book_from_school = require("./api/delete_book_from_school");
+const delete_review = require("./api/delete_review");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -121,6 +122,7 @@ app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/
 app.use("/delete_user/:userid", delete_user);
 app.use("/delete_school/:schoolid", delete_school);
 app.use("/delete_book_from_school/:schoolid/:isbn", delete_book_from_school);
+app.use("/delete_review/:reviewid", delete_review);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
