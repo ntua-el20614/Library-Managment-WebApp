@@ -44,6 +44,7 @@ const updatepassword = require("./api/updatepassword");
 const update_approves = require("./api/update_approves");
 const update_teacher = require("./api/update_teacher");
 const update_copys = require("./api/update_copys");
+const updatebook = require("./api/updatebook");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -109,6 +110,7 @@ app.use("/updatepassword/:password/:userid", updatepassword);
 app.use("/update_approves/:approved/:userid", update_approves);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email", update_teacher);
 app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
+app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image", updatebook);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
