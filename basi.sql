@@ -1,6 +1,5 @@
 DROP DATABASE IF EXISTS library_project;
-CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED WITH mySQL_native_password BY 'password';
-
+CREATE USER IF NOT EXISTS 'papamaster'@'localhost' IDENTIFIED BY 'password';
 CREATE DATABASE library_project;
 GRANT ALL PRIVILEGES ON library_project.* TO 'papamaster'@'localhost';
 
@@ -8,7 +7,7 @@ USE library_project;
  
  CREATE TABLE school(
 	school_id integer(4) NOT NULL auto_increment,
-    school_name varchar(50) NOT NULL,
+    school_name varchar(50) NOT NULL UNIQUE,
     address varchar(100) NOT NULL,
     city varchar(50) NOT NULL,
     telephone integer(15) NOT NULL,
@@ -19,7 +18,7 @@ USE library_project;
 
 CREATE TABLE author(
 	author_id integer(4) NOT NULL auto_increment,
-    author_name varchar(15) NOT NULL,
+    author_name varchar(50) NOT NULL,
     PRIMARY KEY (author_id)
 );
 
@@ -58,11 +57,14 @@ CREATE TABLE book_author(
 CREATE TABLE book_school(
 	isbn char(10) NOT NULL,
 	school_id integer(4) NOT NULL,
+    copys integer(3) NOT NULL,
+    available_copys integer(3) NOT NULL,
         CONSTRAINT school_info FOREIGN KEY (school_id)
         REFERENCES school(school_id) ON  DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT book_info2 FOREIGN KEY (isbn)
         REFERENCES book(isbn) ON  DELETE CASCADE ON UPDATE CASCADE,
-        primary key(isbn, school_id)
+        primary key(isbn, school_id),
+        CHECK (available_copys <= copys)
 );
 
 CREATE TABLE book_category (
@@ -78,12 +80,13 @@ CREATE TABLE book_category (
 
 CREATE TABLE users(
 	user_id integer(4) NOT NULL auto_increment,
-    username varchar(20) NOT NULL,
+    username varchar(20) NOT NULL UNIQUE,
     passcode varchar(20) NOT NULL,
     user_name varchar(50) NOT NULL,
     birthday date NOT NULL,
     email varchar(50) NOT NULL,
-    approved boolean NOT NULL,
+    
+    approved boolean NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id)
 );
 
@@ -130,8 +133,8 @@ CREATE TABLE rent(
     isbn char(10) NOT NULL,
     school_id integer(4) NOT NULL,
     date_of_rent timestamp NOT NULL,
-    returned boolean NOT NULL,
-    approved boolean NOT NULL,
+    returned boolean NOT NULL DEFAULT 0,
+    approved boolean NOT NULL DEFAULT 0,
 		CONSTRAINT rent_by_user FOREIGN KEY (user_id)
         REFERENCES users(user_id) ON  DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT rented_book FOREIGN KEY (isbn,school_id)
@@ -145,7 +148,7 @@ CREATE TABLE reservation(
     isbn char(10) NOT NULL,
     school_id integer(4) NOT NULL,
     date_of_reservation timestamp NOT NULL,
-    approved boolean NOT NULL,
+    approved boolean NOT NULL DEFAULT 0,
 		CONSTRAINT reserved_by_user FOREIGN KEY (user_id)
         REFERENCES users(user_id) ON  DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT reserved_book FOREIGN KEY (isbn,school_id)
@@ -160,7 +163,7 @@ CREATE TABLE review(
     school_id integer(4) NOT NULL,
     likert integer(1) NOT NULL,
 	comments varchar(255),
-    approved boolean NOT NULL,
+    approved boolean NOT NULL DEFAULT 0,
 		CONSTRAINT user_who_reviewed FOREIGN KEY (user_id)
         REFERENCES users(user_id) ON  DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT book_reviewed FOREIGN KEY (isbn,school_id)
