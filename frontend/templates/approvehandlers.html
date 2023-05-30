@@ -84,6 +84,7 @@ h1 {
     background-color: #45a049;
 }
 
+
 #backButton {
     position: fixed;
     top: 20px;
@@ -104,24 +105,23 @@ h1 {
 
 </head>
 <body>
-    <h1>Pending Students</h1>
+    <h1>Pending Handlers</h1>
 
     <div class="user-container" id="userContainer"></div>
-    <a id="backButton" href="/handler">
+    <a id="backButton" href="/mastoras">
         <span>&#8617;</span>
     </a> 
 
     <script action="http://localhost:3305/update_approves/1/{user_id}" method="GET">        
         
         
-        let user = JSON.parse(localStorage.getItem("user"));
-        console.log(user);
-
-
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             window.location.href = '/handlers';
         });
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
 
         async function fetchHandlers() {
             try {
@@ -155,21 +155,10 @@ h1 {
                 console.error('Error fetching users info:', error);
                 return null;
             }
-        }
-        async function fetchTeachers() {
-          try {
-            const response = await fetch('http://localhost:3305/allteachers');
-            const teachersData = await response.json();
-      
-            return teachersData;
-          } catch (error) {
-            console.error('Error fetching teachers info:', error);
-            return null;
-          }
-        }
-        async function fetchStuds() {
+        }  
+        async function fetchHandlrs() {
             try {
-                const response = await fetch(`http://localhost:3305/allteachers_fromusers_school/${user.user_id}`);
+                const response = await fetch(`http://localhost:3305/allhandlers_fromusers_school/${user.user_id}`);
                 const handlersData = await response.json();
                 return handlersData;
             } catch (error) {
@@ -182,30 +171,25 @@ h1 {
 
 
             
-            const handlersData = await fetchHandlers();
-            let flag = false;
-            for (const handlersDataItem of handlersData) {
-                if (handlersDataItem.user_id === user.user_id) {
-                    if (user.approved === 1) {
-                        flag = true;
-                        schoolID = handlersDataItem.school_id;
-                        console.log('You are allowed to stay here!');
-                    } else {
-                        alert("You are not approved yet");
-                        window.location.href = '/';
-                    }
+                 if (user.passcode === "password" && user.user_name === "Mastoras") {
+                         console.log('You are allowed to stay here!');
+                    
                 }
-            }
+            
             if (!flag) {
-                alert('You are not a Handler!');
+                alert('You are not Mastoras!');
                 window.location.href = '/';
             }
 
 
-            const userData = await fetchStuds();
+            const userData = await fetchHandlrs();
             const userContainer = document.getElementById('userContainer');
 
             userData.forEach(user => {
+
+
+                const schoolData = await ();
+
 
                 if (user.approved === 0) {
                     const userContainer = document.getElementById('userContainer');
@@ -254,17 +238,17 @@ h1 {
         }
         async function approveUser(userId) {
             console.log(userId);
-            const approveStudent = `http://localhost:3305/update_approves/1/${userId}`;
+            const approveHandler = `http://localhost:3305/update_approves/1/${userId}`;
 
         try {
-            const response = await fetch(approveStudent);
+            const response = await fetch(approveHandler);
 
         if (response.ok) {
-            console.log("student approved!");
+            console.log("Handler approved!");
             location.reload();
 
         } else {
-            console.log("could not approve student!");
+            console.log("could not approve Handler!");
         }
         } catch (error) {
         console.log("An error occurred:", error);

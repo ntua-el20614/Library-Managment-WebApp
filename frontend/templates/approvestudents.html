@@ -83,7 +83,21 @@ h1 {
 .approve-button:hover {
     background-color: #45a049;
 }
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
 
+#backButton:hover {
+    background-color: #aaa;
+} 
     </style>
 
 </head>
@@ -91,24 +105,30 @@ h1 {
     <h1>Pending Students</h1>
 
     <div class="user-container" id="userContainer"></div>
-
-    <script action="http://localhost:3305/update_approves/1/{user_id}" method="GET">        
-        
+    <a id="backButton" href="/handler">
+        <span>&#8617;</span>
+    </a> 
+    <script type="module" action="http://localhost:3305/update_approves/1/{user_id}" method="GET">        
+         
         
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            window.location.href = '/handlers';
+        });
 
         async function fetchHandlers() {
-            try {
-                const response = await fetch('http://localhost:3305/allhandlers');
-                const handlersData = await response.json();
-                return handlersData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
-                return null;
-            }
-        }
+    try {
+        const response = await fetch('http://localhost:3305/allhandlers');
+        const handlersData = await response.json();
+        return handlersData;
+    } catch (error) {
+        console.error('Error fetching handlers info:', error);
+        return null;
+    }
+}  
         
         async function fetchSchoolsData() {
             try {
@@ -164,7 +184,7 @@ h1 {
                 if (handlersDataItem.user_id === user.user_id) {
                     if (user.approved === 1) {
                         flag = true;
-                        schoolID = handlersDataItem.school_id;
+                        let schoolID = handlersDataItem.school_id;
                         console.log('You are allowed to stay here!');
                     } else {
                         alert("You are not approved yet");
