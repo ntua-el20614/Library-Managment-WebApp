@@ -71,3 +71,7 @@ def all_books_in_school_x():
 @app.route("/approve/students")
 def approve_students():
     return render_template("/approvestudents.html", pageTitle="Approve Students")
+
+@app.route("/approve/teachers")
+def approve_teachers():
+    return render_template("/approveteachers.html", pageTitle="Approve Teachers")

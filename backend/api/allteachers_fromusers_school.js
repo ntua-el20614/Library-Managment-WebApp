@@ -12,17 +12,17 @@ const fetchData = (userid, callback) => {
 
     // Execute a SQL query to fetch data
     const query = 
-      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email, u.approved ' +
       'FROM teacher s ' +
       'JOIN users u ON s.user_id = u.user_id ' +
       'WHERE s.school_id = (SELECT school_id FROM student WHERE user_id = ' + userid  + ') ' +
       'UNION ' +
-      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email, u.approved ' +
       'FROM teacher s ' +
       'JOIN users u ON s.user_id = u.user_id ' +
       'WHERE s.school_id = (SELECT school_id FROM teacher WHERE user_id = ' + userid + ') ' +
       'UNION ' +
-      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email ' +
+      'SELECT s.user_id, u.username, u.user_name, u.birthday, u.email, u.approved ' +
       'FROM teacher s ' +
       'JOIN users u ON s.user_id = u.user_id ' +
       'WHERE s.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ')';

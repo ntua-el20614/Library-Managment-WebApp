@@ -132,20 +132,20 @@ h1 {
                 return null;
             }
         }
-        async function fetchStudents() {
+        async function fetchTeachers() {
           try {
-            const response = await fetch('http://localhost:3305/allstudents');
-            const studentsData = await response.json();
+            const response = await fetch('http://localhost:3305/allteachers');
+            const teachersData = await response.json();
       
-            return studentsData;
+            return teachersData;
           } catch (error) {
-            console.error('Error fetching student info:', error);
+            console.error('Error fetching teachers info:', error);
             return null;
           }
         }
         async function fetchStuds() {
             try {
-                const response = await fetch(`http://localhost:3305/allstudents_fromusers_school/${user.user_id}`);
+                const response = await fetch(`http://localhost:3305/allteachers_fromusers_school/${user.user_id}`);
                 const handlersData = await response.json();
                 return handlersData;
             } catch (error) {
