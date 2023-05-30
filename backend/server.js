@@ -39,6 +39,7 @@ const { addData: addReservation } = require('./api/addreservation');
 const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { updateData: updatePassword } = require('./api/updatepassword');
+const { updateData: updateApproves } = require('./api/update_approves');
 
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
@@ -488,6 +489,19 @@ app.get('/updatepassword/:password/:userid', (req, res) => {
       return;
     }
     res.status(200).send('Password changed successfully');
+  });
+});
+
+// Define a route handler for approrves update
+app.get('/update_approves/:approved/:userid', (req, res) => {
+  const { approved, userid} = req.params; // Get the user data from the request body
+  updateApproves(approved, userid, (err, result) => {
+    if (err) {
+      console.error('Error changing approved:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Approved status successfully');
   });
 });
 

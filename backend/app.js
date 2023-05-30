@@ -41,6 +41,7 @@ const addrent = require("./api/addrent");
 const addreservation = require("./api/addreservation");
 const addbooktoschool = require("./api/addbooktoschool");
 const updatepassword = require("./api/updatepassword");
+const update_approves = require("./api/update_approves");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -103,6 +104,7 @@ app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addres
 app.use("/addbooktoschool/:isbn/:school_id/:copys/:available_copys", addbooktoschool);
 ////////////////////////////////////////////////////////////////
 app.use("/updatepassword/:password/:userid", updatepassword);
+app.use("/update_approves/:approved/:userid", update_approves);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
