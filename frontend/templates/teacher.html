@@ -195,13 +195,14 @@
           editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
           console.log("Now, user is:", user);
 
-          const changeTeacher = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.birthday}/${user.email}/${user.passcode}`;
+          const changeTeacher = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
           //app.use("/update_teacher/:userid/:name/:username/:birthday/:email/:password", update_teacher);
 
           try {
             const response = await fetch(changeTeacher);
+            
 
-            if (response.ok) {
+            if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday )) {
               console.log("Teacher information updated!");
               console.log(user);
               alert("Teacher information updated successfully!");
