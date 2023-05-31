@@ -66,13 +66,18 @@
     </div>
 
     <div class="rectangle">
-      <button class="rectangle-button">Reserve</button>
+      <button class="rectangle-button" onclick="window.location.href='/reserve_a_book';">Reserve</button>
       <p class="rectangle-content">Reserve a book</p>
     </div>
 
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/rents';">Show</button>
       <p class="rectangle-content">My Rents</p>
+    </div>
+
+    <div class="rectangle">
+      <button class="rectangle-button" onclick="window.location.href='/reservations';">Show</button>
+      <p class="rectangle-content">My Reservations</p>
     </div>
 
     <script action="http://localhost:3305/updatepassword/{password}/{user_id}" method="GET">

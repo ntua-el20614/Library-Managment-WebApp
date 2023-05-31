@@ -19,6 +19,7 @@ const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
 const { fetchData: fetchTopCategoryCombos } = require('./api/top_category_combos');
 const { fetchData: fetchAuthLessThanFive } = require('./api/authors_less_than_five');
 const { fetchData: fetchBooksRentedByUser } = require('./api/books_rented_by_user');
+const { fetchData: fetchBooksReservedByUser } = require('./api/books_reserved_by_user');
 const { fetchData: fetchStudentFromUserSchool } = require('./api/allstudents_fromusers_school');
 const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fromusers_school');
 const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
@@ -292,6 +293,22 @@ app.get('/books_rented_by_user/:id', (req, res) => {
   const userid = req.params.id; // Get the school ID from the request parameters
 
   fetchBooksRentedByUser(userid, (err, results) => {
+    if (err) {
+      console.error('Error fetching Book data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+
+// Define a route handler for /books reserved by user
+app.get('/books_reserved_by_user/:id', (req, res) => {
+  const userid = req.params.id; // Get the school ID from the request parameters
+
+  fetchBooksReservedByUser(userid, (err, results) => {
     if (err) {
       console.error('Error fetching Book data:', err);
       res.status(500).send('Internal Server Error');

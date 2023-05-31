@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>User Rents</title>
+    <title>My Rents</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,7 +58,7 @@
 </head>
 
 <body>
-    <h1>User Rents</h1>
+    <h1>My Rents</h1>
 
     <table class="rents-table">
         <thead>
@@ -70,6 +70,8 @@
                 <th>Publisher</th>
                 <th>Summary</th>
                 <th>Book Language</th>
+                <th>Approved</th>
+                <th>Returned</th>
             </tr>
         </thead>
         <tbody id="rents-table-body"></tbody>
@@ -86,7 +88,7 @@
         }
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
-            window.location.href = '/handlers';
+            window.location.href = '/student';
         });
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
@@ -126,6 +128,8 @@
             <td>${rent.publisher}</td>
             <td>${rent.summary}</td>
             <td>${rent.book_language}</td>
+            <td>${rent.approved === 1 ? 'Yes' : 'No'}</td>
+            <td>${rent.returned === 1 ? 'Yes' : 'No'}</td>
           </tr>
         `;
             });
