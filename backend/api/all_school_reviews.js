@@ -13,7 +13,7 @@ const fetchData = ([userid], callback) => {
 
         // Execute a SQL query to fetch data
         const query =
-            'SELECT r.isbn, r.comments, r.likert, b.title, r.approved ' +
+            'SELECT r.review_id, r.isbn, r.comments, r.likert, b.title, r.approved ' +
             'FROM review r ' +
             'JOIN book b ON r.isbn = b.isbn ' +
             'WHERE r.school_id = ( ' +
