@@ -26,6 +26,7 @@ const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fr
 const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
 const { fetchData: fetchUsersSchool } = require('./api/users_school');
 const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
+const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -229,6 +230,22 @@ app.get('/all_rents/:year/:month', (req, res) => {
   fetchRents([rent_year, rent_month], (err, results) => {
     if (err) {
       console.error('Error fetching Rent data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /all_rents
+app.get('/avg_likert/:userid/:categoryid', (req, res) => {
+  const userid = req.params.userid; // Get the year and month from the request parameters
+  const categoryid = req.params.categoryid;
+
+  fetchAvgLikert([userid, categoryid], (err, results) => {
+    if (err) {
+      console.error('Error fetching likert data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
