@@ -3,58 +3,7 @@
 
 <head>
     <title>My Rents</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: lightyellow;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .rents-table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 80%;
-        }
-
-        .rents-table th,
-        .rents-table td {
-            border: 1px solid #000000;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .rents-table th {
-            background-color: #333;
-            color: white;
-        }
-
-        .rents-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .rents-table tr:nth-child(odd) {
-            background-color: #e6e6e6;
-        }
-
-        #backButton {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #ccc;
-            color: #333;
-            padding: 10px;
-            border-radius: 50%;
-            font-size: 20px;
-            text-decoration: none;
-        }
-
-        #backButton:hover {
-            background-color: #aaa;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/Rlists.css">
 </head>
 
 <body>
@@ -81,6 +30,8 @@
     </a>
 
     <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
 
 
         function redirectToPreviousPage() {
@@ -90,8 +41,30 @@
         backButton.addEventListener('click', () => {
             window.location.href = '/student';
         });
-        let user = JSON.parse(localStorage.getItem("user"));
-        console.log(user);
+
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
         async function fetchRents() {
             try {
                 const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
@@ -117,6 +90,49 @@
                 return;
             }
 
+            async function checkifvalid() {
+                const studentsData = await fetchStudents();
+                const teachersData = await fetchTeachers();
+                let schoolID;
+                let found_teacher = false;
+                let found_student = false;
+
+                for (const studentsDataItem of studentsData) {
+                    if (studentsDataItem.user_id === user.user_id) {
+                        if (user.approved === 1) {
+                            flag = true;
+                            schoolID = studentsDataItem.school_id;
+                            found_student = true;
+                            console.log('You are allowed to stay here!');
+                        } else {
+                            alert("You are not approved yet");
+                            window.location.href = '/';
+
+                        }
+                    }
+                }
+
+                for (const teachersDataItem of teachersData) {
+                    if (teachersDataItem.user_id === user.user_id) {
+                        if (user.approved === 1) {
+                            schoolID = studentsDataItem.school_id;
+                            found_teacher = true;
+                            console.log('You are allowed to stay here!');
+                        } else {
+                            alert("You are not approved yet");
+                            window.location.href = '/';
+
+                        }
+                    }
+                }
+
+
+                if (!found_student && !found_teacher) {
+                    alert("You shouldn't be here!");
+                    window.location.href = '/';
+                }
+            }
+            checkifvalid();
             let tableHTML = '';
             rents.forEach(rent => {
                 tableHTML += `

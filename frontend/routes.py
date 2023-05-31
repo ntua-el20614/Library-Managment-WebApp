@@ -60,12 +60,6 @@ def page_for_handler():
 def page_for_mastoras():
     return render_template("/mastoras.html", pageTitle="Home Page")
 
-@app.route("/student/books")
-def all_books_in_school_x():
-    return render_template("/books1.html", pageTitle="Library's books")
-
-
-
 
 
 @app.route("/approve/students")
@@ -80,6 +74,17 @@ def approve_teachers():
 def approve_handlers():
     return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
 
+
+
+
+
+
+
+
+
+
+#Users moves
+####################################################################################~
 @app.route("/rents")
 def show_rents():
     return render_template("/rent/rents.html", pageTitle="My rents")
@@ -88,13 +93,22 @@ def show_rents():
 def show_reservations():
     return render_template("/reserve/reservations.html", pageTitle="My rents")
 
-@app.route("/rent_a_book")
+@app.route("/student/rent_a_book")
 def rent_a_book():
     return render_template("/rent/rent_a_book1.html", pageTitle="My rents")
 
-@app.route("/reserve_a_book")
+@app.route("/student/reserve_a_book")
 def reserve_a_book():
     return render_template("/reserve/reserve_a_book1.html", pageTitle="My rents")
+
+@app.route("/teacher/rent_a_book")
+def rent_a_book():
+    return render_template("/rent/rent_a_book2.html", pageTitle="My rents")
+
+@app.route("/teacher/reserve_a_book")
+def reserve_a_book():
+    return render_template("/reserve/reserve_a_book2.html", pageTitle="My rents")
+
 
 @app.route("/review_a_book")
 def review_a_book():
@@ -103,3 +117,4 @@ def review_a_book():
 @app.route("/review")
 def reviews_of_a_book():
     return render_template("/review.html", pageTitle="Reviews")
+####################################################################################~

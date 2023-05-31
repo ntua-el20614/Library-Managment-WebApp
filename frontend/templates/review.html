@@ -1,137 +1,162 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Book Reviews</title>
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
     <style>
-        /* CSS Styles */
+        /* CSS styling goes here */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
             margin: 0;
+            padding: 0;
+            background-color: lightyellow;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
             padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
         }
 
         h1 {
             text-align: center;
-            color: #333;
         }
 
-        .review-container {
-            margin: 20px auto;
-            max-width: 600px;
+        .review {
+            margin-bottom: 20px;
+            padding: 10px;
             background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .comment {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
 
-        .comment p {
-            margin: 0;
-            padding: 0;
-        }
-
-        .comment .author {
-            font-weight: bold;
-        }
-
-        .likert-scale {
-            margin-top: 15px;
+        .rating {
             display: flex;
-            justify-content: space-between;
-            font-size: 14px;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .likert-scale span {
-            color: #999;
+        .rating span {
+            margin-right: 10px;
         }
 
-        .likert-scale .likert-option {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background-color: #ccc;
-            cursor: pointer;
+        .star {
+            font-size: 20px;
+            color: #ccc;
         }
 
-        .likert-scale .likert-option:hover {
-            background-color: #999;
+        .star.gold {
+            color: #f39c12;
         }
 
-        .likert-scale .likert-option.active {
-            background-color: #333;
-        }
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#backButton:hover {
+    background-color: #aaa;
+}
     </style>
 </head>
-<body>
-    <h1>Book Reviews</h1>
 
-    <div class="review-container" id="reviewContainer">
-        <!-- Reviews will be dynamically added here -->
+<body>
+    <div class="container">
+        <h1>Book's Reviews</h1>
+        <div id="reviewsContainer"></div>
     </div>
 
     <script>
-        // JavaScript Code
-        let user = JSON.parse(localStorage.getItem("user"));
-        let book = JSON.parse(localStorage.getItem("book"));
+        const user = JSON.parse(localStorage.getItem("user"));
+        const book = localStorage.getItem("book");
+
         console.log(user);
         console.log(book);
 
-        async function fetchReviews(book) {
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchRents(book) {
             try {
-                const response = await fetch(`http://localhost:3305/allreviews/${book}`);
-                const reviewsData = await response.json();
-                return reviewsData;
+                const response = await fetch(`http://localhost:3305/all_reviews/${book}`);
+                const rentsData = await response.json();
+                return rentsData;
             } catch (error) {
-                console.error('Error fetching reviews:', error);
+                console.error('Error fetching rent info:', error);
                 return null;
             }
         }
 
-        async function displayReviews() {
-            const reviews = await fetchReviews(book);
+    // Function to render the reviews on the page
+    function renderReviews(rentsData) {
+      const reviewsContainer = document.getElementById('reviewsContainer');
 
-            if (reviews && reviews.length > 0) {
-                const reviewContainer = document.getElementById("reviewContainer");
+      if (rentsData && rentsData.length > 0) {
+        rentsData.forEach((rent) => {
+          const reviewElement = document.createElement('div');
+          reviewElement.classList.add('review');
 
-                reviews.forEach(review => {
-                    const commentElement = document.createElement("div");
-                    commentElement.classList.add("comment");
+          const commentElement = document.createElement('p');
+          commentElement.classList.add('comment');
+          commentElement.innerText = rent.comments;
+          reviewElement.appendChild(commentElement);
 
-                    const authorElement = document.createElement("p");
-                    authorElement.classList.add("author");
-                    authorElement.innerText = review.author;
+          const ratingElement = document.createElement('div');
+          ratingElement.classList.add('rating');
 
-                    const commentTextElement = document.createElement("p");
-                    commentTextElement.innerText = review.comment;
+          const ratingText = document.createElement('span');
+          ratingText.innerText = 'Rating:';
+          ratingElement.appendChild(ratingText);
 
-                    const likertScaleElement = document.createElement("div");
-                    likertScaleElement.classList.add("likert-scale");
+          for (let i = 1; i <= 5; i++) {
+            const starElement = document.createElement('span');
+            starElement.classList.add('star');
 
-                    for (let i = 1; i <= 5; i++) {
-                        const likertOptionElement = document.createElement("span");
-                        likertOptionElement.classList.add("likert-option");
-                        if (review.rating === i) {
-                            likertOptionElement.classList.add("active");
-                        }
-                        likertScaleElement.appendChild(likertOptionElement);
-                    }
-
-                    commentElement.appendChild(authorElement);
-                    commentElement.appendChild(commentTextElement);
-                    commentElement.appendChild(likertScaleElement);
-
-                    reviewContainer.appendChild(commentElement);
-                });
+            if (i <= rent.likert) {
+              starElement.classList.add('gold');
             }
-        }
 
-        // Call the function to display reviews when the page loads
-        displayReviews();
-    </script>
+            starElement.innerHTML = '&#9733;'; // Unicode star symbol
+            ratingElement.appendChild(starElement);
+          }
+
+          reviewElement.appendChild(ratingElement);
+
+          reviewsContainer.appendChild(reviewElement);
+        });
+      } else {
+        const noReviewsElement = document.createElement('p');
+        noReviewsElement.innerText = 'No reviews available.';
+        reviewsContainer.appendChild(noReviewsElement);
+      }
+    }
+
+    // Call the fetchRents function and render the reviews
+    fetchRents(book)
+      .then((rentsData) => {
+        renderReviews(rentsData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  </script>
 </body>
 </html>
