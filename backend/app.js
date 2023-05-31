@@ -51,6 +51,7 @@ const addbooktoschool = require("./api/addbooktoschool");
 ////////////////////////////////////////////////////////////////
 const updatepassword = require("./api/updatepassword");
 const update_approves = require("./api/update_approves");
+const approve_review = require("./api/approve_review");
 const update_teacher = require("./api/update_teacher");
 const update_copys = require("./api/update_copys");
 const updatebook = require("./api/updatebook");
@@ -136,6 +137,7 @@ app.use("/addbooktoschool/:isbn/:school_id/:copys", addbooktoschool);
 ////////////////////////////////////////////////////////////////
 app.use("/updatepassword/:password/:userid", updatepassword);
 app.use("/update_approves/:approved/:userid", update_approves);
+app.use("/approve_review/:approved/:reviewid", approve_review);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email/:password", update_teacher);
 app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
 app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image", updatebook);

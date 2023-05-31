@@ -47,6 +47,7 @@ const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { updateData: updatePassword } = require('./api/updatepassword');
 const { updateData: updateApproves } = require('./api/update_approves');
+const { updateData: updateReviewApprove } = require('./api/approve_review');
 const { updateData: updateTeacher } = require('./api/update_teacher');
 const { updateData: updateCopys } = require('./api/update_copys');
 const { updateData: updateBook } = require('./api/updatebook');
@@ -640,6 +641,19 @@ app.get('/update_copys/:schoolid/:isbn/:copys', (req, res) => {
 app.get('/update_approves/:approved/:userid', (req, res) => {
   const { approved, userid } = req.params; // Get the user data from the request body
   updateApproves(approved, userid, (err, result) => {
+    if (err) {
+      console.error('Error changing approved status:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Approved status changed successfully');
+  });
+});
+
+// Define a route handler for approrves update
+app.get('/approve_review/:approved/:reviewid', (req, res) => {
+  const { approved, reviewid } = req.params; // Get the user data from the request body
+  updateReviewApprove(approved, reviewid, (err, result) => {
     if (err) {
       console.error('Error changing approved status:', err);
       res.status(500).send('Internal Server Error');
