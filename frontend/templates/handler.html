@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href="/static/css/HomePage.css"> 
+    <link rel="stylesheet" href="/static/css/HomePage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body>
     <h1>My Profile</h1>
-    
+
     <button class="logout-button" onclick="logout()">Logout</button>
 
     <div class="profile">
@@ -30,8 +32,8 @@
         <div class="profile-item">
             <label>Passcode:</label>
             <input id="passcode" type="text" disabled>
-          </div>
-          
+        </div>
+
         <div class="profile-item">
             <label>Name-Surname:</label>
             <span id="user-name"></span>
@@ -62,8 +64,8 @@
             <p class="rectangle-content">Approve Teachers</p>
             <div id="notApprovedCountT" class="red-circle"></div>
         </div>
-        
-        
+
+
         <!-- Other rectangles -->
     </div>
 
@@ -101,21 +103,21 @@
                 return null;
             }
         }
-  async function fetchTeachers() {
-    try {
-      const response = await fetch(`http://localhost:3305/allteachers_fromusers_school/${user.user_id}`);
-      const teachersData = await response.json();
-  
-      return teachersData;
-    } catch (error) {
-      console.error('Error fetching teacher info:', error);
-      return null;
-    }
-  }
+        async function fetchTeachers() {
+            try {
+                const response = await fetch(`http://localhost:3305/allteachers_fromusers_school/${user.user_id}`);
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
         function logout() {
-          user=undefined;
-          localStorage.removeItem("user");
-          window.location.href = '/';
+            user = undefined;
+            localStorage.removeItem("user");
+            window.location.href = '/';
         }
 
         let user = JSON.parse(localStorage.getItem("user"));
@@ -172,138 +174,10 @@
             document.getElementById("notApprovedCountS").textContent = notApprovedCountS;
             document.getElementById("notApprovedCountT").textContent = notApprovedCountT;
         })();
-        function editProfile() {
-            // Get the elements containing the user's data
-            //const editButton = document.getElementById("edit-button");
-            const userTypeElement = document.getElementById("userType");
-            const schoolElement = document.getElementById("school");
-            const userIdElement = document.getElementById("user-id");
-            const usernameElement = document.getElementById("username");
-            const userNameElement = document.getElementById("user-name");
-            const emailElement = document.getElementById("email");
-            const birthdayElement = document.getElementById("birthday");
-            const passcodeElement = document.getElementById("passcode");
-            const editButton = document.querySelector(".edit-button");
-            // Toggle visibility of the "Passcode" label
-            const passcodeLabel = document.getElementById("passcode-label");
-            if (editButton.classList.contains("editing")) {
-                passcodeLabel.style.display = "block";
-            } else {
-                passcodeLabel.style.display = "none";
-            }
 
-            // Change to "Okay" button with a green tick
-            
-            if (editButton.classList.contains("editing")) {
-
-            editButton.innerHTML = '<i class="fas fa-check-circle"></i> Okay';
-            passcodeElement.style.display = "block";
-
-            // Enable editing for each element by setting contenteditable attribute to true
-            userTypeElement.contentEditable = true;
-            schoolElement.contentEditable = true;
-            userIdElement.contentEditable = true;
-            usernameElement.contentEditable = true;
-            userNameElement.contentEditable = true;
-            emailElement.contentEditable = true;
-            birthdayElement.contentEditable = true;
-            passcodeElement.contentEditable = true;
-
-
-            passcodeElement.value = user.passcode;
-            
-            passcodeElement.disabled = false;
-            // Add a class to style the editable elements
-            userTypeElement.classList.add("editable");
-            schoolElement.classList.add("editable");
-            userIdElement.classList.add("editable");
-            usernameElement.classList.add("editable");
-            userNameElement.classList.add("editable");
-            emailElement.classList.add("editable");
-            birthdayElement.classList.add("editable");
-            passcodeElement.classList.add("editable");
-
-            // Add event listeners to handle saving changes
-            userTypeElement.addEventListener("blur", saveChanges);
-            schoolElement.addEventListener("blur", saveChanges);
-            userIdElement.addEventListener("blur", saveChanges);
-            usernameElement.addEventListener("blur", saveChanges);
-            userNameElement.addEventListener("blur", saveChanges);
-            emailElement.addEventListener("blur", saveChanges);
-            birthdayElement.addEventListener("blur", saveChanges);
-            passcodeElement.addEventListener("blur", saveChanges);
-
-            // Add a class to indicate the editing state
-            document.body.classList.add("editing-state");
-        } else {
-            // Change back to "Edit" button
-            editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i> Edit';
-
-            // Hide the passcode element
-            passcodeElement.style.display = "none";
-
-            // Disable editing for each element
-            userTypeElement.contentEditable = false;
-            schoolElement.contentEditable = false;
-            userIdElement.contentEditable = false;
-            usernameElement.contentEditable = false;
-            userNameElement.contentEditable = false;
-            emailElement.contentEditable = false;
-            birthdayElement.contentEditable = false;
-
-            // Remove the class for styling the editable elements
-            userTypeElement.classList.remove("editable");
-            schoolElement.classList.remove("editable");
-            userIdElement.classList.remove("editable");
-            usernameElement.classList.remove("editable");
-            userNameElement.classList.remove("editable");
-            emailElement.classList.remove("editable");
-            birthdayElement.classList.remove("editable");
-            passcodeElement.classList.remove("editable");
-
-            // Remove the event listeners for saving changes
-            userTypeElement.removeEventListener("blur", saveChanges);
-            schoolElement.removeEventListener("blur", saveChanges);
-            userIdElement.removeEventListener("blur", saveChanges);
-            usernameElement.removeEventListener("blur", saveChanges);
-            userNameElement.removeEventListener("blur", saveChanges);
-            emailElement.removeEventListener("blur", saveChanges);
-            birthdayElement.removeEventListener("blur", saveChanges);
-            passcodeElement.removeEventListener("blur", saveChanges);
-
-            // Remove the class indicating the editing state
-            document.body.classList.remove("editing-state");
-        }
-
-        // Toggle the "editing" class on the edit button
-         //editButton.classList.toggle("editing");
-        }
- 
-
-        function saveChanges(event) {
-            // Get the edited element
-            const editedElement = event.target;
-
-            // Disable editing by setting contenteditable attribute to false
-            editedElement.contentEditable = false;
-
-            // Remove the class for styling
-            editedElement.classList.remove("editable");
-
-            // Remove the event listener
-            editedElement.removeEventListener("blur", saveChanges);
-
-            // Remove the editing state class if no editable elements are left
-            const editableElements = document.getElementsByClassName("editable");
-            if (editableElements.length === 0) {
-                document.body.classList.remove("editing-state");
-            }
-
-            // Code to save the changes goes here
-            console.log("Changes saved:", editedElement.textContent);
-}
 
 
     </script>
 </body>
+
 </html>

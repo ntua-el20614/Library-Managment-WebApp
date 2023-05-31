@@ -1,150 +1,215 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Home</title>
-    <link rel="stylesheet" href="/static/css/HomePage.css">
+  <title>Home</title>
+  <link rel="stylesheet" href="/static/css/HomePage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body>
-    <h1>My Profile</h1>
-    <button class="logout-button" onclick="logout()">Logout</button>
+  <h1>My Profile</h1>
+  <button class="logout-button" onclick="logout()">Logout</button>
 
-    <div class="profile">
-      <div class="profile-item">
-          <label>User Type:</label>
-          <span id="userType"></span>
-      </div>
-      <div class="profile-item">
-          <label>School:</label>
-          <span id="school"></span>
-      </div>
-        <div class="profile-item">
-            <label>User ID:</label>
-            <span id="user-id"></span>
-        </div>
-        <div class="profile-item">
-            <label>Username:</label>
-            <span id="username"></span>
-        </div>
-        <div class="profile-item">
-            <label>Name-Surname:</label>
-            <span id="user-name"></span>
-        </div>
-        <div class="profile-item">
-            <label>Email:</label>
-            <span id="email"></span>
-        </div>
-        <div class="profile-item">
-            <label>Birthday:</label>
-            <span id="birthday"></span>
-        </div>
+  <div class="profile">
+    <div class="profile-item">
+      <label>User Type:</label>
+      <span id="userType"></span>
     </div>
-    
-    <!-- Rectangles container -->
-    <div class="rectangle-container">
-        <div class="rectangle">
-            <button class="rectangle-button" onclick="window.location.href='/student/books';">Show</button>
-            <p class="rectangle-content">The list of books in my school</p>
-        </div>
-    
-        <div class="rectangle">
-            <button class="rectangle-button">Review</button>
-            <p class="rectangle-content">Review of a book</p>
-        </div>
+    <div class="profile-item">
+      <label>School:</label>
+      <span id="school"></span>
+    </div>
+    <div class="profile-item">
+      <label>User ID:</label>
+      <span id="user-id"></span>
+    </div>
+    <div class="profile-item">
+      <label>Username:</label>
+      <span id="username"></span>
+    </div>
+    <div class="profile-item">
+      <label>Password:</label>
+      <span id="password">*********</span>
+    </div>
+    <div class="profile-item">
+      <label>Name-Surname:</label>
+      <span id="user-name"></span>
+    </div>
+    <div class="profile-item">
+      <label>Email:</label>
+      <span id="email"></span>
+    </div>
+    <div class="profile-item">
+      <label>Birthday:</label>
+      <span id="birthday"></span>
+      <button class="edit-button" onclick="editProfile()">
+        <i class="fas fa-pencil-alt edit-icon"></i>
+    </div>
+  </div>
 
-        <div class="rectangle">
-          <button class="rectangle-button">Rent</button>
-          <p class="rectangle-content">Rent a book</p>
-      </div>
-  
-      <div class="rectangle">
-        <button class="rectangle-button">Reserve</button>
-        <p class="rectangle-content">Reserve a book</p>
-      </div>
+  <!-- Rectangles container -->
+  <div class="rectangle-container">
+    <div class="rectangle">
+      <button class="rectangle-button" onclick="window.location.href='/student/books';">Show</button>
+      <p class="rectangle-content">The list of books in my school</p>
+    </div>
 
-      <div class="rectangle">
-        <button class="rectangle-button" onclick="window.location.href='/rents';">Show</button>
-        <p class="rectangle-content">My Rents</p>
-      </div>
+    <div class="rectangle">
+      <button class="rectangle-button">Review</button>
+      <p class="rectangle-content">Review of a book</p>
+    </div>
 
-    <script>    
+    <div class="rectangle">
+      <button class="rectangle-button" onclick="window.location.href='/rent_a_book';">Rent</button>
+      <p class="rectangle-content">Rent a book</p>
+    </div>
 
-        async function fetchStudents() {
+    <div class="rectangle">
+      <button class="rectangle-button">Reserve</button>
+      <p class="rectangle-content">Reserve a book</p>
+    </div>
+
+    <div class="rectangle">
+      <button class="rectangle-button" onclick="window.location.href='/rents';">Show</button>
+      <p class="rectangle-content">My Rents</p>
+    </div>
+
+    <script action="http://localhost:3305/updatepassword/{password}/{user_id}" method="GET">
+
+      async function fetchStudents() {
+        try {
+          const response = await fetch('http://localhost:3305/allstudents');
+          const studentsData = await response.json();
+
+          return studentsData;
+        } catch (error) {
+          console.error('Error fetching student info:', error);
+          return null;
+        }
+      }
+      async function fetchSchoolsData() {
+        try {
+          const response = await fetch('http://localhost:3305/all_schools');
+          const userSchool = await response.json();
+
+          return userSchool;
+        } catch (error) {
+          console.error('Error fetching schools info:', error);
+          return null;
+        }
+      }
+      function logout() {
+        user = undefined;
+        localStorage.removeItem("user");
+        window.location.href = '/';
+      }
+
+
+      let user = JSON.parse(localStorage.getItem("user"));
+      console.log(user);
+
+
+      let isEditing = false;
+      let originalPassword = "";
+
+      async function editProfile() {
+        const passwordElement = document.getElementById("password");
+        const editButton = document.getElementsByClassName("edit-button")[0];
+
+        if (!isEditing) {
+          // Enter edit mode
+          originalPassword = user.passcode;
+          passwordElement.textContent = originalPassword;
+          passwordElement.contentEditable = true;
+          passwordElement.style.border = "1px solid black";
+          editButton.innerHTML = "OK";
+        } else {
+          // Save changes and exit edit mode
+          const newPassword = passwordElement.textContent;
+          user.passcode = newPassword;
+          passwordElement.textContent = "*********";
+          passwordElement.contentEditable = false;
+          passwordElement.style.border = "none";
+          editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+          console.log("New password:", newPassword);
+          
+          
+          const changePass = `http://localhost:3305/updatepassword/${newPassword}/${user.user_id}`;
+
           try {
-            const response = await fetch('http://localhost:3305/allstudents');
-            const studentsData = await response.json();
-      
-            return studentsData;
+            const response = await fetch(changePass);
+
+            if (response.ok) {
+              console.log("Password Changed!");
+              user.passcode = newPassword;
+              console.log(user);
+              alert("Password changed correctly!\nPlease log in again!");
+              user = undefined;
+              localStorage.removeItem("user");
+              window.location.href = '/';
+
+
+            } else {
+              console.log("could not change password!");
+            }
           } catch (error) {
-            console.error('Error fetching student info:', error);
-            return null;
+            console.log("An error occurred:", error);
+          }
+
+
+        }
+
+        isEditing = !isEditing;
+      }
+
+      (async () => {
+        const studentsData = await fetchStudents();
+
+        let flag = false;
+
+        if (user === undefined || user === null)
+          window.location.href = '/';
+
+        for (const studentsDataItem of studentsData) {
+          if (studentsDataItem.user_id === user.user_id) {
+
+            if (user.approved === 1) {
+              flag = true;
+              schoolID = studentsDataItem.school_id;
+              console.log('You are allowed to stay here!');
+            } else {
+              alert("You are not approved yet");
+              window.location.href = '/';
+            }
           }
         }
-        async function fetchSchoolsData() {
-          try {
-            const response = await fetch('http://localhost:3305/all_schools');
-            const userSchool = await response.json();
-  
-            return userSchool;
-          } catch (error) {
-            console.error('Error fetching schools info:', error);
-            return null;
-          }
-        }
-        function logout() {
-          user=undefined;
-          localStorage.removeItem("user");
+        if (!flag) {
+          alert('You are not a Student!');
           window.location.href = '/';
         }
-       
-      
-        let user = JSON.parse(localStorage.getItem("user"));
-        console.log(user);
-      
-        (async () => {
-          const studentsData = await fetchStudents(); 
-      
-          let flag = false;
 
-          if(user === undefined || user === null) 
-            window.location.href = '/';
 
-          for (const studentsDataItem of studentsData) {
-            if (studentsDataItem.user_id === user.user_id) { 
-      
-              if (user.approved === 1) {
-                flag = true;
-                schoolID = studentsDataItem.school_id;
-                console.log('You are allowed to stay here!');
-              } else {
-                alert("You are not approved yet");
-                window.location.href = '/';
-              }
-            }
-          }
-          if (!flag) {
-            alert('You are not a Student!');
-            window.location.href = '/';
-          }
-          
-          const schoolsData = await fetchSchoolsData();
-          let schoolsname;
-          for (const schoolsDataItem of schoolsData){
-            if (schoolsDataItem.school_id === schoolID) {
-              schoolsname = schoolsDataItem.school_name;
-            }
-
+        const schoolsData = await fetchSchoolsData();
+        let schoolsname;
+        for (const schoolsDataItem of schoolsData) {
+          if (schoolsDataItem.school_id === schoolID) {
+            schoolsname = schoolsDataItem.school_name;
           }
 
-          document.getElementById("userType").textContent = "Student";
-          document.getElementById("school").textContent = schoolsname;
-          document.getElementById("user-id").textContent = user.user_id;
-          document.getElementById("username").textContent = user.username;
-          document.getElementById("user-name").textContent = user.user_name;
-          document.getElementById("email").textContent = user.email;
-          document.getElementById("birthday").textContent = user.birthday;
-          
-        })();
-      </script>
-      
+        }
+
+        document.getElementById("userType").textContent = "Student";
+        document.getElementById("school").textContent = schoolsname;
+        document.getElementById("user-id").textContent = user.user_id;
+        document.getElementById("username").textContent = user.username;
+        document.getElementById("user-name").textContent = user.user_name;
+        document.getElementById("email").textContent = user.email;
+        document.getElementById("birthday").textContent = user.birthday;
+
+      })();
+    </script>
+
 </body>
+
 </html>

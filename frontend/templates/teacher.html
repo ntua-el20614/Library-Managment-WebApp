@@ -1,122 +1,127 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Home</title>
-    <link rel="stylesheet" href="/static/css/HomePage.css">
+  <title>Home</title>
+  <link rel="stylesheet" href="/static/css/HomePage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body>
-    <h1>My Profile</h1>
-    <button class="logout-button" onclick="logout()">Logout</button>
+  <h1>My Profile</h1>
+  <button class="logout-button" onclick="logout()">Logout</button>
 
-    <div class="profile">
-        <div class="profile-item">
-            <label>User Type:</label>
-            <span id="userType"></span>
-        </div>
-        <div class="profile-item">
-            <label>School:</label>
-            <span id="school"></span>
-        </div>
-        <div class="profile-item">
-            <label>User ID:</label>
-            <span id="user-id"></span>
-        </div>
-        <div class="profile-item">
-            <label>Username:</label>
-            <span id="username"></span>
-        </div>
-        <div class="profile-item">
-            <label>Name-Surname:</label>
-            <span id="user-name"></span>
-        </div>
-        <div class="profile-item">
-            <label>Email:</label>
-            <span id="email"></span>
-        </div>
-        <div class="profile-item">
-            <label>Birthday:</label>
-            <span id="birthday"></span>
-        </div>
+  <div class="profile">
+    <div class="profile-item">
+      <label>User Type:</label>
+      <span id="userType"></span>
     </div>
+    <div class="profile-item">
+      <label>School:</label>
+      <span id="school"></span>
+    </div>
+    <div class="profile-item">
+      <label>User ID:</label>
+      <span id="user-id"></span>
+    </div>
+    <div class="profile-item">
+      <label>Username:</label>
+      <span id="username"></span>
+    </div>
+    <div class="profile-item">
+      <label>Name-Surname:</label>
+      <span id="user-name"></span>
+    </div>
+    <div class="profile-item">
+      <label>Email:</label>
+      <span id="email"></span>
+    </div>
+    <div class="profile-item">
+      <label>Birthday:</label>
+      <span id="birthday"></span>
+      <button class="edit-button" onclick="editProfile()">
+          <i class="fas fa-pencil-alt edit-icon"></i>
+      </button>
+    </div>
+  </div>
 
-    <script>    
+  <script>
 
 
-async function fetchTeachers() {
-    try {
-      const response = await fetch('http://localhost:3305/allteachers');
-      const teachersData = await response.json();
-  
-      return teachersData;
-    } catch (error) {
-      console.error('Error fetching teacher info:', error);
-      return null;
+    async function fetchTeachers() {
+      try {
+        const response = await fetch('http://localhost:3305/allteachers');
+        const teachersData = await response.json();
+
+        return teachersData;
+      } catch (error) {
+        console.error('Error fetching teacher info:', error);
+        return null;
+      }
     }
-  }
-  async function fetchSchoolsData() {
-          try {
-            const response = await fetch('http://localhost:3305/all_schools');
-            const userSchool = await response.json();
-  
-            return userSchool;
-          } catch (error) {
-            console.error('Error fetching schools info:', error);
-            return null;
-          }
-        }
-        function logout() {
-          user=undefined;
-          localStorage.removeItem("user");
-          window.location.href = '/';
-        }
+    async function fetchSchoolsData() {
+      try {
+        const response = await fetch('http://localhost:3305/all_schools');
+        const userSchool = await response.json();
 
-        let user = JSON.parse(localStorage.getItem("user"));
-        console.log(user);
+        return userSchool;
+      } catch (error) {
+        console.error('Error fetching schools info:', error);
+        return null;
+      }
+    }
+    function logout() {
+      user = undefined;
+      localStorage.removeItem("user");
+      window.location.href = '/';
+    }
 
-        
-        if(user === undefined || user === null) 
-            window.location.href = '/';
+    let user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
 
-        (async () => {
-          const teachersData = await fetchTeachers(); 
-      
-          let flag = false;
-          for (const teachersDataItem of teachersData) {
-            if (teachersDataItem.user_id === user.user_id) { 
-      
-              if (user.approved === 1) {
-                flag = true;
-                schoolID = teachersDataItem.school_id;
-                console.log('You are allowed to stay here!');
-              } else {
-                alert("You are not approved yet");
-                window.location.href = '/';
-              }
-            }
-          }
-          if (!flag) {
-            alert('You are not a Teacher!');
+
+    if (user === undefined || user === null)
+      window.location.href = '/';
+
+    (async () => {
+      const teachersData = await fetchTeachers();
+
+      let flag = false;
+      for (const teachersDataItem of teachersData) {
+        if (teachersDataItem.user_id === user.user_id) {
+
+          if (user.approved === 1) {
+            flag = true;
+            schoolID = teachersDataItem.school_id;
+            console.log('You are allowed to stay here!');
+          } else {
+            alert("You are not approved yet");
             window.location.href = '/';
           }
-          const schoolsData = await fetchSchoolsData();
-          let schoolsname;
-          for (const schoolsDataItem of schoolsData){
-            if (schoolsDataItem.school_id === schoolID) {
-              schoolsname = schoolsDataItem.school_name;
-            }
+        }
+      }
+      if (!flag) {
+        alert('You are not a Teacher!');
+        window.location.href = '/';
+      }
+      const schoolsData = await fetchSchoolsData();
+      let schoolsname;
+      for (const schoolsDataItem of schoolsData) {
+        if (schoolsDataItem.school_id === schoolID) {
+          schoolsname = schoolsDataItem.school_name;
+        }
 
-          }
+      }
 
-        document.getElementById("userType").textContent = "Teacher";
-        document.getElementById("school").textContent = schoolsname;
-        document.getElementById("user-id").textContent = user.user_id;
-        document.getElementById("username").textContent = user.username;
-        document.getElementById("user-name").textContent = user.user_name;
-        document.getElementById("email").textContent = user.email;
-        document.getElementById("birthday").textContent = user.birthday;
+      document.getElementById("userType").textContent = "Teacher";
+      document.getElementById("school").textContent = schoolsname;
+      document.getElementById("user-id").textContent = user.user_id;
+      document.getElementById("username").textContent = user.username;
+      document.getElementById("user-name").textContent = user.user_name;
+      document.getElementById("email").textContent = user.email;
+      document.getElementById("birthday").textContent = user.birthday;
     })();
-    </script>
+  </script>
 </body>
+
 </html>
-
-
