@@ -29,6 +29,10 @@
       <span id="username"></span>
     </div>
     <div class="profile-item">
+      <label>Password:</label>
+      <span id="password">*********</span>
+    </div>
+    <div class="profile-item">
       <label>Name-Surname:</label>
       <span id="user-name"></span>
     </div>
@@ -45,7 +49,7 @@
     </div>
   </div>
 
-  
+
   <!-- Rectangles container -->
   <div class="rectangle-container">
     <div class="rectangle">
@@ -71,90 +75,193 @@
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/teacher/reserve_a_book';">Reserve</button>
       <p class="rectangle-content">Reserve a book</p>
-    </div> 
+    </div>
 
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/review_a_book';">Review</button>
       <p class="rectangle-content">Review of a book</p>
     </div>
 
-  <script>
+    <script>
 
 
-    async function fetchTeachers() {
-      try {
-        const response = await fetch('http://localhost:3305/allteachers');
-        const teachersData = await response.json();
+      async function fetchTeachers() {
+        try {
+          const response = await fetch('http://localhost:3305/allteachers');
+          const teachersData = await response.json();
 
-        return teachersData;
-      } catch (error) {
-        console.error('Error fetching teacher info:', error);
-        return null;
-      }
-    }
-    async function fetchSchoolsData() {
-      try {
-        const response = await fetch('http://localhost:3305/all_schools');
-        const userSchool = await response.json();
-
-        return userSchool;
-      } catch (error) {
-        console.error('Error fetching schools info:', error);
-        return null;
-      }
-    }
-    function logout() {
-      user = undefined;
-      localStorage.removeItem("user");
-      window.location.href = '/';
-    }
-
-    let user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
-
-
-    if (user === undefined || user === null)
-      window.location.href = '/';
-
-    (async () => {
-      const teachersData = await fetchTeachers();
-
-      let flag = false;
-      for (const teachersDataItem of teachersData) {
-        if (teachersDataItem.user_id === user.user_id) {
-
-          if (user.approved === 1) {
-            flag = true;
-            schoolID = teachersDataItem.school_id;
-            console.log('You are allowed to stay here!');
-          } else {
-            alert("You are not approved yet");
-            window.location.href = '/';
-          }
+          return teachersData;
+        } catch (error) {
+          console.error('Error fetching teacher info:', error);
+          return null;
         }
       }
-      if (!flag) {
-        alert('You are not a Teacher!');
+      async function fetchSchoolsData() {
+        try {
+          const response = await fetch('http://localhost:3305/all_schools');
+          const userSchool = await response.json();
+
+          return userSchool;
+        } catch (error) {
+          console.error('Error fetching schools info:', error);
+          return null;
+        }
+      }
+      function logout() {
+        user = undefined;
+        localStorage.removeItem("user");
         window.location.href = '/';
       }
-      const schoolsData = await fetchSchoolsData();
-      let schoolsname;
-      for (const schoolsDataItem of schoolsData) {
-        if (schoolsDataItem.school_id === schoolID) {
-          schoolsname = schoolsDataItem.school_name;
+
+      let user = JSON.parse(localStorage.getItem("user"));
+      console.log(user);
+
+
+      if (user === undefined || user === null)
+        window.location.href = '/';
+
+
+
+
+
+
+
+
+
+
+
+
+      let isEditing = false;
+      let originalPassword = "";
+
+      async function editProfile() {
+
+        const passcodeElement = document.getElementById("password");
+        const editButton = document.getElementsByClassName("edit-button")[0];
+
+        const usernameElement = document.getElementById("username");
+        const nameElement = document.getElementById("user-name");
+        const emailElement = document.getElementById("email");
+        const birthdayElement = document.getElementById("birthday");
+
+        if (!isEditing) {
+          // Enter edit mode
+          originalUsername = usernameElement.textContent;
+          originalPasscode = user.passcode;
+          originalName = nameElement.textContent;
+          originalEmail = emailElement.textContent;
+          originalBirthday = birthdayElement.textContent;
+          //save tis palies times
+          passcodeElement.textContent = user.passcode;
+
+          usernameElement.contentEditable = true;
+          passcodeElement.contentEditable = true;
+          nameElement.contentEditable = true;//mporw na ta kanw edit
+          emailElement.contentEditable = true;
+          birthdayElement.contentEditable = true;
+
+          usernameElement.style.border = "1px solid black";
+          passcodeElement.style.border = "1px solid black";
+          nameElement.style.border = "1px solid black";
+          emailElement.style.border = "1px solid black";
+          birthdayElement.style.border = "1px solid black";
+          editButton.innerHTML = "OK";
+        } else {
+          // Save changes and exit edit mode
+          const newUsername = usernameElement.textContent;
+          const newPasscode = passcodeElement.textContent;
+          const newName = nameElement.textContent;
+          const newEmail = emailElement.textContent;
+          const newBirthday = birthdayElement.textContent;
+
+          user.username = newUsername;
+          user.passcode = newPasscode;
+          user.user_name = newName;
+          user.email = newEmail;
+          user.birthday = newBirthday;
+          passcodeElement.textContent = "***********";
+
+          usernameElement.contentEditable = false;
+          passcodeElement.contentEditable = false;
+          nameElement.contentEditable = false;
+          emailElement.contentEditable = false;
+          birthdayElement.contentEditable = false;
+
+          usernameElement.style.border = "none";
+          passcodeElement.style.border = "none";
+          nameElement.style.border = "none";
+          emailElement.style.border = "none";
+          birthdayElement.style.border = "none";
+          editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+          console.log("Now, user is:", user);
+
+          const changeTeacher = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.birthday}/${user.email}/${user.passcode}`;
+          //app.use("/update_teacher/:userid/:name/:username/:birthday/:email/:password", update_teacher);
+
+          try {
+            const response = await fetch(changeTeacher);
+
+            if (response.ok) {
+              console.log("Teacher information updated!");
+              console.log(user);
+              alert("Teacher information updated successfully!");
+            } else {
+              console.log("Could not update teacher information or no changes were made.");
+            }
+          } catch (error) {
+            console.log("This username is already taken!");
+          }
         }
 
+        isEditing = !isEditing;
       }
 
-      document.getElementById("userType").textContent = "Teacher";
-      document.getElementById("school").textContent = schoolsname;
-      document.getElementById("user-id").textContent = user.user_id;
-      document.getElementById("username").textContent = user.username;
-      document.getElementById("user-name").textContent = user.user_name;
-      document.getElementById("email").textContent = user.email;
-      document.getElementById("birthday").textContent = user.birthday;
-    })();
-  </script>
+
+
+
+
+
+
+
+      (async () => {
+        const teachersData = await fetchTeachers();
+
+        let flag = false;
+        for (const teachersDataItem of teachersData) {
+          if (teachersDataItem.user_id === user.user_id) {
+
+            if (user.approved === 1) {
+              flag = true;
+              schoolID = teachersDataItem.school_id;
+              console.log('You are allowed to stay here!');
+            } else {
+              alert("You are not approved yet");
+              window.location.href = '/';
+            }
+          }
+        }
+        if (!flag) {
+          alert('You are not a Teacher!');
+          window.location.href = '/';
+        }
+        const schoolsData = await fetchSchoolsData();
+        let schoolsname;
+        for (const schoolsDataItem of schoolsData) {
+          if (schoolsDataItem.school_id === schoolID) {
+            schoolsname = schoolsDataItem.school_name;
+          }
+
+        }
+
+        document.getElementById("userType").textContent = "Teacher";
+        document.getElementById("school").textContent = schoolsname;
+        document.getElementById("user-id").textContent = user.user_id;
+        document.getElementById("username").textContent = user.username;
+        document.getElementById("user-name").textContent = user.user_name;
+        document.getElementById("email").textContent = user.email;
+        document.getElementById("birthday").textContent = user.birthday;
+      })();
+    </script>
 </body>
 
 </html>
