@@ -3,156 +3,10 @@
 
 <head>
     <title>Rent a book</title>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8">   
+    <link rel="stylesheet" href="/static/css/BookList.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            background-color: lightyellow;
-        }
 
-        #book-list {
-            display: grid;
-            gap: 20px;
-        }
-
-        .book-item {
-            padding: 10px;
-            border: 1px solid gray;
-            border-radius: 5px;
-            position: relative;
-            background-color: rgba(56, 56, 56, 0.21);
-        }
-
-        .book-item h2 {
-            cursor: pointer;
-        }
-
-        .expand-button {
-            position: absolute;
-            top: 70%;
-            right: 10px;
-            transform: translateY(-50%);
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            background-color: gray;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 26px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .expand-button.expanded {
-            transform: translateY(-50%) rotate(180deg);
-        }
-
-        .expand-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 7px solid white;
-        }
-
-
-        .book-details {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f5f5f55d;
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: #e6e6e6;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .back-button:hover {
-            background-color: #d4d4d4;
-        }
-
-        .back-button::before {
-            content: "Home";
-            transform: translateY(-50%) rotate(90deg);
-            margin-right: 5px;
-        }
-
-        /* Media queries */
-        @media (min-width: 400px) {
-            #book-list {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 600px) {
-            #book-list {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (min-width: 800px) {
-            #book-list {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (min-width: 1000px) {
-            #book-list {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-
-        @media (min-width: 1200px) {
-            #book-list {
-                grid-template-columns: repeat(6, 1fr);
-            }
-        }
-
-        .rent-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: green;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .rent-button.max-rented {
-            background-color: gray;
-            cursor: not-allowed;
-        }
-
-        #backButton {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #ccc;
-            color: #333;
-            padding: 10px;
-            border-radius: 50%;
-            font-size: 20px;
-            text-decoration: none;
-        }
-
-        #backButton:hover {
-            background-color: #aaa;
-        }
-    </style>
 </head>
 
 <body>
@@ -178,17 +32,19 @@
             history.back();
         }
 
-        async function fetchStudents() {
-            try {
-                const response = await fetch('http://localhost:3305/allstudents');
-                const studentsData = await response.json();
+        async function fetchTeachers() {
+      try {
+        const response = await fetch('http://localhost:3305/allteachers');
+        const teachersData = await response.json();
 
-                return studentsData;
-            } catch (error) {
-                console.error('Error fetching student info:', error);
-                return null;
-            }
-        }
+        return teachersData;
+      } catch (error) {
+        console.error('Error fetching teacher info:', error);
+        return null;
+      }
+    }
+
+
         async function fetchRents() {
             try {
                 const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
@@ -218,7 +74,7 @@
         });
 
         (async () => {
-            const studentsData = await fetchStudents();
+            const studentsData = await fetchTeachers();
             let schoolID;
             let flag = false;
 
@@ -266,10 +122,10 @@
                 rentButton.classList.add('rent-button');
                 rentButton.style.backgroundColor = 'green';
                 rentButton.addEventListener('click', () => {
-                    if (rentedBooksCount < 2) {
+                    if (rentedBooksCount < 1) {
                         rentBook(book);
                     } else {
-                        alert("You have already rented 2 books. You are only allowed two books per week.");
+                        alert("You have already rented a book. You are only allowed one book per week.");
                     }
                 });
 
@@ -317,7 +173,7 @@
         async function rentBook(book) {
             console.log('Renting book:', book);
 
-            const studs = await fetchStudents();
+            const studs = await fetchTeachers();
             let schoolID;
             for (const curr_user of studs) {
                 if (curr_user.user_id === user.user_id) {
@@ -343,7 +199,7 @@
                     console.log("Pending approval to rent the book!");
                     alert("You just rented the book!\nPlease wait for the approval from your handler")
 
-                    if (rentedBooksCount > 2) {
+                    if (rentedBooksCount > 1) {
                         rentButton.disabled = true;
                         rentButton.textContent = 'Max Rented';
                         rentButton.classList.add('max-rented');

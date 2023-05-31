@@ -26,6 +26,8 @@ const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fr
 const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
 const { fetchData: fetchUsersSchool } = require('./api/users_school');
 const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
+const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
+const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameters');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -237,6 +239,22 @@ app.get('/all_rents/:year/:month', (req, res) => {
   });
 });
 
+// Define a route handler for /all_rents
+app.get('/avg_likert/:userid/:categoryid', (req, res) => {
+  const userid = req.params.userid; // Get the year and month from the request parameters
+  const categoryid = req.params.categoryid;
+
+  fetchAvgLikert([userid, categoryid], (err, results) => {
+    if (err) {
+      console.error('Error fetching likert data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
 // Define a route handler for /all_reviews
 app.get('/all_reviews/:isbn', (req, res) => {
   const isbn = req.params.isbn; // Get the year and month from the request parameters
@@ -357,6 +375,21 @@ app.get('/users_school/:userid', (req, res) => {
   fetchUsersSchool(userid, (err, results) => {
     if (err) {
       console.error('Error fetching Users data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for book_user_parameters
+app.get('/book__user_parameters/:schoolid/:categoryname/:title/:authorname', (req, res) => {
+  const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
+
+  fetchBookUserParameters(schoolid, categoryname, title, authorname, (err, results) => {
+    if (err) {
+      console.error('Error fetching Books data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
@@ -597,9 +630,9 @@ app.get('/update_approves/:approved/:userid', (req, res) => {
 });
 
 // Define a route handler for teacher update
-app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) => {
-  const { userid, name, username, birthday, email } = req.params; // Get the user data from the request body
-  updateTeacher(userid, name, username, birthday, email, (err, result) => {
+app.get('/update_teacher/:userid/:name/:username/:birthday/:email/:password', (req, res) => {
+  const { userid, name, username, birthday, email, password } = req.params; // Get the user data from the request body
+  updateTeacher(userid, name, username, birthday, email, password, (err, result) => {
     if (err) {
       console.error('Error changing teacher data:', err);
       res.status(500).send('Internal Server Error');
