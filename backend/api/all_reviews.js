@@ -1,4 +1,4 @@
-const pool =require('../dbconnector')
+const pool = require('../dbconnector')
 
 // Function to fetch data from the database
 
@@ -12,7 +12,7 @@ const fetchData = ([isbn], callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query  = 'SELECT comments, likert FROM review WHERE isbn = ? AND approved = 1';
+    const query = 'SELECT comments, likert FROM review WHERE isbn = ? AND approved = 1';
     connection.query(query, [isbn], (err, results) => {
       // Release the connection back to the pool
       connection.release();

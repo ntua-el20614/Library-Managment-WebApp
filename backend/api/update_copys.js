@@ -11,16 +11,16 @@ const updateData = (schoolid, isbn, copys, callback) => {
     }
 
     // Execute a SQL query to update users password
-    const query = 
-    'UPDATE book_school ' +
-    'SET available_copys = available_copys  +  ( ' +
-        'SELECT (' + copys + ' - copys ) AS copy_difference ' +
-        'FROM book_school ' +
-        'WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid +
-    ' ) ' + ', ' +
-    ' copys = ' + copys + 
-    ' WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid;
-    
+    const query =
+      'UPDATE book_school ' +
+      'SET available_copys = available_copys  +  ( ' +
+      'SELECT (' + copys + ' - copys ) AS copy_difference ' +
+      'FROM book_school ' +
+      'WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid +
+      ' ) ' + ', ' +
+      ' copys = ' + copys +
+      ' WHERE isbn = ' + "'" + isbn + "' " + 'AND school_id = ' + schoolid;
+
     const values = [schoolid, isbn, copys];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool

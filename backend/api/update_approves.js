@@ -13,9 +13,9 @@ const updateData = (approved, userid, callback) => {
 
     // Execute a SQL query to update data
     const query =
-    'UPDATE users ' +
-      'SET approved = ' + approved +  
-	    ' WHERE user_id = ' + userid;
+      'UPDATE users ' +
+      'SET approved = ' + approved +
+      ' WHERE user_id = ' + userid;
     connection.query(query, [approved, userid], (err, result) => {
       // Release the connection back to the pool
       connection.release();

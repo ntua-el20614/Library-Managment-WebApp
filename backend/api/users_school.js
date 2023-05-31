@@ -1,4 +1,4 @@
-const pool =require('../dbconnector')
+const pool = require('../dbconnector')
 
 // Function to fetch data from the database
 
@@ -13,17 +13,17 @@ const fetchData = (userid, callback) => {
 
     // Execute a SQL query to fetch data
     const query =
-    'SELECT school_id ' +
-'FROM student ' +
-'WHERE user_id = ' + userid +
-' UNION ALL ' +
-'SELECT school_id ' +
-'FROM teacher ' +
-'WHERE user_id = ' + userid +
-' UNION ALL ' +
-'SELECT school_id ' +
-'FROM handlers ' +
-'WHERE user_id = ' + userid;
+      'SELECT school_id ' +
+      'FROM student ' +
+      'WHERE user_id = ' + userid +
+      ' UNION ALL ' +
+      'SELECT school_id ' +
+      'FROM teacher ' +
+      'WHERE user_id = ' + userid +
+      ' UNION ALL ' +
+      'SELECT school_id ' +
+      'FROM handlers ' +
+      'WHERE user_id = ' + userid;
     connection.query(query, userid, (err, results) => {
       // Release the connection back to the pool
       connection.release();

@@ -10,8 +10,8 @@ const { fetchData: fetchStudents } = require('./api/allstudents');
 const { fetchData: fetchTeachers } = require('./api/allteachers');
 const { fetchData: fetchHandlers } = require('./api/allhandlers');
 const { fetchData: fetchSchools } = require('./api/all_schools');
-const { fetchData: fetchAuthors } = require('./api/all_authors'); 
-const { fetchData: fetchBooks } = require('./api/all_books'); 
+const { fetchData: fetchAuthors } = require('./api/all_authors');
+const { fetchData: fetchBooks } = require('./api/all_books');
 const { fetchData: fetchRents } = require('./api/all_rents');
 const { fetchData: fetchReviews } = require('./api/all_reviews');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
@@ -420,7 +420,7 @@ app.get('/addauthor/:authorname', (req, res) => {
       res.status(500).send('Internal Server Error');
       return;
     }
-    
+
     res.status(200).send('Author added successfully');
   });
 });
@@ -441,8 +441,8 @@ app.get('/addcategory/:categoryname', (req, res) => {
 
 // Define a route handler for adding a review
 app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {//vazume to userid,school id ke isbn mesa sto review table 
-  const { userid, schoolid, isbn, comments, likert} = req.params; // Get the user data from the request body
-  addReview(userid, schoolid, isbn, comments, likert,  (err, result) => {
+  const { userid, schoolid, isbn, comments, likert } = req.params; // Get the user data from the request body
+  addReview(userid, schoolid, isbn, comments, likert, (err, result) => {
     if (err) {
       console.error('Error adding review:', err);
       res.status(500).send('Internal Server Error');
@@ -454,8 +454,8 @@ app.get('/addreview/:userid/:schoolid/:isbn/:comments/:likert', (req, res) => {/
 
 // Define a route handler for adding a school
 app.get('/addschool/:school_name/:address/:city/:telephone/:email/:principal_fullname', (req, res) => {
-  const { school_name, address, city, telephone, email, principal_fullname} = req.params; // Get the user data from the request body
-  addSchool(school_name, address, city, telephone, email, principal_fullname,  (err, result) => {
+  const { school_name, address, city, telephone, email, principal_fullname } = req.params; // Get the user data from the request body
+  addSchool(school_name, address, city, telephone, email, principal_fullname, (err, result) => {
     if (err) {
       console.error('Error adding school:', err);
       res.status(500).send('Internal Server Error');
@@ -467,8 +467,8 @@ app.get('/addschool/:school_name/:address/:city/:telephone/:email/:principal_ful
 
 // Define a route handler for adding a book
 app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords', (req, res) => {
-  const { isbn, title, publisher, pages, summary, image, book_language, keywords} = req.params; // Get the user data from the request body
-  addBook(isbn, title, publisher, pages, summary, image, book_language, keywords,  (err, result) => {
+  const { isbn, title, publisher, pages, summary, image, book_language, keywords } = req.params; // Get the user data from the request body
+  addBook(isbn, title, publisher, pages, summary, image, book_language, keywords, (err, result) => {
     if (err) {
       console.error('Error adding book:', err);
       res.status(500).send('Internal Server Error');
@@ -480,8 +480,8 @@ app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/
 
 // Define a route handler for adding an author to a book
 app.get('/addauthortobook/:isbn/:authorid', (req, res) => {
-  const { isbn, authorid} = req.params; // Get the user data from the request body
-  addAuthorToBook(isbn, authorid,  (err, result) => {
+  const { isbn, authorid } = req.params; // Get the user data from the request body
+  addAuthorToBook(isbn, authorid, (err, result) => {
     if (err) {
       console.error('Error adding author to book:', err);
       res.status(500).send('Internal Server Error');
@@ -493,8 +493,8 @@ app.get('/addauthortobook/:isbn/:authorid', (req, res) => {
 
 // Define a route handler for adding a category to a book
 app.get('/addcategorytobook/:isbn/:categoryid', (req, res) => {
-  const { isbn, categoryid} = req.params; // Get the user data from the request body
-  addCategoryToBook(isbn, categoryid,  (err, result) => {
+  const { isbn, categoryid } = req.params; // Get the user data from the request body
+  addCategoryToBook(isbn, categoryid, (err, result) => {
     if (err) {
       console.error('Error adding category to book:', err);
       res.status(500).send('Internal Server Error');
@@ -506,8 +506,8 @@ app.get('/addcategorytobook/:isbn/:categoryid', (req, res) => {
 
 // Define a route handler for adding a rent
 app.get('/addrent/:user_id/:isbn/:school_id/:date_of_rent', (req, res) => {
-  const { user_id, isbn, school_id, date_of_rent} = req.params; // Get the user data from the request body
-  addRent(user_id, isbn, school_id, date_of_rent,  (err, result) => {
+  const { user_id, isbn, school_id, date_of_rent } = req.params; // Get the user data from the request body
+  addRent(user_id, isbn, school_id, date_of_rent, (err, result) => {
     if (err) {
       console.error('Error adding rent:', err);
       res.status(500).send('Internal Server Error');
@@ -519,8 +519,8 @@ app.get('/addrent/:user_id/:isbn/:school_id/:date_of_rent', (req, res) => {
 
 // Define a route handler for adding a reservation
 app.get('/addreservation/:user_id/:isbn/:school_id/:date_of_reservation', (req, res) => {
-  const { user_id, isbn, school_id, date_of_reservation} = req.params; // Get the user data from the request body
-  addReservation(user_id, isbn, school_id, date_of_reservation,  (err, result) => {
+  const { user_id, isbn, school_id, date_of_reservation } = req.params; // Get the user data from the request body
+  addReservation(user_id, isbn, school_id, date_of_reservation, (err, result) => {
     if (err) {
       console.error('Error adding reservation:', err);
       res.status(500).send('Internal Server Error');
@@ -532,7 +532,7 @@ app.get('/addreservation/:user_id/:isbn/:school_id/:date_of_reservation', (req, 
 
 // Define a route handler for adding a book to school
 app.get('/addbooktoschool/:isbn/:school_id/:copys', (req, res) => {
-  const { isbn, school_id, copys} = req.params; // Get the user data from the request body
+  const { isbn, school_id, copys } = req.params; // Get the user data from the request body
   addBookToSchool(isbn, school_id, copys, (err, result) => {
     if (err) {
       console.error('Error adding book to school:', err);
@@ -545,7 +545,7 @@ app.get('/addbooktoschool/:isbn/:school_id/:copys', (req, res) => {
 
 // Define a route handler for password update
 app.get('/updatepassword/:password/:userid', (req, res) => {
-  const { password, userid} = req.params; // Get the user data from the request body
+  const { password, userid } = req.params; // Get the user data from the request body
   updatePassword(password, userid, (err, result) => {
     if (err) {
       console.error('Error changing password:', err);
@@ -558,7 +558,7 @@ app.get('/updatepassword/:password/:userid', (req, res) => {
 
 // Define a route handler for copys update
 app.get('/update_copys/:schoolid/:isbn/:copys', (req, res) => {
-  const { schoolid, isbn, copys} = req.params; // Get the user data from the request body
+  const { schoolid, isbn, copys } = req.params; // Get the user data from the request body
   updateCopys(schoolid, isbn, copys, (err, result) => {
     if (err) {
       console.error('Error changing copys:', err);
@@ -571,7 +571,7 @@ app.get('/update_copys/:schoolid/:isbn/:copys', (req, res) => {
 
 // Define a route handler for approrves update
 app.get('/update_approves/:approved/:userid', (req, res) => {
-  const { approved, userid} = req.params; // Get the user data from the request body
+  const { approved, userid } = req.params; // Get the user data from the request body
   updateApproves(approved, userid, (err, result) => {
     if (err) {
       console.error('Error changing approved status:', err);
@@ -584,8 +584,8 @@ app.get('/update_approves/:approved/:userid', (req, res) => {
 
 // Define a route handler for teacher update
 app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) => {
-  const { userid, name, username, birthday, email} = req.params; // Get the user data from the request body
-  updateTeacher(userid,name, username, birthday, email, (err, result) => {
+  const { userid, name, username, birthday, email } = req.params; // Get the user data from the request body
+  updateTeacher(userid, name, username, birthday, email, (err, result) => {
     if (err) {
       console.error('Error changing teacher data:', err);
       res.status(500).send('Internal Server Error');
@@ -597,7 +597,7 @@ app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) =
 
 // Define a route handler for book update
 app.get('/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image', (req, res) => {
-  const { isbn, title, publisher, page, summary, language, keywords, image} = req.params; // Get the user data from the request body
+  const { isbn, title, publisher, page, summary, language, keywords, image } = req.params; // Get the user data from the request body
   updateBook(isbn, title, publisher, page, summary, language, keywords, image, (err, result) => {
     if (err) {
       console.error('Error changing book data:', err);
@@ -610,7 +610,7 @@ app.get('/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/
 
 // Define a route handler to delete user
 app.get('/delete_user/:userid', (req, res) => {
-  const { userid} = req.params; // Get the user data from the request body
+  const { userid } = req.params; // Get the user data from the request body
   deleteUser(userid, (err, result) => {
     if (err) {
       console.error('Error deleting user:', err);
@@ -623,7 +623,7 @@ app.get('/delete_user/:userid', (req, res) => {
 
 // Define a route handler to delete school
 app.get('/delete_school/:schoolid', (req, res) => {
-  const { schoolid} = req.params; // Get the user data from the request body
+  const { schoolid } = req.params; // Get the user data from the request body
   deleteSchool(schoolid, (err, result) => {
     if (err) {
       console.error('Error deleting school:', err);
@@ -636,7 +636,7 @@ app.get('/delete_school/:schoolid', (req, res) => {
 
 // Define a route handler to delete book
 app.get('/delete_book/:isbn', (req, res) => {
-  const { isbn} = req.params; // Get the user data from the request body
+  const { isbn } = req.params; // Get the user data from the request body
   deleteBook(isbn, (err, result) => {
     if (err) {
       console.error('Error deleting book:', err);
@@ -649,7 +649,7 @@ app.get('/delete_book/:isbn', (req, res) => {
 
 // Define a route handler to delete book
 app.get('/delete_book_from_school/:schoolid/:isbn', (req, res) => {
-  const { schoolid, isbn} = req.params; // Get the user data from the request body
+  const { schoolid, isbn } = req.params; // Get the user data from the request body
   deleteBookFromSchool(schoolid, isbn, (err, result) => {
     if (err) {
       console.error('Error deleting book from school:', err);
@@ -662,7 +662,7 @@ app.get('/delete_book_from_school/:schoolid/:isbn', (req, res) => {
 
 // Define a route handler to delete review
 app.get('/delete_review/:reviewid', (req, res) => {
-  const { reviewid} = req.params; // Get the user data from the request body
+  const { reviewid } = req.params; // Get the user data from the request body
   deleteReview(reviewid, (err, result) => {
     if (err) {
       console.error('Error deleting review:', err);
@@ -675,7 +675,7 @@ app.get('/delete_review/:reviewid', (req, res) => {
 
 // Define a route handler to delete rent
 app.get('/delete_rent/:rentid', (req, res) => {
-  const { rentid} = req.params; // Get the user data from the request body
+  const { rentid } = req.params; // Get the user data from the request body
   deleteRent(rentid, (err, result) => {
     if (err) {
       console.error('Error deleting rent:', err);
@@ -688,7 +688,7 @@ app.get('/delete_rent/:rentid', (req, res) => {
 
 // Define a route handler to delete reservation
 app.get('/delete_reservation/:reservationid', (req, res) => {
-  const { reservationid} = req.params; // Get the user data from the request body
+  const { reservationid } = req.params; // Get the user data from the request body
   deleteReservation(reservationid, (err, result) => {
     if (err) {
       console.error('Error deleting reservation:', err);
@@ -701,7 +701,7 @@ app.get('/delete_reservation/:reservationid', (req, res) => {
 
 // Define a route handler to delete author
 app.get('/delete_author/:authorid', (req, res) => {
-  const { authorid} = req.params; // Get the user data from the request body
+  const { authorid } = req.params; // Get the user data from the request body
   deleteAuthor(authorid, (err, result) => {
     if (err) {
       console.error('Error deleting author:', err);
@@ -714,7 +714,7 @@ app.get('/delete_author/:authorid', (req, res) => {
 
 // Define a route handler to delete category
 app.get('/delete_category/:categoryid', (req, res) => {
-  const { categoryid} = req.params; // Get the user data from the request body
+  const { categoryid } = req.params; // Get the user data from the request body
   deleteCategory(categoryid, (err, result) => {
     if (err) {
       console.error('Error deleting category:', err);
@@ -727,7 +727,7 @@ app.get('/delete_category/:categoryid', (req, res) => {
 
 // Define a route handler to delete author from book
 app.get('/delete_author_from_book/:authorid/:isbn', (req, res) => {
-  const { authorid, isbn} = req.params; // Get the user data from the request body
+  const { authorid, isbn } = req.params; // Get the user data from the request body
   deleteAuthorFromBook(authorid, isbn, (err, result) => {
     if (err) {
       console.error('Error deleting author from book:', err);
@@ -740,7 +740,7 @@ app.get('/delete_author_from_book/:authorid/:isbn', (req, res) => {
 
 // Define a route handler to delete category from book
 app.get('/delete_category_from_book/:categoryid/:isbn', (req, res) => {
-  const { categoryid, isbn} = req.params; // Get the user data from the request body
+  const { categoryid, isbn } = req.params; // Get the user data from the request body
   deleteCategoryFromBook(categoryid, isbn, (err, result) => {
     if (err) {
       console.error('Error deleting category from book:', err);

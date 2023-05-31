@@ -11,10 +11,10 @@ const updateData = (password, userid, callback) => {
     }
 
     // Execute a SQL query to update users password
-    const query = 
-    'UPDATE users ' +
-    'SET passcode = ' + "'" + password + "' " +
-    'WHERE user_id = ' + userid;
+    const query =
+      'UPDATE users ' +
+      'SET passcode = ' + "'" + password + "' " +
+      'WHERE user_id = ' + userid;
     const values = [password, userid];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool

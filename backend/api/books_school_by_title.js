@@ -1,4 +1,4 @@
-const pool =require('../dbconnector')
+const pool = require('../dbconnector')
 
 // Function to fetch data from the database
 
@@ -12,18 +12,18 @@ const fetchData = ([Title, Userid], callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query =" SELECT b.isbn, b.title, b.publisher, b.pages, b.summary " +
-    "FROM book AS b " +
-    "JOIN book_school AS bs ON b.isbn = bs.isbn " +
-    "JOIN school AS s ON bs.school_id = s.school_id " +
-    "JOIN ( " +
-        "SELECT user_id, school_id " +
-        "FROM student " +
-        "UNION " +
-        "SELECT user_id, school_id " +
-        "FROM teacher " +
-    ") AS u ON s.school_id = u.school_id " +
-    "WHERE b.title = "+ "'" + Title + "' " + "AND u.user_id = " + Userid ;
+    const query = " SELECT b.isbn, b.title, b.publisher, b.pages, b.summary " +
+      "FROM book AS b " +
+      "JOIN book_school AS bs ON b.isbn = bs.isbn " +
+      "JOIN school AS s ON bs.school_id = s.school_id " +
+      "JOIN ( " +
+      "SELECT user_id, school_id " +
+      "FROM student " +
+      "UNION " +
+      "SELECT user_id, school_id " +
+      "FROM teacher " +
+      ") AS u ON s.school_id = u.school_id " +
+      "WHERE b.title = " + "'" + Title + "' " + "AND u.user_id = " + Userid;
     connection.query(query, [Title, Userid], (err, results) => {
       // Release the connection back to the pool
       connection.release();

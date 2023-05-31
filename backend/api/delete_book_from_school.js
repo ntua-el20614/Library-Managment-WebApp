@@ -2,7 +2,7 @@ const pool = require('../dbconnector');
 
 // Function to fetch data from the database
 const deleteData = (schoolid, isbn, callback) => {
-  
+
   // Get a connection from the pool
   pool.getConnection((err, connection) => {
     if (err) {
@@ -16,11 +16,11 @@ const deleteData = (schoolid, isbn, callback) => {
 
     // Execute SQL queries to delete data
     const queries = [
-        `DELETE FROM book_school WHERE school_id = ? AND isbn = ?`,
-        `DELETE FROM rent WHERE school_id = ? AND isbn = ?`,
-        `DELETE FROM review WHERE school_id = ? AND isbn = ?`,
-        `DELETE FROM reservation WHERE school_id = ? AND isbn = ?`
-      ];
+      `DELETE FROM book_school WHERE school_id = ? AND isbn = ?`,
+      `DELETE FROM rent WHERE school_id = ? AND isbn = ?`,
+      `DELETE FROM review WHERE school_id = ? AND isbn = ?`,
+      `DELETE FROM reservation WHERE school_id = ? AND isbn = ?`
+    ];
 
     // Run the queries sequentially
     const deleteSequentially = (index) => {

@@ -13,9 +13,9 @@ const deleteData = (reviewid, callback) => {
 
     // Execute a SQL query to update data
     const query =
-    'DELETE FROM review ' +
-    'WHERE review_id = ' + reviewid;
-    
+      'DELETE FROM review ' +
+      'WHERE review_id = ' + reviewid;
+
     connection.query(query, reviewid, (err, result) => {
       // Release the connection back to the pool
       connection.release();

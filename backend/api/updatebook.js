@@ -13,15 +13,15 @@ const updateData = (isbn, title, publisher, page, summary, language, keywords, i
 
     // Execute a SQL query to update data
     const query =
-    'UPDATE book ' +
-    'SET title = ' + "'" + title + "', " +
-        'publisher = ' + "'" + publisher + "', " +
-        'pages = ' + page  + ", " +
-        'summary = ' + "'" +summary + "', " +
-        'image = ' + image + ", " +
-        'book_language = ' + "'" + language + "', " +
-        'keywords = ' + "'" + keywords + "' " +
-    'WHERE isbn = ' + "'" + isbn + "'";
+      'UPDATE book ' +
+      'SET title = ' + "'" + title + "', " +
+      'publisher = ' + "'" + publisher + "', " +
+      'pages = ' + page + ", " +
+      'summary = ' + "'" + summary + "', " +
+      'image = ' + image + ", " +
+      'book_language = ' + "'" + language + "', " +
+      'keywords = ' + "'" + keywords + "' " +
+      'WHERE isbn = ' + "'" + isbn + "'";
     connection.query(query, [isbn, title, publisher, page, summary, language, keywords, image], (err, result) => {
       // Release the connection back to the pool
       connection.release();

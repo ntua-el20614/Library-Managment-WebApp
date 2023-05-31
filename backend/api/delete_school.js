@@ -2,7 +2,7 @@ const pool = require('../dbconnector');
 
 // Function to fetch data from the database
 const deleteData = (schoolId, callback) => {
-  
+
   // Get a connection from the pool
   pool.getConnection((err, connection) => {
     if (err) {

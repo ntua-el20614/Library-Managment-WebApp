@@ -11,14 +11,14 @@ const updateData = (userid, name, username, birthday, email, callback) => {
     }
 
     // Execute a SQL query to update users password
-    const query = 
-    'UPDATE users ' +
-    'SET username = ' + "'" + username +  "', " +
-        'user_name = ' + "'" + name + "', " +
-        'birthday = ' + "'" + birthday + "', " +
-        'email = ' + "'"+ email + "' " +
-    'WHERE user_id = ' + userid;
-    
+    const query =
+      'UPDATE users ' +
+      'SET username = ' + "'" + username + "', " +
+      'user_name = ' + "'" + name + "', " +
+      'birthday = ' + "'" + birthday + "', " +
+      'email = ' + "'" + email + "' " +
+      'WHERE user_id = ' + userid;
+
     const values = [userid, name, username, birthday, email];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool

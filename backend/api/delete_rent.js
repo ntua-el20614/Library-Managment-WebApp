@@ -13,9 +13,9 @@ const deleteData = (rentid, callback) => {
 
     // Execute a SQL query to update data
     const query =
-    'DELETE FROM rent ' +
-    'WHERE rent_id = ' + rentid;
-    
+      'DELETE FROM rent ' +
+      'WHERE rent_id = ' + rentid;
+
     connection.query(query, rentid, (err, result) => {
       // Release the connection back to the pool
       connection.release();
