@@ -27,6 +27,7 @@ const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fr
 const { fetchData: fetchUsersSchool } = require('./api/users_school');
 const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
 const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
+const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameters');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -382,6 +383,21 @@ app.get('/users_school/:userid', (req, res) => {
   });
 });
 
+// Define a route handler for book_user_parameters
+app.get('/book__user_parameters/:schoolid/:categoryname/:title/:authorname', (req, res) => {
+  const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
+
+  fetchBookUserParameters(schoolid, categoryname, title, authorname, (err, results) => {
+    if (err) {
+      console.error('Error fetching Books data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
 // Define a route handler for adding a user
 app.get('/adduser/:username/:password/:user_name/:birthday/:email', (req, res) => {
   const { username, password, user_name, birthday, email } = req.params; // Get the user data from the request body
@@ -614,9 +630,9 @@ app.get('/update_approves/:approved/:userid', (req, res) => {
 });
 
 // Define a route handler for teacher update
-app.get('/update_teacher/:userid/:name/:username/:birthday/:email', (req, res) => {
-  const { userid, name, username, birthday, email } = req.params; // Get the user data from the request body
-  updateTeacher(userid, name, username, birthday, email, (err, result) => {
+app.get('/update_teacher/:userid/:name/:username/:birthday/:email/:password', (req, res) => {
+  const { userid, name, username, birthday, email, password } = req.params; // Get the user data from the request body
+  updateTeacher(userid, name, username, birthday, email, password, (err, result) => {
     if (err) {
       console.error('Error changing teacher data:', err);
       res.status(500).send('Internal Server Error');

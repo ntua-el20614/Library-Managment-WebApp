@@ -1,7 +1,7 @@
 const pool = require('../dbconnector');
 
 // Function to add a user to the database
-const updateData = (userid, name, username, birthday, email, callback) => {
+const updateData = (userid, name, username, birthday, email, password, callback) => {
   // Get a connection from the pool
   pool.getConnection((err, connection) => {
     if (err) {
@@ -17,9 +17,10 @@ const updateData = (userid, name, username, birthday, email, callback) => {
       'user_name = ' + "'" + name + "', " +
       'birthday = ' + "'" + birthday + "', " +
       'email = ' + "'" + email + "' " +
+      'passcode = ' + password +
       'WHERE user_id = ' + userid;
 
-    const values = [userid, name, username, birthday, email];
+    const values = [userid, name, username, birthday, email, password];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool
       connection.release();
