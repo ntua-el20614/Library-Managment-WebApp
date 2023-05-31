@@ -13,6 +13,7 @@ const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors'); 
 const { fetchData: fetchBooks } = require('./api/all_books'); 
 const { fetchData: fetchRents } = require('./api/all_rents');
+const { fetchData: fetchReviews } = require('./api/all_reviews');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
 const { fetchData: fetchZeroRentAuthors } = require('./api/zero_rent_authors');
@@ -221,6 +222,20 @@ app.get('/all_rents/:year/:month', (req, res) => {
   });
 });
 
+// Define a route handler for /all_reviews
+app.get('/all_reviews/:isbn', (req, res) => {
+  const isbn = req.params.isbn; // Get the year and month from the request parameters
+
+  fetchReviews([isbn], (err, results) => {
+    if (err) {
+      console.error('Error fetching review data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 // Define a route handler for /teacher_loans
 app.get('/teacher_loans', (req, res) => {
