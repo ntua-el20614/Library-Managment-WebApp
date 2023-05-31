@@ -25,6 +25,7 @@ const { fetchData: fetchStudentFromUserSchool } = require('./api/allstudents_fro
 const { fetchData: fetchTeachersFromUserSchool } = require('./api/allteachers_fromusers_school');
 const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fromusers_school');
 const { fetchData: fetchUsersSchool } = require('./api/users_school');
+const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -65,6 +66,19 @@ app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
 
+
+// Define a route handler for handlers over 20books
+app.get('/handlers_over20books', (req, res) => {
+  fetchHandlersOver20Books((err, results) => {
+    if (err) {
+      console.error('Error fetching handlers data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 
 // Define a route handler for /all_users
