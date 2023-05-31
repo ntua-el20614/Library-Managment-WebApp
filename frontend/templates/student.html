@@ -3,7 +3,7 @@
 
 <head>
   <title>Home</title>
-  <link rel="stylesheet" href="/static/css/HomePage.css"> 
+  <link rel="stylesheet" href="/static/css/HomePage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 </head>
@@ -146,7 +146,7 @@
           try {
             const response = await fetch(changePass);
 
-            if (response.ok && user.passcode != newPassword) {
+            if (response.ok && user.passcode != originalPassword) {
 
               console.log("Password Changed!");
               user.passcode = newPassword;
@@ -212,7 +212,11 @@
         document.getElementById("username").textContent = user.username;
         document.getElementById("user-name").textContent = user.user_name;
         document.getElementById("email").textContent = user.email;
-        document.getElementById("birthday").textContent = user.birthday;
+        const birthdayElement = document.getElementById("birthday");
+        const userBirthday = new Date(user.birthday);
+        userBirthday.setDate(userBirthday.getDate() + 1);
+        const birthday = userBirthday.toISOString().split("T")[0];
+        birthdayElement.textContent = birthday;
 
       })();
     </script>

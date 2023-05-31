@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Home</title>
     <link rel="stylesheet" href="/static/css/HomePage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body>
     <h1>My Profile</h1>
     <button class="logout-button" onclick="logout()">Logout</button>
@@ -44,61 +46,62 @@
         </div>
 
 
-    <script>    
+        <script>
 
-        async function fetchHandlers() {
-            try {
-                const response = await fetch('http://localhost:3305/allhandlers');
-                const handlersData = await response.json();
-                return handlersData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
-                return null;
+            async function fetchHandlers() {
+                try {
+                    const response = await fetch('http://localhost:3305/allhandlers');
+                    const handlersData = await response.json();
+                    return handlersData;
+                } catch (error) {
+                    console.error('Error fetching handlers info:', error);
+                    return null;
+                }
             }
-        }
-        function logout() {
-          user=undefined;
-          localStorage.removeItem("user");
-          window.location.href = '/';
-        }
+            function logout() {
+                user = undefined;
+                localStorage.removeItem("user");
+                window.location.href = '/';
+            }
 
-        let user = JSON.parse(localStorage.getItem("user"));
-        console.log(user);
-
-        
-        if(user === undefined || user === null) 
-            window.location.href = '/';
-
-        (async () => { 
-
-            if(user.username === 'Mastoras' && user.passcode === 'password'){ 
-            console.log("You are allowed to stay here!");
-
-      }
-      else{
-        alert("You are not Mastoras!");
-        window.location.href = '/';
-
-      }
-
-      
-      const handlersData = await fetchHandlers();
-            const notApprovedUsers = handlersData.filter(user => user.approved === 0);
-            const notApprovedCount = notApprovedUsers.length;
+            let user = JSON.parse(localStorage.getItem("user"));
+            console.log(user);
 
 
+            if (user === undefined || user === null)
+                window.location.href = '/';
 
-        document.getElementById("userType").textContent = "Mastoras";
-        document.getElementById("user-id").textContent = user.user_id;
-        document.getElementById("username").textContent = user.username;
-        document.getElementById("user-name").textContent = user.user_name;
-        document.getElementById("email").textContent = user.email;
-        document.getElementById("birthday").textContent = user.birthday;
-        document.getElementById("notApprovedCount").textContent = notApprovedCount;
-    
-    })();
-    </script>
+            (async () => {
+
+                if (user.username === 'Mastoras' && user.passcode === 'password') {
+                    console.log("You are allowed to stay here!");
+
+                }
+                else {
+                    alert("You are not Mastoras!");
+                    window.location.href = '/';
+
+                }
+
+
+                const handlersData = await fetchHandlers();
+                const notApprovedUsers = handlersData.filter(user => user.approved === 0);
+                const notApprovedCount = notApprovedUsers.length;
+
+
+
+                document.getElementById("userType").textContent = "Mastoras";
+                document.getElementById("user-id").textContent = user.user_id;
+                document.getElementById("username").textContent = user.username;
+                document.getElementById("user-name").textContent = user.user_name;
+                document.getElementById("email").textContent = user.email;
+                const birthdayElement = document.getElementById("birthday");
+                const userBirthday = new Date(user.birthday);
+                userBirthday.setDate(userBirthday.getDate() + 1);
+                const birthday = userBirthday.toISOString().split("T")[0];
+                birthdayElement.textContent = birthday;
+            })();
+        </script>
 </body>
+
 </html>
-
-
