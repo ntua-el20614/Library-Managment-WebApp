@@ -103,12 +103,12 @@
             const tableBody = document.getElementById('reservations-table-body');
 
             if (!reservations) {
-                tableBody.innerHTML = '<tr><td colspan="7">Error fetching reservations</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="8">Error fetching reservations</td></tr>';
                 return;
             }
 
             if (reservations.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7">No reservations found</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="8">No reservations found</td></tr>';
                 return;
             }
 

@@ -66,7 +66,7 @@
             padding: 10px;
             background-color: #f5f5f55d;
         }
- 
+
 
         /* Media queries */
         @media (min-width: 400px) {
@@ -226,10 +226,10 @@
                                               <b>Summary:</b> ${book.summary}<br>
                                               <b>Language:</b> ${book.book_language}<br>
                                               <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>Copies:</b> ${book.copys}<br>
                                               <b>Available Copies:</b> ${book.available_copys}<br>
                                               <b>Author:</b> ${book.authors}<br>
-                                              <b>Category:</b> ${book.categories}<br>`;
+                                              <b>Category:</b> ${book.categories}<br>
+                                              <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
 
                 // Append expand button and details to the book item
                 bookItem.appendChild(expandButton);
@@ -239,6 +239,14 @@
                 bookList.appendChild(bookItem);
             });
         })();
+
+        function redirectToReviews(isbn) {
+            
+            document.cookie = "book=" + isbn;
+            window.location.href = `/review`;
+        
+        
+        }
     </script>
 </body>
 
