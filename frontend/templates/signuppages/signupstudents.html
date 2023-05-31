@@ -4,50 +4,72 @@
 <head>
   <title>Student Signup</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: rgba(234, 234, 185, 0.848);
-      padding: 20px;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(234, 234, 185, 0.848);
+    padding: 20px;
+  }
 
-    form {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
 
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="email"],
-    select {
-      width: 100%;
-      padding: 5px;
-      margin-bottom: 10px;
-    }
+  input[type="text"],
+  input[type="password"],
+  input[type="date"],
+  input[type="email"],
+  select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
 
-    input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+  input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
 
-    /* Adjust select option styles for visibility */
-    select option {
-      color: black;
-    }
-  </style>
+  /* Adjust select option styles for visibility */
+  select option {
+    color: black;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+  }
+
+  #backButton:hover {
+    background-color: #aaa;
+  }
+</style>
 </head>
 
 <body>
+  <h1>Student Signup</h1>
   <form action="http://localhost:3305/adduser/{username}/{password}/{user_name}/{birthday}/{email}" method="GET">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -71,8 +93,14 @@
 
     <input type="submit" id="submitButton" value="Sign Up">
   </form>
+  <a id="backButton" onclick="redirectToPreviousPage()">
+    <span>&#8617;</span>
+  </a>
 
   <script>
+    function redirectToPreviousPage() {
+      history.back();
+    }
     async function fetchUserData() {
       try {
         const response = await fetch('http://localhost:3305/all_users');
