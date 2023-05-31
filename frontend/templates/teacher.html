@@ -121,16 +121,6 @@
         window.location.href = '/';
 
 
-
-
-
-
-
-
-
-
-
-
       let isEditing = false;
       let originalPassword = "";
 
@@ -200,12 +190,17 @@
 
           try {
             const response = await fetch(changeTeacher);
-            
 
-            if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday )) {
+
+            if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
               console.log("Teacher information updated!");
               console.log(user);
-              alert("Teacher information updated successfully!");
+              alert("Teacher information updated successfully!\nPlease log-in again!");
+
+              user = undefined;
+              localStorage.removeItem("user");
+              window.location.href = '/';
+
             } else {
               console.log("Could not update teacher information or no changes were made.");
             }
