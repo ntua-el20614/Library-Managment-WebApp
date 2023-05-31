@@ -82,9 +82,20 @@ def approve_handlers():
 
 @app.route("/rents")
 def show_rents():
-    return render_template("/rents.html", pageTitle="My rents")
+    return render_template("/rent/rents.html", pageTitle="My rents")
 
+@app.route("/reservations")
+def show_reservations():
+    return render_template("/reserve/reservations.html", pageTitle="My rents")
 
 @app.route("/rent_a_book")
 def rent_a_book():
-    return render_template("/rent_a_book.html", pageTitle="My rents")
+    return render_template("/rent/rent_a_book1.html", pageTitle="My rents")
+
+@app.route("/reserve_a_book")
+def reserve_a_book():
+    return render_template("/reserve/reserve_a_book1.html", pageTitle="My rents")
+
+@app.route("/review_a_book")
+def review_a_book():
+    return render_template("/review_a_book.html", pageTitle="My rents")

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>books</title>
+    <title>Reserve a book</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -120,7 +120,7 @@
             }
         }
 
-        .rent-button {
+        .reservation-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -132,7 +132,7 @@
             cursor: pointer;
         }
 
-        .rent-button.max-rented {
+        .reservation-button.max-rented {
             background-color: gray;
             cursor: not-allowed;
         }
@@ -169,34 +169,25 @@
     <div id="book-list"></div>
 
     <script>
-        let rentedBooksCount = 0;
+        let reservedBooksCount = 0;
 
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
 
-        async function fetchRents() {
+        async function fetchReservations() {
             try {
-                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
-                const rentsData = await response.json();
-                return rentsData;
+                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const reservationsData = await response.json();
+                //console.log(reservationsData);
+                return reservationsData;
             } catch (error) {
-                console.error('Error fetching rent info:', error);
+                console.error('Error fetching reservation info:', error);
                 return null;
             }
         }
 
 
-        async function fetchStuds() {
-            try {
-                const response = await fetch(`http://localhost:3305/allstudents`);
-                const handlersData = await response.json();
-                return handlersData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
-                return null;
-            }
-        }
 
         async function fetchStudents() {
             try {
@@ -222,12 +213,9 @@
             }
         }
 
-        function redirectToPreviousPage() {
-            history.back();
-        }
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
-            window.location.href = '/handlers';
+            window.location.href = '/student';
         });
 
         (async () => {
@@ -253,10 +241,10 @@
                 window.location.href = '/';
             }
 
-            const rents = await fetchRents();
-            for (const curr_rent of rents) {
-                if(curr_rent.approved === 0)
-                rentedBooksCount++;
+            const reservations = await fetchReservations();
+            for (const curr_reservation of reservations) {
+                if (curr_reservation.approved === 0)
+                reservedBooksCount++;
 
             }
 
@@ -270,15 +258,15 @@
                 const bookItem = document.createElement('div');
                 bookItem.classList.add('book-item');
 
-                const rentButton = document.createElement('button');
-                rentButton.textContent = 'Rent';
-                rentButton.classList.add('rent-button');
-                rentButton.style.backgroundColor = 'green';
-                rentButton.addEventListener('click', () => {
-                    if (rentedBooksCount < 2) {
-                        rentBook(book);
+                const reservationButton = document.createElement('button');
+                reservationButton.textContent = 'Reserve';
+                reservationButton.classList.add('reservation-button');
+                reservationButton.style.backgroundColor = 'green';
+                reservationButton.addEventListener('click', () => {
+                    if (reservedBooksCount < 2) {
+                        reserveBook(book);
                     } else {
-                        alert("You have already rented 2 books. You can't rent more.");
+                        alert("You have already reserved 2 books. You can't reserve more.");
                     }
                 });
 
@@ -318,16 +306,16 @@
                 // Append expand button and details to the book item
                 bookItem.appendChild(expandButton);
                 bookItem.appendChild(detailsContainer);
-                bookItem.appendChild(rentButton);
+                bookItem.appendChild(reservationButton);
                 // Append book item to the book list
                 bookList.appendChild(bookItem);
             });
         })();
 
-        async function rentBook(book) {
-            console.log('Renting book:', book);
+        async function reserveBook(book) {
+            console.log('Reserving book:', book);
 
-            const studs = await fetchStuds();
+            const studs = await fetchStudents();
             let schoolID;
             for (const curr_user of studs) {
                 //console.log(curr_user.user_id, user.user_id);
@@ -337,8 +325,7 @@
                     break;
                 }
 
-            }
-            console.log(schoolID);
+            } 
 
             const today = new Date();
             const year = today.getFullYear();
@@ -346,24 +333,26 @@
             const day = String(today.getDate()).padStart(2, '0');
             const currentDate = `${year}-${month}-${day}`;
 
-            const rent_req = `http://localhost:3305/addrent/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
+            const reservation_req = `http://localhost:3305/addreservation/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
 
             try {
-                const response = await fetch(rent_req);
+                const response = await fetch(reservation_req);
 
-                if (response.ok) {
-                    console.log("Pending approval to rent the book!");
-                    alert("You just rented the book!\nPlease wait for the approval from a handler")
-                    
-                    if (rentedBooksCount >= 2) {
-                        rentButton.disabled = true;
-                        rentButton.textContent = 'Max Rented';
-                        rentButton.classList.add('max-rented');
+                if (response.ok) {  
+
+                    console.log("Pending approval to reservation the book!");
+                    alert("You just reserved the book!\nPlease wait for the approval from your handler")
+
+                    if (reservedBooksCount > 2) {
+                        reserveButton.disabled = true;
+                        reserveButton.textContent = 'Max Rented';
+                        reserveButton.classList.add('max-rented');
                     }
-
+                    location.reload();
                 } else {
-                    console.log("could not rent the book!");
-                    alert("You cant rent this book!");
+                    console.log("could not reserve the book!");
+                    alert("You cant reserve this book!");
+                    location.reload();
                 }
             } catch (error) {
                 console.log("An error occurred:", error);

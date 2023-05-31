@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Reservations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightyellow;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .reservations-table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        .reservations-table th,
+        .reservations-table td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .reservations-table th {
+            background-color: #333;
+            color: white;
+        }
+
+        .reservations-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .reservations-table tr:nth-child(odd) {
+            background-color: #e6e6e6;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>My Reservations</h1>
+
+    <table class="reservations-table">
+        <thead>
+            <tr>
+                <th>Rent ID</th>
+                <th>ISBN</th>
+                <th>Date of Rent</th>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>Summary</th>
+                <th>Book Language</th>
+                <th>Approved</th>
+            </tr>
+        </thead>
+        <tbody id="reservations-table-body"></tbody>
+    </table>
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
+
+    <script> 
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+        async function fetchReservations() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+        async function displayReservations() {
+            const reservations = await fetchReservations();
+            const tableBody = document.getElementById('reservations-table-body');
+
+            if (!reservations) {
+                tableBody.innerHTML = '<tr><td colspan="7">Error fetching reservations</td></tr>';
+                return;
+            }
+
+            if (reservations.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7">No reservations found</td></tr>';
+                return;
+            }
+
+            let tableHTML = '';
+            reservations.forEach(reservation => {
+                tableHTML += `
+          <tr>
+            <td>${reservation.reservation_id}</td>
+            <td>${reservation.isbn}</td>
+            <td>${new Date(reservation.date_of_reservation).toLocaleDateString()}</td>
+            <td>${reservation.title}</td>
+            <td>${reservation.publisher}</td>
+            <td>${reservation.summary}</td>
+            <td>${reservation.book_language}</td>
+            <td>${reservation.approved === 1 ? 'Yes' : 'No'}</td>
+          </tr>
+        `;
+            });
+
+            tableBody.innerHTML = tableHTML;
+        }
+
+        displayReservations();
+    </script>
+</body>
+
+</html>

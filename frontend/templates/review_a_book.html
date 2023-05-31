@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>books</title>
+    <title>Reviews</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -60,13 +60,90 @@
             border-top: 7px solid white;
         }
 
-        .book-details {
+        .book-reviewForm {
             display: none;
             margin-top: 10px;
             padding: 10px;
             background-color: #f5f5f55d;
         }
- 
+
+        .back-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .back-button::before {
+            content: "Home";
+            transform: translateY(-50%) rotate(90deg);
+            margin-right: 5px;
+        }
+
+
+        .submit-button {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #73d730;
+            border: 0.5px solid black;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #1aa713;
+        }
+
+
+
+        .review-form {
+            margin-top: 10px;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            height: 200px;
+            resize: vertical;
+        }
+
+        .rating {
+            display: inline-block;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            float: right;
+            color: gray;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .rating label:before {
+            content: '★';
+            transition: color 0.3s ease;
+        }
+
+        .rating input:checked~label {
+            color: gold;
+        }
 
         /* Media queries */
         @media (min-width: 400px) {
@@ -121,7 +198,7 @@
 <body>
     <h1>
         <a>
-            Book list
+            Book list ~ Reviews
         </a>
         <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
             <a id="backButton" onclick="redirectToPreviousPage()">
@@ -159,9 +236,23 @@
             }
         }
 
+        async function createReview(userId, schoolId, isbn, comments, likert) {
+            try {
+                const response = await fetch(`http://localhost:3305/addreview/${userId}/${schoolId}/${isbn}/${comments}/${likert}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                console.log('Review created:', result);
+            } catch (error) {
+                console.error('Error creating review:', error);
+            }
+        }
+
         function redirectToPreviousPage() {
             history.back();
         }
+
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             window.location.href = '/student';
@@ -194,48 +285,72 @@
             const bookList = document.getElementById('book-list');
 
             booksData.forEach((book) => {
-                // Create book item container
                 const bookItem = document.createElement('div');
                 bookItem.classList.add('book-item');
 
-                // Create book title with toggle functionality
-                const title = document.createElement('h2');
-                title.textContent = book.title;
-                bookItem.appendChild(title);
+                const bookTitle = document.createElement('h2');
+                bookTitle.textContent = book.title;
+                bookItem.appendChild(bookTitle);
 
-                // Create expand button
                 const expandButton = document.createElement('span');
                 expandButton.classList.add('expand-button');
                 expandButton.textContent = '▼';
+
+                const reviewForm = document.createElement('div');
+                reviewForm.classList.add('book-reviewForm');
+
+
+
+                const submitButton = document.createElement('button');
+                submitButton.classList.add('submit-button');
+                submitButton.textContent = 'submit';
+                reviewForm.appendChild(submitButton);
+
+                const reviewTextarea = document.createElement('textarea');
+                reviewTextarea.placeholder = 'Type your review here...';
+                reviewForm.appendChild(reviewTextarea);
+
+                const ratingContainer = document.createElement('div');
+                ratingContainer.classList.add('rating');
+
+                for (let i = 5; i >= 1; i--) {
+                    const ratingInput = document.createElement('input');
+                    ratingInput.type = 'radio';
+                    ratingInput.name = `rating-${book.isbn}`;
+                    ratingInput.value = i;
+                    ratingInput.id = `rating-${book.isbn}-${i}`;
+
+                    const ratingLabel = document.createElement('label');
+                    ratingLabel.htmlFor = `rating-${book.isbn}-${i}`;
+                    ratingLabel.addEventListener('mouseenter', () => {
+                        for (let j = i; j >= 1; j--) {
+                            const starLabel = document.getElementById(`rating-${book.isbn}-${j}`);
+                            starLabel.style.color = 'gold';
+                        }
+                    });
+                    ratingLabel.addEventListener('mouseleave', () => {
+                        for (let j = i; j >= 1; j--) {
+                            const starLabel = document.getElementById(`rating-${book.isbn}-${j}`);
+                            starLabel.style.color = 'gray';
+                        }
+                    });
+
+                    ratingContainer.appendChild(ratingInput);
+                    ratingContainer.appendChild(ratingLabel);
+                }
+
+                reviewForm.appendChild(ratingContainer);
+
+
+                bookItem.appendChild(expandButton);
+                bookItem.appendChild(reviewForm);
+
                 expandButton.addEventListener('click', () => {
-                    const details = bookItem.querySelector('.book-details');
-                    const isExpanded = details.style.display === 'block';
-                    details.style.display = isExpanded ? 'none' : 'block';
+                    const isExpanded = reviewForm.style.display === 'block';
+                    reviewForm.style.display = isExpanded ? 'none' : 'block';
                     expandButton.classList.toggle('expanded', !isExpanded);
                 });
 
-                // Create book details container
-                const detailsContainer = document.createElement('div');
-                detailsContainer.classList.add('book-details');
-
-                // Create book details
-                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
-                                              <b>ISBN:</b> ${book.isbn}<br>
-                                              <b>Publisher:</b> ${book.publisher}<br>
-                                              <b>Pages:</b> ${book.pages}<br>
-                                              <b>Summary:</b> ${book.summary}<br>
-                                              <b>Language:</b> ${book.book_language}<br>
-                                              <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>Copies:</b> ${book.copys}<br>
-                                              <b>Available Copies:</b> ${book.available_copys}<br>
-                                              <b>Author:</b> ${book.authors}<br>
-                                              <b>Category:</b> ${book.categories}<br>`;
-
-                // Append expand button and details to the book item
-                bookItem.appendChild(expandButton);
-                bookItem.appendChild(detailsContainer);
-
-                // Append book item to the book list
                 bookList.appendChild(bookItem);
             });
         })();

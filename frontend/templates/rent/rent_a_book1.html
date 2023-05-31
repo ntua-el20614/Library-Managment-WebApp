@@ -2,11 +2,10 @@
 <html>
 
 <head>
-    <title>books</title>
+    <title>Rent</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* CSS styles */
         body {
             background-color: lightyellow;
         }
@@ -30,7 +29,7 @@
 
         .expand-button {
             position: absolute;
-            top: 50%;
+            top: 70%;
             right: 10px;
             transform: translateY(-50%);
             display: inline-block;
@@ -60,13 +59,35 @@
             border-top: 7px solid white;
         }
 
+
         .book-details {
             display: none;
             margin-top: 10px;
             padding: 10px;
             background-color: #f5f5f55d;
         }
- 
+
+        .back-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .back-button::before {
+            content: "Home";
+            transform: translateY(-50%) rotate(90deg);
+            margin-right: 5px;
+        }
 
         /* Media queries */
         @media (min-width: 400px) {
@@ -99,6 +120,22 @@
             }
         }
 
+        .rent-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: green;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rent-button.max-rented {
+            background-color: gray;
+            cursor: not-allowed;
+        }
 
         #backButton {
             position: fixed;
@@ -132,8 +169,22 @@
     <div id="book-list"></div>
 
     <script>
+        let rentedBooksCount = 0;
+
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
+
+
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
+                const rentsData = await response.json();
+                return rentsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
 
         async function fetchStudents() {
             try {
@@ -159,9 +210,6 @@
             }
         }
 
-        function redirectToPreviousPage() {
-            history.back();
-        }
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             window.location.href = '/student';
@@ -190,6 +238,15 @@
                 window.location.href = '/';
             }
 
+            const rents = await fetchRents();
+            for (const curr_rent of rents) {
+                if (curr_rent.approved === 0)
+                    rentedBooksCount++;
+
+            }
+
+
+
             const booksData = await fetchBooksData(schoolID);
             const bookList = document.getElementById('book-list');
 
@@ -197,6 +254,18 @@
                 // Create book item container
                 const bookItem = document.createElement('div');
                 bookItem.classList.add('book-item');
+
+                const rentButton = document.createElement('button');
+                rentButton.textContent = 'Rent';
+                rentButton.classList.add('rent-button');
+                rentButton.style.backgroundColor = 'green';
+                rentButton.addEventListener('click', () => {
+                    if (rentedBooksCount < 2) {
+                        rentBook(book);
+                    } else {
+                        alert("You have already rented 2 books. You can't rent more.");
+                    }
+                });
 
                 // Create book title with toggle functionality
                 const title = document.createElement('h2');
@@ -234,11 +303,60 @@
                 // Append expand button and details to the book item
                 bookItem.appendChild(expandButton);
                 bookItem.appendChild(detailsContainer);
-
+                bookItem.appendChild(rentButton);
                 // Append book item to the book list
                 bookList.appendChild(bookItem);
             });
         })();
+
+        async function rentBook(book) {
+            console.log('Renting book:', book);
+
+            const studs = await fetchStuds();
+            let schoolID;
+            for (const curr_user of studs) {
+                //console.log(curr_user.user_id, user.user_id);
+                if (curr_user.user_id === user.user_id) {
+                    //console.log(curr_user.school_id);
+                    schoolID = curr_user.school_id;
+                    break;
+                }
+
+            }
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const currentDate = `${year}-${month}-${day}`;
+
+            const rent_req = `http://localhost:3305/addrent/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
+
+            try {
+                const response = await fetch(rent_req);
+
+                if (response.ok) {  
+
+                    console.log("Pending approval to rent the book!");
+                    alert("You just rented the book!\nPlease wait for the approval from your handler")
+
+                    if (rentedBooksCount > 2) {
+                        rentButton.disabled = true;
+                        rentButton.textContent = 'Max Rented';
+                        rentButton.classList.add('max-rented');
+                    }
+                    location.reload();
+                } else {
+                    console.log("could not rent the book!");
+                    alert("You cant rent this book!");
+                    location.reload();
+                }
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+
+
+        }
     </script>
 </body>
 
