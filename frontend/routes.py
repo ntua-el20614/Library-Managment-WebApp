@@ -73,6 +73,10 @@ def approve_teachers():
 @app.route("/approve/handlers")
 def approve_handlers():
     return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
+ 
+@app.route("/approve/reviews")
+def approve_reviews():
+    return render_template("/approves/approvereviews.html", pageTitle="Approve Reviews")
 
 
 

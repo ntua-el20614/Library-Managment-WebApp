@@ -213,6 +213,27 @@
       }
 
 
+      async function checkforexpired() {
+        const rentsData = await fetchReservations();
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        for (const rentsDataItem of rentsData) {
+        const reservationDate = new Date(rentsDataItem.date_of_reservation);
+          if (reservationDate < oneWeekAgo && rentsDataItem.approved===0) {
+            const reservation_del = `http://localhost:3305/delete_reservation/${user.user_id}`;
+            try {
+              const response = await fetch(reservation_del);
+              if (response.ok) {
+                console.log("deleted expired reservation");
+              } else {
+                console.log("couldnt delete expired reservation");
+              }
+            } catch (error) {
+              console.log("error deleting reservation:", error);
+            }
+          }
+        }
+      }
 
 
 
@@ -248,7 +269,7 @@
           }
 
         }
-
+        checkforexpired();
         document.getElementById("userType").textContent = "Teacher";
         document.getElementById("school").textContent = schoolsname;
         document.getElementById("user-id").textContent = user.user_id;
