@@ -56,8 +56,13 @@
     </div>
 
     <div class="rectangle">
-      <button class="rectangle-button">Review</button>
-      <p class="rectangle-content">Review of a book</p>
+      <button class="rectangle-button" onclick="window.location.href='/rents';">Show</button>
+      <p class="rectangle-content">My Rents</p>
+    </div>
+
+    <div class="rectangle">
+      <button class="rectangle-button" onclick="window.location.href='/reservations';">Show</button>
+      <p class="rectangle-content">My Reservations</p>
     </div>
 
     <div class="rectangle">
@@ -68,16 +73,11 @@
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/reserve_a_book';">Reserve</button>
       <p class="rectangle-content">Reserve a book</p>
-    </div>
+    </div> 
 
     <div class="rectangle">
-      <button class="rectangle-button" onclick="window.location.href='/rents';">Show</button>
-      <p class="rectangle-content">My Rents</p>
-    </div>
-
-    <div class="rectangle">
-      <button class="rectangle-button" onclick="window.location.href='/reservations';">Show</button>
-      <p class="rectangle-content">My Reservations</p>
+      <button class="rectangle-button" onclick="window.location.href='/review_a_book';">Review</button>
+      <p class="rectangle-content">Review of a book</p>
     </div>
 
     <script action="http://localhost:3305/updatepassword/{password}/{user_id}" method="GET">
@@ -145,7 +145,8 @@
           try {
             const response = await fetch(changePass);
 
-            if (response.ok) {
+            if (response.ok && user.passcode!=newPassword) {
+
               console.log("Password Changed!");
               user.passcode = newPassword;
               console.log(user);
@@ -156,7 +157,7 @@
 
 
             } else {
-              console.log("could not change password!");
+              console.log("could not change password! or password is the same");
             }
           } catch (error) {
             console.log("An error occurred:", error);

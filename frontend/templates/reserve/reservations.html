@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>My Rents</title>
+    <title>My Reservations</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,29 +13,29 @@
             text-align: center;
         }
 
-        .rents-table {
+        .reservations-table {
             margin: 20px auto;
             border-collapse: collapse;
             width: 80%;
         }
 
-        .rents-table th,
-        .rents-table td {
+        .reservations-table th,
+        .reservations-table td {
             border: 1px solid #000000;
             padding: 8px;
             text-align: left;
         }
 
-        .rents-table th {
+        .reservations-table th {
             background-color: #333;
             color: white;
         }
 
-        .rents-table tr:nth-child(even) {
+        .reservations-table tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-        .rents-table tr:nth-child(odd) {
+        .reservations-table tr:nth-child(odd) {
             background-color: #e6e6e6;
         }
 
@@ -60,10 +60,10 @@
 <body>
     <h1>My Reservations</h1>
 
-    <table class="rents-table">
+    <table class="reservations-table">
         <thead>
             <tr>
-                <th>Reservation ID</th>
+                <th>Rent ID</th>
                 <th>ISBN</th>
                 <th>Date of Rent</th>
                 <th>Title</th>
@@ -73,22 +73,25 @@
                 <th>Approved</th>
             </tr>
         </thead>
-        <tbody id="Reservations-table-body"></tbody>
+        <tbody id="reservations-table-body"></tbody>
     </table>
-    <script>
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
 
+    <script> 
 
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/student';
-        });
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
         async function fetchReservations() {
             try {
-                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
-                const ReservationData = await response.json();
-                return ReservationData;
+                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
             } catch (error) {
                 console.error('Error fetching rent info:', error);
                 return null;
@@ -96,31 +99,31 @@
         }
 
         async function displayReservations() {
-            const reserve = await fetchReservations();
-            const tableBody = document.getElementById('rents-table-body');
+            const reservations = await fetchReservations();
+            const tableBody = document.getElementById('reservations-table-body');
 
-            if (!rents) {
-                tableBody.innerHTML = '<tr><td colspan="7">Error fetching rents</td></tr>';
+            if (!reservations) {
+                tableBody.innerHTML = '<tr><td colspan="7">Error fetching reservations</td></tr>';
                 return;
             }
 
-            if (rents.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7">No rents found</td></tr>';
+            if (reservations.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7">No reservations found</td></tr>';
                 return;
             }
 
             let tableHTML = '';
-            rents.forEach(rent => {
+            reservations.forEach(reservation => {
                 tableHTML += `
           <tr>
-            <td>${Reservationy.rent_id}</td>
-            <td>${rent.isbn}</td>
-            <td>${new Date(rent.date_of_rent).toLocaleDateString()}</td>
-            <td>${rent.title}</td>
-            <td>${rent.publisher}</td>
-            <td>${rent.summary}</td>
-            <td>${rent.book_language}</td>
-            <td>${rent.approved === 1 ? 'Yes' : 'No'}</td>
+            <td>${reservation.reservation_id}</td>
+            <td>${reservation.isbn}</td>
+            <td>${new Date(reservation.date_of_reservation).toLocaleDateString()}</td>
+            <td>${reservation.title}</td>
+            <td>${reservation.publisher}</td>
+            <td>${reservation.summary}</td>
+            <td>${reservation.book_language}</td>
+            <td>${reservation.approved === 1 ? 'Yes' : 'No'}</td>
           </tr>
         `;
             });
@@ -128,7 +131,7 @@
             tableBody.innerHTML = tableHTML;
         }
 
-        displayRents();
+        displayReservations();
     </script>
 </body>
 

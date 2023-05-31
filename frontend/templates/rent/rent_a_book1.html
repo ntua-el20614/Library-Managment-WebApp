@@ -186,18 +186,6 @@
             }
         }
 
-
-        async function fetchStuds() {
-            try {
-                const response = await fetch(`http://localhost:3305/allstudents`);
-                const handlersData = await response.json();
-                return handlersData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
-                return null;
-            }
-        }
-
         async function fetchStudents() {
             try {
                 const response = await fetch('http://localhost:3305/allstudents');
@@ -335,7 +323,6 @@
                 }
 
             }
-            console.log(schoolID);
 
             const today = new Date();
             const year = today.getFullYear();
@@ -351,7 +338,7 @@
                 if (response.ok) {  
 
                     console.log("Pending approval to rent the book!");
-                    alert("You just rented the book!\nPlease wait for the approval from a handler")
+                    alert("You just rented the book!\nPlease wait for the approval from your handler")
 
                     if (rentedBooksCount > 2) {
                         rentButton.disabled = true;
