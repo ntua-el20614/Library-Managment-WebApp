@@ -27,7 +27,7 @@ const { fetchData: fetchHandlersFromUserSchool } = require('./api/allhandlers_fr
 const { fetchData: fetchUsersSchool } = require('./api/users_school');
 const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
 const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
-const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameters');
+const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameter');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -384,10 +384,14 @@ app.get('/users_school/:userid', (req, res) => {
 });
 
 // Define a route handler for book_user_parameters
-app.get('/book__user_parameters/:schoolid/:categoryname/:title/:authorname', (req, res) => {
-  const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
-
+app.get('/book_user_parameter/:schoolid/:categoryname/:title/:authorname', (req, res) => {
+  //const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
+  const schoolid = req.params.schoolid;
+  const categoryname = req.params.categoryname;
+  const title = req.params.title;
+  const authorname = req.params.authorname;
   fetchBookUserParameters(schoolid, categoryname, title, authorname, (err, results) => {
+    console.log('serveeer');
     if (err) {
       console.error('Error fetching Books data:', err);
       res.status(500).send('Internal Server Error');
