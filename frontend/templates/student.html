@@ -51,7 +51,7 @@
   <!-- Rectangles container -->
   <div class="rectangle-container">
     <div class="rectangle">
-      <button class="rectangle-button" onclick="window.location.href='/student/books';">Show</button>
+      <button class="rectangle-button" onclick="window.location.href='/books';">Show</button>
       <p class="rectangle-content">The list of books in my school</p>
     </div>
 
@@ -73,7 +73,7 @@
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/reserve_a_book';">Reserve</button>
       <p class="rectangle-content">Reserve a book</p>
-    </div> 
+    </div>
 
     <div class="rectangle">
       <button class="rectangle-button" onclick="window.location.href='/review_a_book';">Review</button>
@@ -133,19 +133,19 @@
           // Save changes and exit edit mode
           const newPassword = passwordElement.textContent;
           user.passcode = newPassword;
-          passwordElement.textContent = "*********";
+          passwordElement.textContent = "***********";
           passwordElement.contentEditable = false;
           passwordElement.style.border = "none";
           editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
           console.log("New password:", newPassword);
-          
-          
+
+
           const changePass = `http://localhost:3305/updatepassword/${newPassword}/${user.user_id}`;
 
           try {
             const response = await fetch(changePass);
 
-            if (response.ok && user.passcode!=newPassword) {
+            if (response.ok && user.passcode != newPassword) {
 
               console.log("Password Changed!");
               user.passcode = newPassword;
