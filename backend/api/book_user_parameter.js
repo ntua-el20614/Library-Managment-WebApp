@@ -104,11 +104,11 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND (b.title = '" + title + "' " +
-        " AND a.author_name = '" + authorname + "' )";
+        " AND b.title = '" + title + "' " +
+        " AND a.author_name = '" + authorname + "'";
     }
     //category - title
-    else if (categoryname !== '0' && authorname === 'nothing' && title !== '0') {
+    else if (categoryname !== '0' && authorname === '0' && title !== '0') {
       query =
         "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
@@ -122,57 +122,70 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         " AND b.title = '" + title + "' )";
     }
     //author - category
-    else if (categoryname !== '0' && authorname !== '0' && title === 'nothing') { 
-         query =
-      "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
-      "FROM book_school bs " +
-      "JOIN book b ON bs.isbn = b.isbn " +
-      "JOIN book_author ba ON b.isbn = ba.isbn " +
-      "JOIN author a ON ba.author_id = a.author_id " +
-      "JOIN book_category bc ON b.isbn = bc.isbn " +
-      "JOIN category c ON bc.category_id = c.category_id " +
-      "WHERE bs.school_id =  " + schoolid +
-      " AND (c.category_name = '" + categoryname + "' " +
-      " AND a.author_name = '" + authorname + "' )";
+    else if (categoryname !== '0' && authorname !== '0' && title === '0') {
+      query =
+        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "FROM book_school bs " +
+        "JOIN book b ON bs.isbn = b.isbn " +
+        "JOIN book_author ba ON b.isbn = ba.isbn " +
+        "JOIN author a ON ba.author_id = a.author_id " +
+        "JOIN book_category bc ON b.isbn = bc.isbn " +
+        "JOIN category c ON bc.category_id = c.category_id " +
+        "WHERE bs.school_id =  " + schoolid +
+        " AND (c.category_name = '" + categoryname + "' " +
+        " AND a.author_name = '" + authorname + "' )";
     }
     //title
     else if (categoryname === '0' && authorname === '0' && title !== '0') {
       query =
-      "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
-      "FROM book_school bs " +
-      "JOIN book b ON bs.isbn = b.isbn " +
-      "JOIN book_author ba ON b.isbn = ba.isbn " +
-      "JOIN author a ON ba.author_id = a.author_id " +
-      "JOIN book_category bc ON b.isbn = bc.isbn " +
-      "JOIN category c ON bc.category_id = c.category_id " +
-      "WHERE bs.school_id =  " + schoolid +
-      " AND b.title = '" + title + "' " ;
+        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "FROM book_school bs " +
+        "JOIN book b ON bs.isbn = b.isbn " +
+        "JOIN book_author ba ON b.isbn = ba.isbn " +
+        "JOIN author a ON ba.author_id = a.author_id " +
+        "JOIN book_category bc ON b.isbn = bc.isbn " +
+        "JOIN category c ON bc.category_id = c.category_id " +
+        "WHERE bs.school_id =  " + schoolid +
+        " AND b.title = '" + title + "' ";
     }
     //author
     else if (categoryname === '0' && authorname !== '0' && title === '0') {
       query =
-      "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
-      "FROM book_school bs " +
-      "JOIN book b ON bs.isbn = b.isbn " +
-      "JOIN book_author ba ON b.isbn = ba.isbn " +
-      "JOIN author a ON ba.author_id = a.author_id " +
-      "JOIN book_category bc ON b.isbn = bc.isbn " +
-      "JOIN category c ON bc.category_id = c.category_id " +
-      "WHERE bs.school_id =  " + schoolid +
-      " AND a.author_name = '" + authorname;
-     }
+        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "FROM book_school bs " +
+        "JOIN book b ON bs.isbn = b.isbn " +
+        "JOIN book_author ba ON b.isbn = ba.isbn " +
+        "JOIN author a ON ba.author_id = a.author_id " +
+        "JOIN book_category bc ON b.isbn = bc.isbn " +
+        "JOIN category c ON bc.category_id = c.category_id " +
+        "WHERE bs.school_id =  " + schoolid +
+        " AND a.author_name = '" + authorname + "'";
+    }
     //category
-    else if (categoryname !== 'nothing' && authorname === 'nothing' && title === 'nothing') {
+    else if (categoryname !== '0' && authorname === '0' && title === '0') {
       query =
-      "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
-      "FROM book_school bs " +
-      "JOIN book b ON bs.isbn = b.isbn " +
-      "JOIN book_author ba ON b.isbn = ba.isbn " +
-      "JOIN author a ON ba.author_id = a.author_id " +
-      "JOIN book_category bc ON b.isbn = bc.isbn " +
-      "JOIN category c ON bc.category_id = c.category_id " +
-      "WHERE bs.school_id =  " + schoolid +
-      " AND c.category_name = '" + categoryname; }
+        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "FROM book_school bs " +
+        "JOIN book b ON bs.isbn = b.isbn " +
+        "JOIN book_author ba ON b.isbn = ba.isbn " +
+        "JOIN author a ON ba.author_id = a.author_id " +
+        "JOIN book_category bc ON b.isbn = bc.isbn " +
+        "JOIN category c ON bc.category_id = c.category_id " +
+        "WHERE bs.school_id =  " + schoolid +
+        " AND c.category_name = '" + categoryname + "'";
+    }
+    //Nothing
+    else if (categoryname === '0' && authorname === '0' && title === '0') {
+      query =
+        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "FROM book_school bs " +
+        "JOIN book b ON bs.isbn = b.isbn " +
+        "JOIN book_author ba ON b.isbn = ba.isbn " +
+        "JOIN author a ON ba.author_id = a.author_id " +
+        "JOIN book_category bc ON b.isbn = bc.isbn " +
+        "JOIN category c ON bc.category_id = c.category_id " +
+        "WHERE bs.school_id =  " + schoolid;
+    }
 
     connection.query(query, [schoolid, categoryname, title, authorname], (err, results) => {
       // Release the connection back to the pool
