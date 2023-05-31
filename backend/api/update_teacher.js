@@ -16,8 +16,8 @@ const updateData = (userid, name, username, birthday, email, password, callback)
       'SET username = ' + "'" + username + "', " +
       'user_name = ' + "'" + name + "', " +
       'birthday = ' + "'" + birthday + "', " +
-      'email = ' + "'" + email + "' " +
-      'passcode = ' + password +
+      'email = ' + "'" + email + "', " +
+      'passcode = ' + "'" + password + "' " +
       'WHERE user_id = ' + userid;
 
     const values = [userid, name, username, birthday, email, password];
