@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Rent</title>
+    <title>Rent a book</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -158,7 +158,7 @@
 <body>
     <h1>
         <a>
-            Book list
+            Book list ~ Rent a book
         </a>
         <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
             <a id="backButton" onclick="redirectToPreviousPage()">
@@ -295,7 +295,6 @@
                                               <b>Summary:</b> ${book.summary}<br>
                                               <b>Language:</b> ${book.book_language}<br>
                                               <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>Copies:</b> ${book.copys}<br>
                                               <b>Available Copies:</b> ${book.available_copys}<br>
                                               <b>Author:</b> ${book.authors}<br>
                                               <b>Category:</b> ${book.categories}<br>`;
@@ -312,7 +311,7 @@
         async function rentBook(book) {
             console.log('Renting book:', book);
 
-            const studs = await fetchStuds();
+            const studs = await fetchStudents();
             let schoolID;
             for (const curr_user of studs) {
                 //console.log(curr_user.user_id, user.user_id);

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Reviews</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .review-container {
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .comment p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .comment .author {
+            font-weight: bold;
+        }
+
+        .likert-scale {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .likert-scale span {
+            color: #999;
+        }
+
+        .likert-scale .likert-option {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+
+        .likert-scale .likert-option:hover {
+            background-color: #999;
+        }
+
+        .likert-scale .likert-option.active {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Reviews</h1>
+
+    <div class="review-container" id="reviewContainer">
+        <!-- Reviews will be dynamically added here -->
+    </div>
+
+    <script>
+        // JavaScript Code
+        let user = JSON.parse(localStorage.getItem("user"));
+        let book = JSON.parse(localStorage.getItem("book"));
+        console.log(user);
+        console.log(book);
+
+        async function fetchReviews(book) {
+            try {
+                const response = await fetch(`http://localhost:3305/allreviews/${book}`);
+                const reviewsData = await response.json();
+                return reviewsData;
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+                return null;
+            }
+        }
+
+        async function displayReviews() {
+            const reviews = await fetchReviews(book);
+
+            if (reviews && reviews.length > 0) {
+                const reviewContainer = document.getElementById("reviewContainer");
+
+                reviews.forEach(review => {
+                    const commentElement = document.createElement("div");
+                    commentElement.classList.add("comment");
+
+                    const authorElement = document.createElement("p");
+                    authorElement.classList.add("author");
+                    authorElement.innerText = review.author;
+
+                    const commentTextElement = document.createElement("p");
+                    commentTextElement.innerText = review.comment;
+
+                    const likertScaleElement = document.createElement("div");
+                    likertScaleElement.classList.add("likert-scale");
+
+                    for (let i = 1; i <= 5; i++) {
+                        const likertOptionElement = document.createElement("span");
+                        likertOptionElement.classList.add("likert-option");
+                        if (review.rating === i) {
+                            likertOptionElement.classList.add("active");
+                        }
+                        likertScaleElement.appendChild(likertOptionElement);
+                    }
+
+                    commentElement.appendChild(authorElement);
+                    commentElement.appendChild(commentTextElement);
+                    commentElement.appendChild(likertScaleElement);
+
+                    reviewContainer.appendChild(commentElement);
+                });
+            }
+        }
+
+        // Call the function to display reviews when the page loads
+        displayReviews();
+    </script>
+</body>
+</html>

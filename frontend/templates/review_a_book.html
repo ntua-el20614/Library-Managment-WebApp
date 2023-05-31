@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* CSS styles */
         body {
             background-color: lightyellow;
         }
@@ -115,12 +114,6 @@
             margin-top: 10px;
         }
 
-        .review-form textarea {
-            width: 100%;
-            height: 200px;
-            resize: vertical;
-        }
-
         .rating {
             display: inline-block;
         }
@@ -176,6 +169,12 @@
             }
         }
 
+        @media (min-width: 1400px) {
+            #book-list {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+
 
         #backButton {
             position: fixed;
@@ -198,7 +197,7 @@
 <body>
     <h1>
         <a>
-            Book list ~ Reviews
+            Book list ~ Review a book
         </a>
         <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
             <a id="backButton" onclick="redirectToPreviousPage()">
@@ -236,18 +235,6 @@
             }
         }
 
-        async function createReview(userId, schoolId, isbn, comments, likert) {
-            try {
-                const response = await fetch(`http://localhost:3305/addreview/${userId}/${schoolId}/${isbn}/${comments}/${likert}`, {
-                    method: 'POST'
-                });
-                const result = await response.json();
-
-                console.log('Review created:', result);
-            } catch (error) {
-                console.error('Error creating review:', error);
-            }
-        }
 
         function redirectToPreviousPage() {
             history.back();
@@ -257,6 +244,8 @@
         backButton.addEventListener('click', () => {
             window.location.href = '/student';
         });
+
+
 
         (async () => {
             const studentsData = await fetchStudents();
@@ -300,14 +289,10 @@
                 reviewForm.classList.add('book-reviewForm');
 
 
-
-                const submitButton = document.createElement('button');
-                submitButton.classList.add('submit-button');
-                submitButton.textContent = 'submit';
-                reviewForm.appendChild(submitButton);
-
                 const reviewTextarea = document.createElement('textarea');
                 reviewTextarea.placeholder = 'Type your review here...';
+                reviewTextarea.style.height = '200px'; // Set the default height to 200px
+                reviewTextarea.style.resize = "none";
                 reviewForm.appendChild(reviewTextarea);
 
                 const ratingContainer = document.createElement('div');
@@ -335,6 +320,32 @@
                         }
                     });
 
+                    const submitButton = document.createElement('submit-button');
+                    submitButton.classList.add('submit-button');
+                    submitButton.textContent = 'submit';
+
+
+                    submitButton.addEventListener('click', async () => {
+                        let flag = false;
+                        try {
+                            const likert = document.querySelector(`input[name="rating-${book.isbn}"]:checked`).value;
+                            const comments = encodeURIComponent(reviewTextarea.value); // Encode the review comments                        const likert = document.querySelector(`input[name="rating-${book.isbn}"]:checked`).value;
+
+                            await createReview(user.user_id, schoolID, book.isbn, comments, likert);
+
+                        } catch (error) {
+                            flag = true;
+                            alert("Please give a likert rating!");
+                            window.location.href = '/review_a_book';
+                        }
+
+                        // Call the createReview function with the required parameters
+                    });
+
+
+
+                    ratingContainer.appendChild(submitButton);
+
                     ratingContainer.appendChild(ratingInput);
                     ratingContainer.appendChild(ratingLabel);
                 }
@@ -353,6 +364,28 @@
 
                 bookList.appendChild(bookItem);
             });
+
+
+            async function createReview(userId, schoolId, isbn, comments, likert) {
+                try {
+                    const addreviewurl = `http://localhost:3305/addreview/${userId}/${schoolId}/${isbn}/${comments}/${likert}`
+
+                    const response = await fetch(addreviewurl);
+
+                    if (response.ok) {
+                        console.log('Review created!');
+                        alert("Review sent!");
+                        location.reload();
+                    } else {
+                        alert("The review has too many characters!");
+                        console.log('Review not created!');
+                        location.reload();
+                    }
+
+                } catch (error) {
+                    console.error('Error creating review:', error);
+                }
+            }
         })();
     </script>
 </body>

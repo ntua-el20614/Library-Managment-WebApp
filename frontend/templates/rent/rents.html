@@ -108,12 +108,12 @@
             const tableBody = document.getElementById('rents-table-body');
 
             if (!rents) {
-                tableBody.innerHTML = '<tr><td colspan="7">Error fetching rents</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9">Error fetching rents</td></tr>';
                 return;
             }
 
             if (rents.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7">No rents found</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9">No rents found</td></tr>';
                 return;
             }
 

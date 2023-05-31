@@ -98,4 +98,8 @@ def reserve_a_book():
 
 @app.route("/review_a_book")
 def review_a_book():
-    return render_template("/review_a_book.html", pageTitle="My rents")
+    return render_template("/review_a_book.html", pageTitle="Reviews")
+
+@app.route("/review")
+def reviews_of_a_book():
+    return render_template("/review.html", pageTitle="Reviews")
