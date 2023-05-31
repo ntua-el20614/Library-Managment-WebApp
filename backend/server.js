@@ -55,6 +55,7 @@ const { deleteData: deleteBook } = require('./api/delete_book');
 const { deleteData: deleteAuthor } = require('./api/delete_author');
 const { deleteData: deleteCategory } = require('./api/delete_category');
 const { deleteData: deleteAuthorFromBook } = require('./api/delete_author_from_book');
+const { deleteData: deleteCategoryFromBook } = require('./api/delete_category_from_book');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Define a route handler for the root URL
@@ -702,6 +703,19 @@ app.get('/delete_author_from_book/:authorid/:isbn', (req, res) => {
       return;
     }
     res.status(200).send('Author deleted from book successfully');
+  });
+});
+
+// Define a route handler to delete category from book
+app.get('/delete_category_from_book/:categoryid/:isbn', (req, res) => {
+  const { categoryid, isbn} = req.params; // Get the user data from the request body
+  deleteCategoryFromBook(categoryid, isbn, (err, result) => {
+    if (err) {
+      console.error('Error deleting category from book:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Category deleted from book successfully');
   });
 });
 

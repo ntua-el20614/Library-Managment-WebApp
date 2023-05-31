@@ -59,6 +59,7 @@ const delete_book = require("./api/delete_book");
 const delete_author = require("./api/delete_author");
 const delete_category = require("./api/delete_category");
 const delete_author_from_book = require("./api/delete_author_from_book");
+const delete_category_from_book = require("./api/delete_category_from_book");
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
@@ -137,6 +138,7 @@ app.use("/delete_book/:isbn", delete_book);
 app.use("/delete_author/:authorid", delete_author);
 app.use("/delete_category/:categoryid", delete_category);
 app.use("/delete_author_from_book/:authorid/:isbn", delete_author_from_book);
+app.use("/delete_category_from_book/:categoryid/:isbn", delete_category_from_book);
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
