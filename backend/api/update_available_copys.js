@@ -12,7 +12,7 @@ const updateData = (isbn, userid, copynum, callback) => {
         }
 
         // Execute a SQL query to update data
-        const query = "UPDATE book_school SET available_copys = available_copys + ? WHERE isbn = ? AND school_id = (SELECT school_id FROM handlers WHERE user_id = ?) AND (SELECT COUNT(*) FROM book_school WHERE isbn = ? AND school_id = (SELECT school_id FROM handlers WHERE user_id = ?)) > 0;";
+        const query = "UPDATE book_school SET available_copys = available_copys + ? WHERE isbn = ? AND school_id = (SELECT school_id FROM handlers WHERE user_id = ?)";
         connection.query(query, [copynum, isbn, userid, isbn, userid], (err, result) => {
             // Release the connection back to the pool
             connection.release();
