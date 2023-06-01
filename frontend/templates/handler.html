@@ -76,6 +76,14 @@
             <p class="rectangle-content">Approve Rents</p>
             <div id="notApprovedCountRents" class="red-circle"></div>
         </div>
+        
+    <div class="rectangle-container">
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/approve/students';">Show</button>
+            <p class="rectangle-content">Approve Reservations</p>
+            <div id="notApprovedCountReservations" class="red-circle"></div>
+        </div>
+
 
         
         <!-- Other rectangles -->
@@ -160,6 +168,16 @@
                 return teachersData;
             } catch (error) {
                 console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+        async function fetchReservations() {
+            try {
+                const response = await fetch(`http://localhost:3305/all_school_reservations/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
                 return null;
             }
         }
@@ -291,6 +309,13 @@
             const notApprovedListRents = rentsData.filter(user => user.approved === 0);
             const notApprovedCountRents = notApprovedListRents.length;
 
+
+            const reservData = await fetchReservations();
+            const notApprovedListReservations = reservData.filter(user => user.approved === 0);
+            const notApprovedCountReservations = notApprovedListReservations.length;
+
+            notApprovedCountReservations
+
             const schoolsData = await fetchSchoolsData();
             let schoolsname;
             for (const schoolsDataItem of schoolsData) {
@@ -315,6 +340,7 @@
             document.getElementById("notApprovedCountT").textContent = notApprovedCountT;
             document.getElementById("notApprovedCountR").textContent = notApprovedCountR;
             document.getElementById("notApprovedCountRents").textContent = notApprovedCountRents;
+            document.getElementById("notApprovedCountReservations").textContent = notApprovedCountReservations;
         })();
 
 
