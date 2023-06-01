@@ -61,7 +61,7 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
           " AND a.author_name = '" + authorname + "' )";
       }
 //category title copys
-      else if (categoryname !== '0' && authorname !== '0' && title === '0' && copys!== '0') {
+      else if (categoryname !== '0' && authorname === '0' && title !== '0' && copys !== '0') {
         query =
         'SELECT b.title, a.author_name ' +
       'FROM book b ' +
@@ -72,12 +72,12 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
       'JOIN author a ON ba.author_id = a.author_id ' +
       'JOIN handlers h ON bs.school_id = h.school_id ' + 
       'WHERE h.user_id = ' + userid +
-        " AND (b.title = '" + title + "' " +
+        " AND b.title = '" + title + "' " +
         " AND c.category_name = '" + categoryname + "' " +
-        " AND bs.copys = " + copys + " )";
+        " AND bs.copys = " + copys;
       }
 //author title copys
-      else if (categoryname === '0' && authorname !== '0' && title !== '0' && copys!== '0') {
+      else if (categoryname === '0' && authorname !== '0' && title !== '0' && copys !== '0') {
         query =
         'SELECT b.title, a.author_name ' +
       'FROM book b ' +
