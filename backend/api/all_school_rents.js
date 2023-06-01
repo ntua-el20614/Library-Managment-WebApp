@@ -20,7 +20,7 @@ const fetchData = ([userid], callback) => {
         'JOIN users u ON r.user_id = u.user_id ' +
         'WHERE r.school_id = ( ' +
         'SELECT school_id FROM handlers WHERE user_id = ' + userid + ') ' +
-        'GROUP BY r.rent_id';
+        'GROUP BY r.rent_id, u.username, u.user_name, u.user_id, r.school_id, r.isbn, r.date_of_rent, r.returned, b.title, bs.copys, bs.available_copys, r.approved ';
     
     
 

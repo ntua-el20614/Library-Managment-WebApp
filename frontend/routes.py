@@ -61,7 +61,6 @@ def page_for_mastoras():
     return render_template("/mastoras.html", pageTitle="Home Page")
 
 
-
 @app.route("/approve/students")
 def approve_students():
     return render_template("/approves/approvestudents.html", pageTitle="Approve Students")
@@ -134,4 +133,12 @@ def review_a_book():
 @app.route("/review")
 def reviews_of_a_book():
     return render_template("/review.html", pageTitle="Reviews")
+####################################################################################~
+
+
+#~Handler moves
+####################################################################################~
+@app.route("/handler/books")
+def see_all_books():
+    return render_template("/handlerbooks.html", pageTitle="All Books")
 ####################################################################################~
