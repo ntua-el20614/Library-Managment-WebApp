@@ -645,8 +645,8 @@ app.get('/updatepassword/:password/:userid', (req, res) => {
 
 // Define a route handler for available copies update
 app.get('/update_available_copys/:isbn/:userid/:copynum', (req, res) => {
-  const { isbn, copynum, userid } = req.params; // Get the user data from the request body
-  updateAvailableCopys(isbn, copynum, userid, (err, result) => {
+  const { isbn, userid, copynum } = req.params; // Get the user data from the request body
+  updateAvailableCopys(isbn, userid, copynum, (err, result) => {
     if (err) {
       console.error('Error changing available copies:', err);
       res.status(500).send('Internal Server Error');
