@@ -71,10 +71,28 @@
         </div>
 
         
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/approve/rents';">Show</button>
+            <p class="rectangle-content">Approve Rents</p>
+            <div id="notApprovedCountRents" class="red-circle"></div>
+        </div>
+
+        
         <!-- Other rectangles -->
     </div>
 
     <script>
+
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/all_school_rents/${user.user_id}`);
+                const RentsData = await response.json();
+                return RentsData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
 
         async function fetchUserData() {
             try {
@@ -269,7 +287,9 @@
             const notApprovedUsersR = reviewsData.filter(user => user.approved === 0);
             const notApprovedCountR = notApprovedUsersR.length;
 
-
+            const rentsData = await fetchRents();
+            const notApprovedListRents = rentsData.filter(user => user.approved === 0);
+            const notApprovedCountRents = notApprovedListRents.length;
 
             const schoolsData = await fetchSchoolsData();
             let schoolsname;
@@ -294,6 +314,7 @@
             document.getElementById("notApprovedCountS").textContent = notApprovedCountS;
             document.getElementById("notApprovedCountT").textContent = notApprovedCountT;
             document.getElementById("notApprovedCountR").textContent = notApprovedCountR;
+            document.getElementById("notApprovedCountRents").textContent = notApprovedCountRents;
         })();
 
 

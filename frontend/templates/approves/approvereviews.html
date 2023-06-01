@@ -15,7 +15,7 @@
             color: #333;
         }
 
-        .user-container {
+        .review-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
@@ -23,7 +23,7 @@
             margin-top: 20px;
         }
 
-        .user {
+        .review {
             width: 300px;
             height: 200px;
             background-color: rgba(211, 211, 211, 0.595);
@@ -35,12 +35,12 @@
             position: relative;
         }
 
-        .user h3 {
+        .review h3 {
             font-size: 18px;
             margin-bottom: 10px;
         }
 
-        .user p {
+        .review p {
             margin: 5px 0;
         }
 
@@ -109,7 +109,7 @@
 <body>
     <h1>Pending Reviews</h1>
 
-    <div class="user-container" id="userContainer"></div>
+    <div class="review-container" id="reviewContainer"></div>
     <a id="backButton" href="/handler">
         <span>&#8617;</span>
     </a>
@@ -171,18 +171,18 @@
             }
 
 
-            const userData = await fetchReviews();
-            const userContainer = document.getElementById('userContainer');
+            const reviewData = await fetchReviews();
+            const reviewContainer = document.getElementById('reviewContainer');
 
-            userData.forEach(user => {
+            reviewData.forEach(review => {
  
-                if (user.approved === 0) {
-                    const userDiv = document.createElement('div');
-                    userDiv.classList.add('user');
+                if (review.approved === 0) {
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.classList.add('review');
 
                     const name = document.createElement('h3');
-                    name.textContent = user.title;
-                    userDiv.appendChild(name);
+                    name.textContent = review.title;
+                    reviewDiv.appendChild(name);
 
                     const ratingContainer = document.createElement('div');
                     ratingContainer.classList.add('rating-container');
@@ -192,18 +192,18 @@
                     for (let i = 1; i <= 5; i++) {
                         const starIcon = document.createElement('span');
                         starIcon.classList.add('star');
-                        if (i <= user.likert) {
+                        if (i <= review.likert) {
                             starIcon.textContent = '★';
                         } else {
                             starIcon.textContent = '☆';
                         }
                         ratingContainer.appendChild(starIcon);
                     }
-                    userDiv.appendChild(ratingContainer);
+                    reviewDiv.appendChild(ratingContainer);
 
                     const comments = document.createElement('p');
-                    comments.textContent = 'Review: ' + user.comments;
-                    userDiv.appendChild(comments);
+                    comments.textContent = 'Review: ' + review.comments;
+                    reviewDiv.appendChild(comments);
 
                     const buttonsContainer = document.createElement('div');
                     buttonsContainer.classList.add('buttons-container');
@@ -212,7 +212,7 @@
                     deleteButton.textContent = 'Delete';
                     deleteButton.classList.add('delete-button');
                     deleteButton.addEventListener('click', () => {
-                        deleteUser(user.review_id);
+                        deletereview(review.review_id);
                     });
                     buttonsContainer.appendChild(deleteButton);
 
@@ -220,13 +220,13 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.review_id);
+                        approvereview(review.review_id);
                     });
 
 
 
-                    async function deleteUser(userId) {
-                        const approveStudent = `http://localhost:3305/delete_review/${userId}`;
+                    async function deletereview(reviewId) {
+                        const approveStudent = `http://localhost:3305/delete_review/${reviewId}`;
 
                         try {
                             const response = await fetch(approveStudent);
@@ -242,9 +242,9 @@
                             console.log("An error occurred:", error);
                         }
                     }
-                    async function approveUser(userId) {
-                        console.log(userId);
-                        const approveStudent = `http://localhost:3305/approve_review/1/${userId}`;
+                    async function approvereview(reviewId) {
+                        console.log(reviewId);
+                        const approveStudent = `http://localhost:3305/approve_review/1/${reviewId}`;
 
                         try {
                             const response = await fetch(approveStudent);
@@ -263,9 +263,9 @@
 
                     buttonsContainer.appendChild(approveButton);
 
-                    userDiv.appendChild(buttonsContainer);
+                    reviewDiv.appendChild(buttonsContainer);
 
-                    userContainer.appendChild(userDiv);
+                    reviewContainer.appendChild(reviewDiv);
                 }
             });
         })();
