@@ -1,5 +1,6 @@
 const pool = require('../dbconnector');
 const fs = require('fs');
+const { exec } = require('child_process');
 
 // Function to backup the database
 const backupDatabase = (callback) => {
@@ -13,7 +14,7 @@ const backupDatabase = (callback) => {
 
     // Dump the database using mysqldump
     const backupFileName = 'database_backup.sql';
-    const dumpCommand = `mysqldump --host='localhost' --user='papamaster' --password='password' library_project`;
+    const dumpCommand = `mysqldump --host=localhost --user=papamaster --password=password --skip-column-statistics library_project`;
 
     // Execute the dump command
     exec(dumpCommand, (error, stdout, stderr) => {

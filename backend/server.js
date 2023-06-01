@@ -6,6 +6,7 @@ app.use(cors());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { backupDatabase: BuckupPaPabase } = require('./api/backup');
+const { restoreDatabase: RestorePaPabase } = require('./api/restore');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { fetchData: fetchUsers } = require('./api/all_users');
 const { fetchData: fetchCategories } = require('./api/all_categories');
@@ -94,6 +95,18 @@ app.get('/backup', (req, res) => {
   });
 });
 
+// Define a route handler for /restore
+app.get('/restore', (req, res) => {
+  RestorePaPabase((err, results) => {
+    if (err) {
+      console.error('Error with RESTORE:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 // Define a route handler for handlers over 20books
 app.get('/handlers_over20books', (req, res) => {
