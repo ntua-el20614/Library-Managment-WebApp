@@ -32,6 +32,7 @@ const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20bo
 const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
 const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameter');
 const { fetchData: fetchBookHandlerParameters } = require('./api/book_handler_parameter');
+const { fetchData: fetchLateRents } = require('./api/late_rents');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -466,6 +467,24 @@ app.get('/book_handler_parameter/:userid/:categoryname/:title/:authorname/:copys
   fetchBookHandlerParameters(userid, categoryname, title, authorname, copys, (err, results) => {
     if (err) {
       console.error('Error fetching Books data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for late_Rents
+app.get('/late_rents/:userid/:name/:dayz', (req, res) => {
+  //const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
+  const userid = req.params.userid;
+  const name = req.params.name;
+  const dayz = req.params.dayz;
+
+  fetchLateRents(userid, name, dayz, (err, results) => {
+    if (err) {
+      console.error('Error fetching rent data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
