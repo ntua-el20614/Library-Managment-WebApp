@@ -285,9 +285,15 @@
                         } catch (error) {
                             console.log("An error occurred:", error);
                         }
+
                     }
+
+
                     async function approveUser(rentid, isbn, copies) {
-                        console.log(rentid);
+
+                        user = JSON.parse(localStorage.getItem("user"));
+
+                        console.log(rentid, user.user_id, isbn, copies);
                         const approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
 
                         try {
@@ -316,6 +322,27 @@
                                     }
                                 } else {
                                     alert("Not enough available copies\nThis request will go to reservations");
+
+                                    const reservation_req = `http://localhost:3305/addreservation/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
+                                    try {
+                                        const response = await fetch(reservation_req);
+
+                                        if (response.ok) {
+
+                                            console.log("Pending approval to reservation the book!");
+                                            alert("You just reserved the book!\nPlease wait for the approval from your handler")
+ 
+                                            location.reload();
+                                        } else {
+                                            console.log("could not reserve the book!");
+                                            alert("You cant reserve this book!");
+                                            location.reload();
+                                        }
+                                    } catch (error) {
+                                        console.log("An error occurred:", error);
+                                    }
+
+
 
                                 }
 
@@ -418,7 +445,7 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.user_id,user.rent_id,user.isbn,user.available_copys);
+                        approveUser(user.user_id, user.rent_id, user.isbn, user.available_copys);
                     });
                     buttonsContainer.appendChild(approveButton);
 
