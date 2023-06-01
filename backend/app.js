@@ -5,6 +5,7 @@ const app = express();
 
 
 ////////////////////////////////////////////////////////////////
+const backup = require("./api/backup");
 ////////////////////////////////////////////////////////////////
 const all_users = require("./api/all_users");
 const all_categories = require("./api/all_categories");
@@ -100,6 +101,7 @@ app.use((req, res, next) => {
 
 // /* Routes used by our project */ 
 ////////////////////////////////////////////////////////////////
+app.use("/backup", backup);
 ////////////////////////////////////////////////////////////////
 app.use("/all_users", all_users);
 app.use("/all_categories", all_categories);

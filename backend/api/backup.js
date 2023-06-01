@@ -13,7 +13,7 @@ const backupDatabase = (callback) => {
 
     // Dump the database using mysqldump
     const backupFileName = 'database_backup.sql';
-    const dumpCommand = `mysqldump --host='localhost' --user='papamaster' --password='password' ${connection.config.database}`;
+    const dumpCommand = `mysqldump --host='localhost' --user='papamaster' --password='password' library_project`;
 
     // Execute the dump command
     exec(dumpCommand, (error, stdout, stderr) => {

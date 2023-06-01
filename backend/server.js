@@ -5,6 +5,8 @@ const app = express();
 app.use(cors());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const { backupDatabase: BuckupPaPabase } = require('./api/backup');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { fetchData: fetchUsers } = require('./api/all_users');
 const { fetchData: fetchCategories } = require('./api/all_categories');
 const { fetchData: fetchTitles } = require('./api/all_titles');
@@ -77,6 +79,19 @@ const { deleteData: deleteCategoryFromBook } = require('./api/delete_category_fr
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
   res.send('Hello, world!');
+});
+
+// Define a route handler for /backup
+app.get('/backup', (req, res) => {
+  BuckupPaPabase((err, results) => {
+    if (err) {
+      console.error('Error with BACKUP:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
 });
 
 

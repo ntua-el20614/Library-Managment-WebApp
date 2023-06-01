@@ -23,22 +23,22 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
 
     const queryParams = [userid];
 
-    if (categoryname !== '0') {
+    if (categoryname !== '-1') {
       query += " AND c.category_name = ?";
       queryParams.push(categoryname);
     }
 
-    if (title !== '0') {
+    if (title !== '-1') {
       query += " AND b.title = ?";
       queryParams.push(title);
     }
 
-    if (authorname !== '0') {
+    if (authorname !== '-1') {
       query += " AND a.author_name = ?";
       queryParams.push(authorname);
     }
 
-    if (copys !== '0') {
+    if (copys !== '-1') {
       query += " AND bs.copys = ?";
       queryParams.push(copys);
     }
