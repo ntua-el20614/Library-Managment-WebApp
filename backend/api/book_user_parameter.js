@@ -81,7 +81,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     // Execute a SQL query to fetch data
     if (categoryname !== '0' && authorname !== '0' && title !== '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -96,7 +96,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //author - title
     else if (categoryname === '0' && authorname !== '0' && title !== '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -110,7 +110,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //category - title
     else if (categoryname !== '0' && authorname === '0' && title !== '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -124,7 +124,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //author - category
     else if (categoryname !== '0' && authorname !== '0' && title === '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -138,7 +138,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //title
     else if (categoryname === '0' && authorname === '0' && title !== '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -151,7 +151,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //author
     else if (categoryname === '0' && authorname !== '0' && title === '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -164,7 +164,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //category
     else if (categoryname !== '0' && authorname === '0' && title === '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
@@ -177,7 +177,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
     //Nothing
     else if (categoryname === '0' && authorname === '0' && title === '0') {
       query =
-        "SELECT bs.isbn, b.title, a.author_name, c.category_id, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
+        "SELECT bs.isbn, b.title, a.author_name, c.category_name, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys " +
         "FROM book_school bs " +
         "JOIN book b ON bs.isbn = b.isbn " +
         "JOIN book_author ba ON b.isbn = ba.isbn " +
