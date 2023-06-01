@@ -6,6 +6,8 @@ app.use(cors());
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { fetchData: fetchUsers } = require('./api/all_users');
+const { fetchData: fetchCategories } = require('./api/all_categories');
+const { fetchData: fetchTitles } = require('./api/all_titles');
 const { fetchData: fetchStudents } = require('./api/allstudents');
 const { fetchData: fetchTeachers } = require('./api/allteachers');
 const { fetchData: fetchHandlers } = require('./api/allhandlers');
@@ -105,6 +107,19 @@ app.get('/all_users', (req, res) => {
   });
 });
 
+// Define a route handler for /all_categories
+app.get('/all_categories', (req, res) => {
+  fetchCategories((err, results) => {
+    if (err) {
+      console.error('Error fetching category data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
 // Define a route handler for /allstudents
 app.get('/allstudents', (req, res) => {
   fetchStudents((err, results) => {
@@ -125,6 +140,21 @@ app.get('/allstudents_fromusers_school/:id', (req, res) => {
   fetchStudentFromUserSchool(userid, (err, results) => {
     if (err) {
       console.error('Error fetching students data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /all_titles
+app.get('/all_titles/:userid', (req, res) => {
+  const userid = req.params.userid; // Get the school ID from the request parameters
+
+  fetchTitles(userid, (err, results) => {
+    if (err) {
+      console.error('Error fetching book data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
