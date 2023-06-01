@@ -25,7 +25,7 @@
 
         .user {
             width: 300px;
-            height: 200px;
+            height: 230px;
             background-color: rgba(211, 211, 211, 0.595);
             border: 2px solid #ccc;
             border-radius: 8px;
@@ -220,6 +220,10 @@
                     name.textContent = user.username + ": " + user.user_name;
                     userDiv.appendChild(name);
 
+                    const rent_num = document.createElement('p');
+                    rent_num.textContent = 'Rent #: ' + user.rent_id;
+                    userDiv.appendChild(rent_num);
+
                     const username = document.createElement('p');
                     username.textContent = 'Title: ' + user.title;
                     userDiv.appendChild(username);
@@ -260,51 +264,70 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.rent_id);
+                        approveUser(user.rent_id, user.isbn, user.available_copys);
                     });
 
 
 
                     async function deleteUser(userId) {
-                        const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+                        const deleteRent = `http://localhost:3305/delete_rent/${userId}`;
 
                         try {
-                            const response = await fetch(approveStudent);
+                            const response = await fetch(deleteRent);
 
                             if (response.ok) {
-                                console.log("student deleted!");
+                                console.log("Rent deleted!");
                                 location.reload();
 
                             } else {
-                                console.log("could not delete student!");
+                                console.log("could not delete rent!");
                             }
                         } catch (error) {
                             console.log("An error occurred:", error);
                         }
                     }
-                    async function approveUser(userId) {
-                        console.log(userId);
-                        const approveStudent = `http://localhost:3305/approve_rent/1/${userId}`;
+                    async function approveUser(rentid, isbn, copies) {
+                        console.log(rentid);
+                        const approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
 
                         try {
-                            const response = await fetch(approveStudent);
+                            const response = await fetch(approveRent);
 
                             if (response.ok) {
-                                console.log("student approved!");
+                                console.log("Rent approved!");
                                 //prepei na meiwsoume ta available copies kata ena
+                                if (copies >= 1) {
+                                    const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+                                    try {
+                                        const response1 = await fetch(reduce_copies);
+                                        if (response1.ok) {
+                                            console.log("Available copies reduced!");
 
+                                            location.reload();
 
+                                        } else {
+                                            console.log("couldnt change available copies!");
+                                            //location.reload();
+                                        }
 
+                                    }
+                                    catch (error) {
+                                        console.log("An error for copies:", error);
+                                    }
+                                } else {
+                                    alert("Not enough available copies\nThis request will go to reservations");
 
-                                //location.reload();
+                                }
 
                             } else {
-                                console.log("could not approve student!");
+                                console.log("couldnt approve rent!");
                             }
-                        } catch (error) {
-                            console.log("An error occurred:", error);
+                        }
+                        catch (error) {
+                            console.log("An error for rents:", error);
                         }
                     }
+
 
 
 
@@ -330,25 +353,25 @@
 
 
             async function deleteUser(userId) {
-                        const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+                const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
 
-                        try {
-                            const response = await fetch(approveStudent);
+                try {
+                    const response = await fetch(approveStudent);
 
-                            if (response.ok) {
-                                console.log("student deleted!");
-                                location.reload();
+                    if (response.ok) {
+                        console.log("student deleted!");
+                        location.reload();
 
-                            } else {
-                                console.log("could not delete student!");
-                            }
-                        } catch (error) {
-                            console.log("An error occurred:", error);
-                        }
+                    } else {
+                        console.log("could not delete student!");
                     }
+                } catch (error) {
+                    console.log("An error occurred:", error);
+                }
+            }
 
             userData.forEach(user => {
-                if (user.username === searchInput) {
+                if (user.username === searchInput && user.approved === 0) {
                     const userDiv = document.createElement('div');
                     userDiv.classList.add('user');
 
@@ -395,7 +418,7 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.rent_id);
+                        approveUser(user.user_id,user.rent_id,user.isbn,user.available_copys);
                     });
                     buttonsContainer.appendChild(approveButton);
 

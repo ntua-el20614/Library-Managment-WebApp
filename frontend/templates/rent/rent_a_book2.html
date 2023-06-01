@@ -3,7 +3,7 @@
 
 <head>
     <title>Rent a book</title>
-    <meta charset="UTF-8">   
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/BookList.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,16 +33,16 @@
         }
 
         async function fetchTeachers() {
-      try {
-        const response = await fetch('http://localhost:3305/allteachers');
-        const teachersData = await response.json();
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
 
-        return teachersData;
-      } catch (error) {
-        console.error('Error fetching teacher info:', error);
-        return null;
-      }
-    }
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
 
 
         async function fetchRents() {
@@ -104,7 +104,7 @@
 
             for (const curr_rent of rents) {
                 const rentDate = new Date(curr_rent.date_of_rent);
-                if (curr_rent.approved === 0 && rentDate > oneWeekAgo) {
+                if (rentDate > oneWeekAgo) {
                     rentedBooksCount++;
                 }
             }
@@ -113,44 +113,47 @@
             const bookList = document.getElementById('book-list');
 
             booksData.forEach((book) => {
-                // Create book item container
-                const bookItem = document.createElement('div');
-                bookItem.classList.add('book-item');
 
-                const rentButton = document.createElement('button');
-                rentButton.textContent = 'Rent';
-                rentButton.classList.add('rent-button');
-                rentButton.style.backgroundColor = 'green';
-                rentButton.addEventListener('click', () => {
-                    if (rentedBooksCount < 1) {
-                        rentBook(book);
-                    } else {
-                        alert("You have already rented a book. You are only allowed one book per week.");
-                    }
-                });
 
-                // Create book title with toggle functionality
-                const title = document.createElement('h2');
-                title.textContent = book.title;
-                bookItem.appendChild(title);
+                if (book.available_copys != 0) {
+                    // Create book item container
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
 
-                // Create expand button
-                const expandButton = document.createElement('span');
-                expandButton.classList.add('expand-button');
-                expandButton.textContent = '▼';
-                expandButton.addEventListener('click', () => {
-                    const details = bookItem.querySelector('.book-details');
-                    const isExpanded = details.style.display === 'block';
-                    details.style.display = isExpanded ? 'none' : 'block';
-                    expandButton.classList.toggle('expanded', !isExpanded);
-                });
+                    const rentButton = document.createElement('button');
+                    rentButton.textContent = 'Rent';
+                    rentButton.classList.add('rent-button');
+                    rentButton.style.backgroundColor = 'green';
+                    rentButton.addEventListener('click', () => {
+                        if (rentedBooksCount < 1) {
+                            rentBook(book);
+                        } else {
+                            alert("You have already rented a book. You are only allowed one book per week.");
+                        }
+                    });
 
-                // Create book details container
-                const detailsContainer = document.createElement('div');
-                detailsContainer.classList.add('book-details');
+                    // Create book title with toggle functionality
+                    const title = document.createElement('h2');
+                    title.textContent = book.title;
+                    bookItem.appendChild(title);
 
-                // Create book details
-                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                    // Create expand button
+                    const expandButton = document.createElement('span');
+                    expandButton.classList.add('expand-button');
+                    expandButton.textContent = '▼';
+                    expandButton.addEventListener('click', () => {
+                        const details = bookItem.querySelector('.book-details');
+                        const isExpanded = details.style.display === 'block';
+                        details.style.display = isExpanded ? 'none' : 'block';
+                        expandButton.classList.toggle('expanded', !isExpanded);
+                    });
+
+                    // Create book details container
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('book-details');
+
+                    // Create book details
+                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
                                               <b>ISBN:</b> ${book.isbn}<br>
                                               <b>Publisher:</b> ${book.publisher}<br>
                                               <b>Pages:</b> ${book.pages}<br>
@@ -161,12 +164,13 @@
                                               <b>Author:</b> ${book.authors}<br>
                                               <b>Category:</b> ${book.categories}<br>`;
 
-                // Append expand button and details to the book item
-                bookItem.appendChild(expandButton);
-                bookItem.appendChild(detailsContainer);
-                bookItem.appendChild(rentButton);
-                // Append book item to the book list
-                bookList.appendChild(bookItem);
+                    // Append expand button and details to the book item
+                    bookItem.appendChild(expandButton);
+                    bookItem.appendChild(detailsContainer);
+                    bookItem.appendChild(rentButton);
+                    // Append book item to the book list
+                    bookList.appendChild(bookItem);
+                }
             });
         })();
 

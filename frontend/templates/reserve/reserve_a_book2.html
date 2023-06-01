@@ -104,7 +104,7 @@
             
             for (const curr_rent of reservations) {
                 const rentDate = new Date(curr_rent.date_of_reservation); 
-                if (curr_rent.approved === 0 && (rentDate > oneWeekAgo)) {
+                if ((rentDate > oneWeekAgo)) {
                     reservedBooksCount++;
                 }
             }
