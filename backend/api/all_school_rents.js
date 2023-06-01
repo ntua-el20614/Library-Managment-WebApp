@@ -13,13 +13,14 @@ const fetchData = ([userid], callback) => {
 
         // Execute a SQL query to fetch data
         const query =
-        'SELECT DISTINCT r.rent_id, u.username, u.user_name, r.user_id, r.school_id, r.isbn, r.date_of_rent, r.returned, r.approved, b.title, bs.copys, bs.available_copys ' +
+        'SELECT r.rent_id, u.username, u.user_name, r.user_id, r.school_id, r.isbn, r.date_of_rent, r.returned, r.approved, b.title, bs.copys, bs.available_copys ' +
         'FROM rent r ' +
         'JOIN users u ON r.user_id = u.user_id ' +
         'JOIN book b ON r.isbn = b.isbn ' +
         'JOIN book_school bs ON r.isbn = bs.isbn ' +
         'WHERE r.school_id = ( ' +
-        'SELECT school_id FROM handlers WHERE user_id = ' + userid + ') ';
+            'SELECT school_id FROM handlers WHERE user_id = ?) ' +
+        'GROUP BY rent_id';
 
         connection.query(query, [userid], (err, results) => {
             // Release the connection back to the pool
