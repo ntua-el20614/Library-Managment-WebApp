@@ -445,7 +445,6 @@ app.get('/book_user_parameter/:schoolid/:categoryname/:title/:authorname', (req,
   const title = req.params.title;
   const authorname = req.params.authorname;
   fetchBookUserParameters(schoolid, categoryname, title, authorname, (err, results) => {
-    console.log('serveeer');
     if (err) {
       console.error('Error fetching Books data:', err);
       res.status(500).send('Internal Server Error');
