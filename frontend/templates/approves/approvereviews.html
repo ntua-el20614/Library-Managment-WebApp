@@ -107,13 +107,13 @@
 </head>
 
 <body>
-    <h1>Pending Students</h1>
+    <h1>Pending Reviews</h1>
 
     <div class="user-container" id="userContainer"></div>
     <a id="backButton" href="/handler">
         <span>&#8617;</span>
     </a>
-    <script type="module" action="http://localhost:3305/update_approves/1/{user_id}" method="GET">
+    <script type="module" action="http://localhost:3305/approve_review/1/{review_id}" method="GET">
 
 
         let user = JSON.parse(localStorage.getItem("user"));
@@ -135,46 +135,14 @@
             }
         }
 
-        async function fetchSchoolsData() {
+        async function fetchReviews() {
             try {
-                const response = await fetch('http://localhost:3305/all_schools');
-                const userSchool = await response.json();
-                return userSchool;
-            } catch (error) {
-                console.error('Error fetching schools info:', error);
-                return null;
-            }
-        }
+                const response = await fetch(`http://localhost:3305/all_school_reviews/${user.user_id}`);
+                const teachersData = await response.json();
 
-        async function fetchUserData() {
-            try {
-                const response = await fetch('http://localhost:3305/all_users');
-                const userData = await response.json();
-
-                return userData;
+                return teachersData;
             } catch (error) {
-                console.error('Error fetching users info:', error);
-                return null;
-            }
-        }
-        async function fetchStudents() {
-            try {
-                const response = await fetch('http://localhost:3305/allstudents');
-                const studentsData = await response.json();
-
-                return studentsData;
-            } catch (error) {
-                console.error('Error fetching student info:', error);
-                return null;
-            }
-        }
-        async function fetchStuds() {
-            try {
-                const response = await fetch(`http://localhost:3305/allstudents_fromusers_school/${user.user_id}`);
-                const handlersData = await response.json();
-                return handlersData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
+                console.error('Error fetching teacher info:', error);
                 return null;
             }
         }
@@ -203,32 +171,39 @@
             }
 
 
-            const userData = await fetchStuds();
+            const userData = await fetchReviews();
             const userContainer = document.getElementById('userContainer');
 
             userData.forEach(user => {
-
+ 
                 if (user.approved === 0) {
-                    const userContainer = document.getElementById('userContainer');
-
                     const userDiv = document.createElement('div');
                     userDiv.classList.add('user');
 
                     const name = document.createElement('h3');
-                    name.textContent = user.username;
+                    name.textContent = user.title;
                     userDiv.appendChild(name);
 
-                    const username = document.createElement('p');
-                    username.textContent = 'Name - Surname: ' + user.user_name;
-                    userDiv.appendChild(username);
+                    const ratingContainer = document.createElement('div');
+                    ratingContainer.classList.add('rating-container');
+                    const ratingText = document.createElement('span');
+                    ratingText.textContent = 'Rating:';
+                    ratingContainer.appendChild(ratingText);
+                    for (let i = 1; i <= 5; i++) {
+                        const starIcon = document.createElement('span');
+                        starIcon.classList.add('star');
+                        if (i <= user.likert) {
+                            starIcon.textContent = '★';
+                        } else {
+                            starIcon.textContent = '☆';
+                        }
+                        ratingContainer.appendChild(starIcon);
+                    }
+                    userDiv.appendChild(ratingContainer);
 
-                    const birthday = document.createElement('p');
-                    birthday.textContent = 'Birthday: ' + user.birthday;
-                    userDiv.appendChild(birthday);
-
-                    const email = document.createElement('p');
-                    email.textContent = 'Email: ' + user.email;
-                    userDiv.appendChild(email);
+                    const comments = document.createElement('p');
+                    comments.textContent = 'Review: ' + user.comments;
+                    userDiv.appendChild(comments);
 
                     const buttonsContainer = document.createElement('div');
                     buttonsContainer.classList.add('buttons-container');
@@ -237,7 +212,7 @@
                     deleteButton.textContent = 'Delete';
                     deleteButton.classList.add('delete-button');
                     deleteButton.addEventListener('click', () => {
-                        deleteUser(user.user_id);
+                        deleteUser(user.review_id);
                     });
                     buttonsContainer.appendChild(deleteButton);
 
@@ -245,20 +220,19 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.user_id);
+                        approveUser(user.review_id);
                     });
 
 
 
                     async function deleteUser(userId) {
-                        const approveStudent = `http://localhost:3305/delete_user/${userId}`;
+                        const approveStudent = `http://localhost:3305/delete_review/${userId}`;
 
                         try {
                             const response = await fetch(approveStudent);
 
                             if (response.ok) {
                                 console.log("student deleted!");
-                                alert("Approval deleted!");
                                 location.reload();
 
                             } else {
@@ -270,17 +244,17 @@
                     }
                     async function approveUser(userId) {
                         console.log(userId);
-                        const approveStudent = `http://localhost:3305/update_approves/1/${userId}`;
+                        const approveStudent = `http://localhost:3305/approve_review/1/${userId}`;
 
                         try {
                             const response = await fetch(approveStudent);
 
                             if (response.ok) {
-                                console.log("student approved!");
+                                console.log("Review approved!");
                                 location.reload();
 
                             } else {
-                                console.log("could not approve student!");
+                                console.log("could not approve review!");
                             }
                         } catch (error) {
                             console.log("An error occurred:", error);
