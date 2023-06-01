@@ -28,6 +28,5 @@ const updateData = (isbn, userid, copynum, callback) => {
         });
     });
 };
-console.log("tetso");
 
 module.exports = { updateData };
