@@ -222,7 +222,7 @@
                     userDiv.appendChild(name);
 
                     const rent_num = document.createElement('p');
-                    rent_num.textContent = 'Rent #: ' + user.rent_id;
+                    rent_num.textContent = 'Reservation #: ' + user.rent_id;
                     userDiv.appendChild(rent_num);
 
                     const username = document.createElement('p');
@@ -239,7 +239,7 @@
                     const datee = dateOfRent.toISOString().split("T")[0];
 
                     const email = document.createElement('p');
-                    email.textContent = 'Date of Rent: ' + datee;
+                    email.textContent = 'Date of Reservation: ' + datee;
                     userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
@@ -381,7 +381,6 @@
             const userContainer = document.getElementById('userContainer');
             userContainer.innerHTML = '';
 
-
             async function approveUser(rentid, isbn, copies, usersid, schoolsid) {
 
                 user = JSON.parse(localStorage.getItem("user"));
@@ -452,7 +451,6 @@
             }
 
 
-
             async function deleteUser(userId) {
                 const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
 
@@ -473,9 +471,11 @@
 
             const processedRentIds2 = [];
             userData.forEach(user => {
- 
+
                 if (user.username === searchInput && user.approved === 0 && !processedRentIds2.includes(user.rent_id)) {
-                    processedRentIds2.push(user.rent_id)
+                    processedRentIds2.push(user.rent_id);
+                    const userContainer = document.getElementById('userContainer');
+
                     const userDiv = document.createElement('div');
                     userDiv.classList.add('user');
 
@@ -483,29 +483,34 @@
                     name.textContent = user.username + ": " + user.user_name;
                     userDiv.appendChild(name);
 
+                    const rent_num = document.createElement('p');
+                    rent_num.textContent = 'Reservation #: ' + user.rent_id;
+                    userDiv.appendChild(rent_num);
+
                     const username = document.createElement('p');
                     username.textContent = 'Title: ' + user.title;
                     userDiv.appendChild(username);
 
-                    const isbn = document.createElement('p');
-                    isbn.textContent = 'ISBN: ' + user.isbn;
-                    userDiv.appendChild(isbn);
+                    const birthday = document.createElement('p');
+                    birthday.textContent = 'ISBN: ' + user.isbn;
+                    userDiv.appendChild(birthday);
+
 
                     const dateOfRent = new Date(user.date_of_rent);
                     dateOfRent.setDate(dateOfRent.getDate() + 1);
                     const datee = dateOfRent.toISOString().split("T")[0];
 
-                    const dateOfRentElement = document.createElement('p');
-                    dateOfRentElement.textContent = 'Date of Rent: ' + datee;
-                    userDiv.appendChild(dateOfRentElement);
+                    const email = document.createElement('p');
+                    email.textContent = 'Date of Reservation: ' + datee;
+                    userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
                     copies.textContent = 'Copies: ' + user.copys;
                     userDiv.appendChild(copies);
 
-                    const availableCopies = document.createElement('p');
-                    availableCopies.textContent = 'Available Copies: ' + user.available_copys;
-                    userDiv.appendChild(availableCopies);
+                    const acopys = document.createElement('p');
+                    acopys.textContent = 'Available Copies: ' + user.available_copys;
+                    userDiv.appendChild(acopys);
 
                     const buttonsContainer = document.createElement('div');
                     buttonsContainer.classList.add('buttons-container');
@@ -522,8 +527,10 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.user_id, user.rent_id, user.isbn, user.available_copys);
+                        approveUser(user.rent_id, user.isbn, user.available_copys, user.user_id, user.school_id);
                     });
+
+
                     buttonsContainer.appendChild(approveButton);
 
                     userDiv.appendChild(buttonsContainer);

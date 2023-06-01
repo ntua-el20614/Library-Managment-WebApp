@@ -25,31 +25,19 @@
     <script>
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
+ 
 
-        async function fetchStudents() {
+
+        async function fetchHandlers() {
             try {
-                const response = await fetch('http://localhost:3305/allstudents');
-                const studentsData = await response.json();
-
-                return studentsData;
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
             } catch (error) {
-                console.error('Error fetching student info:', error);
+                console.error('Error fetching handlers info:', error);
                 return null;
             }
         }
-
-        async function fetchTeachers() {
-            try {
-                const response = await fetch('http://localhost:3305/allteachers');
-                const teachersData = await response.json();
-
-                return teachersData;
-            } catch (error) {
-                console.error('Error fetching teacher info:', error);
-                return null;
-            }
-        }
-
 
         async function fetchBooksData(schoolID) {
             try {
@@ -77,46 +65,27 @@
             // let flag = false;
 
 
-            const studentsData = await fetchStudents();
-            const teachersData = await fetchTeachers();
+            const handlersData = await fetchHandlers();
+            let flag = false;
             let schoolID;
-            let found_teacher = false;
-            let found_student = false;
-
-            for (const studentsDataItem of studentsData) {
-                if (studentsDataItem.user_id === user.user_id) {
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
                     if (user.approved === 1) {
-                        schoolID = studentsDataItem.school_id;
-                        found_student = true;
+                        flag = true;
+                         schoolID = handlersDataItem.school_id;
                         console.log('You are allowed to stay here!');
                     } else {
                         alert("You are not approved yet");
                         window.location.href = '/';
-
                     }
                 }
             }
-
-            for (const teachersDataItem of teachersData) {
-                if (teachersDataItem.user_id === user.user_id) {
-                    if (user.approved === 1) {
-                        schoolID = teachersDataItem.school_id;
-                        found_teacher = true;
-                        console.log('You are allowed to stay here!');
-                    } else {
-                        alert("You are not approved yet");
-                        window.location.href = '/';
-
-                    }
-                    break;
-                }
-            }
-
-
-            if (!found_student && !found_teacher) {
-                alert("You shouldn't be here!");
+            if (!flag) {
+                alert('You are not a Handler!');
                 window.location.href = '/';
             }
+            console.log(schoolID);
+
             const booksData = await fetchBooksData(schoolID);
             const bookList = document.getElementById('book-list');
 
