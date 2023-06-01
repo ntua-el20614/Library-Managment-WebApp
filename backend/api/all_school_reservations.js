@@ -19,9 +19,8 @@ const fetchData = ([userid], callback) => {
         'JOIN book b ON r.isbn = b.isbn ' +
         'JOIN book_school bs ON r.isbn = bs.isbn ' +
         'WHERE r.school_id = ( ' +
-            'SELECT school_id FROM handlers WHERE user_id = ?) '
-             'GROUP BY r.reservation_id'
-             ;
+        'SELECT school_id FROM handlers WHERE user_id = ' + userid + ') ' +
+        'GROUP BY r.reservation_id';
         connection.query(query, [userid], (err, results) => {
             // Release the connection back to the pool
             connection.release();
