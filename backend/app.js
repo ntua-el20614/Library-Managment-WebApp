@@ -35,6 +35,7 @@ const users_school = require("./api/users_school");
 const handlers_over20books = require("./api/handlers_over20books");
 const avg_likert = require("./api/avg_likert");
 const book_user_parameters = require("./api/book_user_parameter");
+const book_handler_parameters = require("./api/book_handler_parameter");
 ////////////////////////////////////////////////////////////////
 const adduser = require("./api/adduser");
 const addteacher = require("./api/addteacher");
@@ -126,6 +127,7 @@ app.use("/users_school/:userid", users_school);
 app.use("/handlers_over20books", handlers_over20books);
 app.use("/avg_likert/:userid/:categoryid", avg_likert);
 app.use("/book_user_parameter/:schoolid/:categoryname/:title/:authorname", book_user_parameters);
+app.use("/book_handler_parameter/:userid/:categoryname/:title/:authorname/:copys", book_handler_parameters);
 ////////////////////////////////////////////////////////////////
 app.use("/adduser/:username/:password/:user_name/:birthday/:email", adduser);
 app.use("/addteacher/:userid/:schoolid", addteacher);

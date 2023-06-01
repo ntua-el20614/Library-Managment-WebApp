@@ -31,6 +31,7 @@ const { fetchData: fetchUsersSchool } = require('./api/users_school');
 const { fetchData: fetchHandlersOver20Books } = require('./api/handlers_over20books');
 const { fetchData: fetchAvgLikert } = require('./api/avg_likert');
 const { fetchData: fetchBookUserParameters } = require('./api/book_user_parameter');
+const { fetchData: fetchBookHandlerParameters } = require('./api/book_handler_parameter');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { addData: addUser } = require('./api/adduser');
 const { addData: addTeacher } = require('./api/addteacher');
@@ -445,7 +446,24 @@ app.get('/book_user_parameter/:schoolid/:categoryname/:title/:authorname', (req,
   const title = req.params.title;
   const authorname = req.params.authorname;
   fetchBookUserParameters(schoolid, categoryname, title, authorname, (err, results) => {
-    console.log('serveeer');
+    if (err) {
+      console.error('Error fetching Books data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+app.get('/book_handler_parameter/:userid/:categoryname/:title/:authorname/:copys', (req, res) => {
+  //const { schoolid, categoryname, title, authorname } = req.params; // Get the school ID from the request parameters
+  const userid = req.params.userid;
+  const categoryname = req.params.categoryname;
+  const title = req.params.title;
+  const authorname = req.params.authorname;
+  const copys = req.params.copys;
+  fetchBookHandlerParameters(userid, categoryname, title, authorname, copys, (err, results) => {
     if (err) {
       console.error('Error fetching Books data:', err);
       res.status(500).send('Internal Server Error');
