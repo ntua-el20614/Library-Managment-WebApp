@@ -82,6 +82,11 @@ def approve_reviews():
 def approve_rents():
     return render_template("/approves/approverents.html", pageTitle="Approve Rents")
 
+@app.route("/approve/reservations")
+def approve_reservations():
+    return render_template("/approves/approvereservations.html", pageTitle="Approve Rents")
+
+
 
 
 

@@ -138,7 +138,7 @@
         <button id="searchButton" class="search-button">Search</button>
     </div>
 
-    <h1>Pending Rents</h1>
+    <h1>Pending Reservations</h1>
 
     <div class="user-container" id="userContainer"></div>
     <a id="backButton" href="/handler">
@@ -166,23 +166,13 @@
             }
         }
 
-        async function fetchRents() {
-            try {
-                const response = await fetch(`http://localhost:3305/all_school_rents/${user.user_id}`);
-                const RentsData = await response.json();
-                return RentsData;
-            } catch (error) {
-                console.error('Error fetching handlers info:', error);
-                return null;
-            }
-        }
         const refreshButton = document.getElementById('refreshButton');
         refreshButton.addEventListener('click', () => {
             location.reload();
         });
         async function fetchReservations() {
             try {
-                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const response = await fetch(`http://localhost:3305/all_school_reservations/${user.user_id}`);
                 const reservationsData = await response.json();
                 return reservationsData;
             } catch (error) {
@@ -190,6 +180,7 @@
                 return null;
             }
         }
+        
 
         (async () => {
 
@@ -215,10 +206,11 @@
             }
 
 
-            const userData = await fetchRents();
+            const userData = await fetchReservations();
             const userContainer = document.getElementById('userContainer');
 
             userData.forEach(user => {
+                //console.log(user)
 
                 if (user.approved === 0) {
                     const userContainer = document.getElementById('userContainer');
@@ -231,7 +223,7 @@
                     userDiv.appendChild(name);
 
                     const rent_num = document.createElement('p');
-                    rent_num.textContent = 'Rent #: ' + user.rent_id;
+                    rent_num.textContent = 'Rent #: ' + user.reservation_id;
                     userDiv.appendChild(rent_num);
 
                     const username = document.createElement('p');
@@ -243,7 +235,7 @@
                     userDiv.appendChild(birthday);
 
 
-                    const dateOfRent = new Date(user.date_of_rent);
+                    const dateOfRent = new Date(user.date_of_reservation);
                     dateOfRent.setDate(dateOfRent.getDate() + 1);
                     const datee = dateOfRent.toISOString().split("T")[0];
 
@@ -274,7 +266,7 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.rent_id, user.isbn, user.available_copys, user.user_id, user.school_id);
+                        approveUser(user.reservation_id, user.isbn, user.available_copys, user.user_id, user.school_id);
                     });
 
 
@@ -383,7 +375,7 @@
 
         async function searchByUsername() {
             const searchInput = document.getElementById('searchInput').value;
-            const userData = await fetchRents();
+            const userData = await fetchReservations();
 
             // Clear previous search results
             const userContainer = document.getElementById('userContainer');
