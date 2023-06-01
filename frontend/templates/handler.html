@@ -311,14 +311,28 @@
             const notApprovedUsersR = reviewsData.filter(user => user.approved === 0);
             const notApprovedCountR = notApprovedUsersR.length;
 
+
+
             const rentsData = await fetchRents();
-            const notApprovedListRents = rentsData.filter(user => user.approved === 0);
-            const notApprovedCountRents = notApprovedListRents.length;
+            let notApprovedCountRents = 0;
+            const notApprovedListRents = new Set();
+            for (const ItemInRents of rentsData) {
+                if (ItemInRents.approved === 0 && !notApprovedListRents.has(ItemInRents.rent_id)) {
+                    notApprovedListRents.add(ItemInRents.rent_id);
+                    notApprovedCountRents++;
+                }
+            }
 
 
             const reservData = await fetchReservations();
-            const notApprovedListReservations = reservData.filter(user => user.approved === 0);
-            const notApprovedCountReservations = notApprovedListReservations.length;
+            let notApprovedCountReservations = 0;
+            const notApprovedListReservations = new Set();
+            for (const ItemInReservations of reservData) {
+                if (ItemInReservations.approved === 0 && !notApprovedListReservations.has(ItemInReservations.reservation_id)) {
+                    notApprovedListReservations.add(ItemInReservations.reservation_id);
+                    notApprovedCountReservations++;
+                }
+            }
 
 
 
