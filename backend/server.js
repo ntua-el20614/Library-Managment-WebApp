@@ -47,6 +47,7 @@ const { addData: addReservation } = require('./api/addreservation');
 const { addData: addBookToSchool } = require('./api/addbooktoschool');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { updateData: updatePassword } = require('./api/updatepassword');
+const { updateData: updateAvailableCopys } = require('./api/update_available_copys');
 const { updateData: updateApproves } = require('./api/update_approves');
 const { updateData: updateReviewApprove } = require('./api/approve_review');
 const { updateData: updateRentApprove } = require('./api/approve_rent');
@@ -639,6 +640,19 @@ app.get('/updatepassword/:password/:userid', (req, res) => {
       return;
     }
     res.status(200).send('Password changed successfully');
+  });
+});
+
+// Define a route handler for available copies update
+app.get('/update_available_copys/:isbn/:userid/:copynum', (req, res) => {
+  const { isbn, copynum, userid } = req.params; // Get the user data from the request body
+  updateAvailableCopys(isbn, copynum, userid, (err, result) => {
+    if (err) {
+      console.error('Error changing available copies:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Available copies changed successfully');
   });
 });
 
