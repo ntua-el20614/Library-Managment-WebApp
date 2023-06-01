@@ -205,14 +205,16 @@
                 window.location.href = '/';
             }
 
+            const processedRentIds = [];
 
             const userData = await fetchReservations();
             const userContainer = document.getElementById('userContainer');
 
-            userData.forEach(user => {
-                //console.log(user)
+            userData.forEach(user => { 
 
-                if (user.approved === 0) {
+                if (user.approved === 0 && !processedRentIds.includes(user.reservation_id)) {
+                    processedRentIds.push(user.reservation_id);
+                    
                     const userContainer = document.getElementById('userContainer');
 
                     const userDiv = document.createElement('div');
@@ -258,7 +260,7 @@
                     deleteButton.textContent = 'Delete';
                     deleteButton.classList.add('delete-button');
                     deleteButton.addEventListener('click', () => {
-                        deleteUser(user.rent_id);
+                        deleteUser(user.reservation_id);
                     });
                     buttonsContainer.appendChild(deleteButton);
 
@@ -272,7 +274,7 @@
 
 
                     async function deleteUser(userId) {
-                        const deleteRent = `http://localhost:3305/delete_rent/${userId}`;
+                        const deleteRent = `http://localhost:3305/delete_reservation/${userId}`;
 
                         try {
                             const response = await fetch(deleteRent);
