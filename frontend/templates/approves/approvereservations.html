@@ -180,7 +180,7 @@
                 return null;
             }
         }
-        
+
 
         (async () => {
 
@@ -210,11 +210,11 @@
             const userData = await fetchReservations();
             const userContainer = document.getElementById('userContainer');
 
-            userData.forEach(user => { 
+            userData.forEach(user => {
 
                 if (user.approved === 0 && !processedRentIds.includes(user.reservation_id)) {
                     processedRentIds.push(user.reservation_id);
-                    
+
                     const userContainer = document.getElementById('userContainer');
 
                     const userDiv = document.createElement('div');
@@ -225,7 +225,7 @@
                     userDiv.appendChild(name);
 
                     const rent_num = document.createElement('p');
-                    rent_num.textContent = 'Rent #: ' + user.reservation_id;
+                    rent_num.textContent = 'Reservation ID: ' + user.reservation_id;
                     userDiv.appendChild(rent_num);
 
                     const username = document.createElement('p');
@@ -242,7 +242,7 @@
                     const datee = dateOfRent.toISOString().split("T")[0];
 
                     const email = document.createElement('p');
-                    email.textContent = 'Date of Rent: ' + datee;
+                    email.textContent = 'Date of Reservation: ' + datee;
                     userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
@@ -268,7 +268,7 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.reservation_id, user.isbn, user.available_copys, user.user_id, user.school_id);
+                        approveUser(user.reservation_id, user.isbn, user.available_copys, user.user_id, user.school_id, user.user_id);
                     });
 
 
@@ -293,64 +293,63 @@
                     }
 
 
-                    async function approveUser(rentid, isbn, copies, usersid, schoolsid) {
+                    async function approveUser(rentid, isbn, copies, usersid, schoolsid, user_id) {
 
                         user = JSON.parse(localStorage.getItem("user"));
 
                         console.log(rentid, user.user_id, isbn, copies);
-                        const approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                        let approveRent;
+                        if (copies !== 0) {
+                            approveRent = `http://localhost:3305/approve_reservation/1/${rentid}`;
 
+                        } else {
+                            alert("Not enough available copies\nThis request will stay here until you delete it/expires/has enough copies");
+                            location.reload();
+                        }
                         try {
                             const response = await fetch(approveRent);
 
                             if (response.ok) {
-                                console.log("Rent approved!");
+                                console.log("Reservation approved!");
                                 //prepei na meiwsoume ta available copies kata ena
-                                if (copies >= 1) {
-                                    const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
-                                    try {
-                                        const response1 = await fetch(reduce_copies);
-                                        if (response1.ok) {
-                                            console.log("Available copies reduced!");
+                                const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+                                try {
+                                    const response = await fetch(reduce_copies);
+                                    if (response.ok) {
+                                        console.log("Available copies reduced!");
+                                        const today = new Date();
+                                        const year = today.getFullYear();
+                                        const month = String(today.getMonth() + 1).padStart(2, '0');
+                                        const day = String(today.getDate()).padStart(2, '0');
+                                        const currentDate = `${year}-${month}-${day}`;
 
-                                            location.reload();
+                                        const rent_req = `http://localhost:3305/add_rent_approved/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
 
-                                        } else {
-                                            console.log("couldnt change available copies!");
-                                            //location.reload();
+                                        try {
+                                            const response = await fetch(rent_req);
+
+                                            if (response.ok) {
+                                                        console.log("Approved rent!");
+                                                        alert("The book has been rented to the user!");
+                                                        location.reload();
+                                            } else {
+                                                console.log("could not rent the book!");
+                                            }
+                                        } catch (error) {
+                                            console.log("An error occurred:", error);
                                         }
 
+
+
+                                    } else {
+                                        console.log("couldnt change available copies!");
                                     }
-                                    catch (error) {
-                                        console.log("An error for copies:", error);
-                                    }
-                                } else {
-                                    alert("Not enough available copies\nThis request will go to reservations");
-                                    const today = new Date();
-                                    const year = today.getFullYear();
-                                    const month = String(today.getMonth() + 1).padStart(2, '0');
-                                    const day = String(today.getDate()).padStart(2, '0');
-                                    const currentDate = `${year}-${month}-${day}`;
-
-                                    const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
-                                    try {
-                                        const response = await fetch(reservation_req);
-
-                                        if (response.ok) {
-
-                                            console.log("Pending approval to reservation the book!");
-                                            location.reload();
-                                        } else {
-                                            console.log("could not reserve the book!");
-                                            location.reload();
-                                        }
-                                    } catch (error) {
-                                        console.log("An error occurred:", error);
-                                    }
-
-
 
                                 }
+                                catch (error) {
+                                    console.log("An error for copies:", error);
+                                }
+
 
                             } else {
                                 console.log("couldnt approve rent!");
@@ -382,6 +381,87 @@
             // Clear previous search results
             const userContainer = document.getElementById('userContainer');
             userContainer.innerHTML = '';
+
+
+            async function approveUser(rentid, isbn, copies, usersid, schoolsid, user_id) {
+
+                user = JSON.parse(localStorage.getItem("user"));
+
+                console.log(rentid, user.user_id, isbn, copies);
+                let approveRent;
+                if (copies !== 0) {
+                    approveRent = `http://localhost:3305/approve_reservation/1/${rentid}`;
+
+                } else {
+                    alert("Not enough available copies\nThis request will stay here until you delete it/expires/has enough copies");
+                    location.reload();
+                }
+                try {
+                    const response = await fetch(approveRent);
+
+                    if (response.ok) {
+                        console.log("Reservation approved!");
+                        //prepei na meiwsoume ta available copies kata ena
+                        const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+                        try {
+                            const response = await fetch(reduce_copies);
+                            if (response.ok) {
+                                console.log("Available copies reduced!");
+                                const today = new Date();
+                                const year = today.getFullYear();
+                                const month = String(today.getMonth() + 1).padStart(2, '0');
+                                const day = String(today.getDate()).padStart(2, '0');
+                                const currentDate = `${year}-${month}-${day}`;
+                                const rent_req = `http://localhost:3305/addrent/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
+
+                                try {
+                                    const response = await fetch(rent_req);
+
+                                    if (response.ok) {
+
+                                        console.log("Pending approval to rent the book!");
+                                        approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                                        try {
+                                            const response = await fetch(approveRent);
+                                            if (response.ok) {
+                                                console.log("Approved rent!");
+                                                alert("The book has been rented to the user!");
+                                                location.reload();
+
+                                            }
+                                        } catch (error) {
+                                            console.log("An error occurred:", error);
+                                        }
+
+
+                                    } else {
+                                        console.log("could not rent the book!");
+                                    }
+                                } catch (error) {
+                                    console.log("An error occurred:", error);
+                                }
+
+
+
+                            } else {
+                                console.log("couldnt change available copies!");
+                            }
+
+                        }
+                        catch (error) {
+                            console.log("An error for copies:", error);
+                        }
+
+
+                    } else {
+                        console.log("couldnt approve rent!");
+                    }
+                }
+                catch (error) {
+                    console.log("An error for rents:", error);
+                }
+            }
+
 
 
 
@@ -451,7 +531,7 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.user_id, user.rent_id, user.isbn, user.available_copys);
+                        approveUser(user.user_id, user.rent_id, user.isbn, user.available_copys, user.user_id);
                     });
                     buttonsContainer.appendChild(approveButton);
 
