@@ -224,9 +224,12 @@
                     username.textContent = 'Name - Surname: ' + user.user_name;
                     userDiv.appendChild(username);
 
-                    const birthday = document.createElement('p');
-                    birthday.textContent = 'Birthday: ' + user.birthday;
-                    userDiv.appendChild(birthday);
+                    const dateOfRent = new Date(user.date_of_rent);
+                    dateOfRent.setDate(dateOfRent.getDate() + 1);
+                    const datee = dateOfRent.toISOString().split("T")[0];
+                    const date = document.createElement('p');
+                    date.textContent = 'Date of Rent: ' + datee;
+                    userDiv.appendChild(date);
 
                     const email = document.createElement('p');
                     email.textContent = 'Email: ' + user.email;
