@@ -181,6 +181,24 @@
             location.reload();
         });
 
+        async function deleteUser(userId) {
+            const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+
+            try {
+                const response = await fetch(approveStudent);
+
+                if (response.ok) {
+                    console.log("student deleted!");
+                    location.reload();
+
+                } else {
+                    console.log("could not delete student!");
+                }
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+        }
+
         (async () => {
 
 
@@ -222,7 +240,7 @@
                     userDiv.appendChild(name);
 
                     const rent_num = document.createElement('p');
-                    rent_num.textContent = 'Reservation #: ' + user.rent_id;
+                    rent_num.textContent = 'Rent #: ' + user.rent_id;
                     userDiv.appendChild(rent_num);
 
                     const username = document.createElement('p');
@@ -239,7 +257,7 @@
                     const datee = dateOfRent.toISOString().split("T")[0];
 
                     const email = document.createElement('p');
-                    email.textContent = 'Date of Reservation: ' + datee;
+                    email.textContent = 'Date of Rent: ' + datee;
                     userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
@@ -269,34 +287,59 @@
                     });
 
 
-
-                    async function deleteUser(userId) {
-                        const deleteRent = `http://localhost:3305/delete_rent/${userId}`;
-
-                        try {
-                            const response = await fetch(deleteRent);
-
-                            if (response.ok) {
-                                console.log("Rent deleted!");
-                                location.reload();
-
-                            } else {
-                                console.log("could not delete rent!");
-                            }
-                        } catch (error) {
-                            console.log("An error occurred:", error);
-                        }
-
-                    }
-
-
                     async function approveUser(rentid, isbn, copies, usersid, schoolsid) {
 
                         user = JSON.parse(localStorage.getItem("user"));
 
+                        let approveRent;
                         console.log(rentid, user.user_id, isbn, copies);
-                        const approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                        if (copies != 0) {
+                            approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                        } else {
+                            alert("Not enough available copies\nThis request will go to reservations");
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const month = String(today.getMonth() + 1).padStart(2, '0');
+                            const day = String(today.getDate()).padStart(2, '0');
+                            const currentDate = `${year}-${month}-${day}`;
 
+                            const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
+                            try {
+                                const response = await fetch(reservation_req);
+
+                                if (response.ok) {
+
+                                    console.log("Pending approval to reservation the book!");
+
+                                    const approveStudent = `http://localhost:3305/delete_rent/${rentid}`;
+
+                                    try {
+                                        const response = await fetch(approveStudent);
+
+                                        if (response.ok) {
+                                            console.log("student deleted!");
+                                            location.reload();
+
+                                        } else {
+                                            console.log("could not delete student!");
+                                        }
+                                    } catch (error) {
+                                        console.log("An error occurred:", error);
+                                    }
+
+
+                                    location.reload();
+                                } else {
+                                    console.log("could not reserve the book!");
+                                    location.reload();
+                                }
+                            } catch (error) {
+                                console.log("An error occurred:", error);
+                            }
+
+
+
+                        }
                         try {
                             const response = await fetch(approveRent);
 
@@ -321,33 +364,6 @@
                                     catch (error) {
                                         console.log("An error for copies:", error);
                                     }
-                                } else {
-                                    alert("Not enough available copies\nThis request will go to reservations");
-                                    const today = new Date();
-                                    const year = today.getFullYear();
-                                    const month = String(today.getMonth() + 1).padStart(2, '0');
-                                    const day = String(today.getDate()).padStart(2, '0');
-                                    const currentDate = `${year}-${month}-${day}`;
-
-                                    const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
-                                    try {
-                                        const response = await fetch(reservation_req);
-
-                                        if (response.ok) {
-
-                                            console.log("Pending approval to reservation the book!");
-                                            deleteUser(rentid)
-                                            location.reload();
-                                        } else {
-                                            console.log("could not reserve the book!");
-                                            location.reload();
-                                        }
-                                    } catch (error) {
-                                        console.log("An error occurred:", error);
-                                    }
-
-
-
                                 }
 
                             } else {
@@ -360,6 +376,25 @@
                     }
 
 
+
+
+                    async function deleteUser(userId) {
+                        const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+
+                        try {
+                            const response = await fetch(approveStudent);
+
+                            if (response.ok) {
+                                console.log("student deleted!");
+                                location.reload();
+
+                            } else {
+                                console.log("could not delete student!");
+                            }
+                        } catch (error) {
+                            console.log("An error occurred:", error);
+                        }
+                    }
 
 
                     buttonsContainer.appendChild(approveButton);
@@ -385,9 +420,55 @@
 
                 user = JSON.parse(localStorage.getItem("user"));
 
+                let approveRent;
                 console.log(rentid, user.user_id, isbn, copies);
-                const approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                if (copies != 0) {
+                    approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                } else {
+                    alert("Not enough available copies\nThis request will go to reservations");
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    const day = String(today.getDate()).padStart(2, '0');
+                    const currentDate = `${year}-${month}-${day}`;
 
+                    const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
+                    try {
+                        const response = await fetch(reservation_req);
+
+                        if (response.ok) {
+
+                            console.log("Pending approval to reservation the book!");
+
+                            const approveStudent = `http://localhost:3305/delete_rent/${rentid}`;
+
+                            try {
+                                const response = await fetch(approveStudent);
+
+                                if (response.ok) {
+                                    console.log("student deleted!");
+                                    location.reload();
+
+                                } else {
+                                    console.log("could not delete student!");
+                                }
+                            } catch (error) {
+                                console.log("An error occurred:", error);
+                            }
+
+
+                            location.reload();
+                        } else {
+                            console.log("could not reserve the book!");
+                            location.reload();
+                        }
+                    } catch (error) {
+                        console.log("An error occurred:", error);
+                    }
+
+
+
+                }
                 try {
                     const response = await fetch(approveRent);
 
@@ -412,33 +493,6 @@
                             catch (error) {
                                 console.log("An error for copies:", error);
                             }
-                        } else {
-                            alert("Not enough available copies\nThis request will go to reservations");
-                            const today = new Date();
-                            const year = today.getFullYear();
-                            const month = String(today.getMonth() + 1).padStart(2, '0');
-                            const day = String(today.getDate()).padStart(2, '0');
-                            const currentDate = `${year}-${month}-${day}`;
-
-                            const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
-                            try {
-                                const response = await fetch(reservation_req);
-
-                                if (response.ok) {
-
-                                    console.log("Pending approval to reservation the book!");
-                                    deleteUser(rentid)
-                                    location.reload();
-                                } else {
-                                    console.log("could not reserve the book!");
-                                    location.reload();
-                                }
-                            } catch (error) {
-                                console.log("An error occurred:", error);
-                            }
-
-
-
                         }
 
                     } else {
@@ -451,23 +505,6 @@
             }
 
 
-            async function deleteUser(userId) {
-                const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
-
-                try {
-                    const response = await fetch(approveStudent);
-
-                    if (response.ok) {
-                        console.log("student deleted!");
-                        location.reload();
-
-                    } else {
-                        console.log("could not delete student!");
-                    }
-                } catch (error) {
-                    console.log("An error occurred:", error);
-                }
-            }
 
             const processedRentIds2 = [];
             userData.forEach(user => {
@@ -484,7 +521,7 @@
                     userDiv.appendChild(name);
 
                     const rent_num = document.createElement('p');
-                    rent_num.textContent = 'Reservation #: ' + user.rent_id;
+                    rent_num.textContent = 'Rent #: ' + user.rent_id;
                     userDiv.appendChild(rent_num);
 
                     const username = document.createElement('p');
@@ -501,7 +538,7 @@
                     const datee = dateOfRent.toISOString().split("T")[0];
 
                     const email = document.createElement('p');
-                    email.textContent = 'Date of Reservation: ' + datee;
+                    email.textContent = 'Date of Rent: ' + datee;
                     userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
