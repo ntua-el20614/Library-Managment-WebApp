@@ -329,9 +329,9 @@
                                             const response = await fetch(rent_req);
 
                                             if (response.ok) {
-                                                        console.log("Approved rent!");
-                                                        alert("The book has been rented to the user!");
-                                                        location.reload();
+                                                console.log("Approved rent!");
+                                                alert("The book has been rented to the user!");
+                                                location.reload();
                                             } else {
                                                 console.log("could not rent the book!");
                                             }
@@ -412,28 +412,16 @@
                                 const month = String(today.getMonth() + 1).padStart(2, '0');
                                 const day = String(today.getDate()).padStart(2, '0');
                                 const currentDate = `${year}-${month}-${day}`;
-                                const rent_req = `http://localhost:3305/addrent/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
+
+                                const rent_req = `http://localhost:3305/add_rent_approved/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
 
                                 try {
                                     const response = await fetch(rent_req);
 
                                     if (response.ok) {
-
-                                        console.log("Pending approval to rent the book!");
-                                        approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
-                                        try {
-                                            const response = await fetch(approveRent);
-                                            if (response.ok) {
-                                                console.log("Approved rent!");
-                                                alert("The book has been rented to the user!");
-                                                location.reload();
-
-                                            }
-                                        } catch (error) {
-                                            console.log("An error occurred:", error);
-                                        }
-
-
+                                        console.log("Approved rent!");
+                                        alert("The book has been rented to the user!");
+                                        location.reload();
                                     } else {
                                         console.log("could not rent the book!");
                                     }
@@ -482,9 +470,14 @@
                     console.log("An error occurred:", error);
                 }
             }
+            const processedRentIds = [];
 
             userData.forEach(user => {
-                if (user.username === searchInput && user.approved === 0) {
+                if (user.username === searchInput && user.approved === 0 && !processedRentIds.includes(user.reservation_id)) {
+                    processedRentIds.push(user.reservation_id);
+
+                    const userContainer = document.getElementById('userContainer');
+
                     const userDiv = document.createElement('div');
                     userDiv.classList.add('user');
 
@@ -492,29 +485,34 @@
                     name.textContent = user.username + ": " + user.user_name;
                     userDiv.appendChild(name);
 
+                    const rent_num = document.createElement('p');
+                    rent_num.textContent = 'Reservation ID: ' + user.reservation_id;
+                    userDiv.appendChild(rent_num);
+
                     const username = document.createElement('p');
                     username.textContent = 'Title: ' + user.title;
                     userDiv.appendChild(username);
 
-                    const isbn = document.createElement('p');
-                    isbn.textContent = 'ISBN: ' + user.isbn;
-                    userDiv.appendChild(isbn);
+                    const birthday = document.createElement('p');
+                    birthday.textContent = 'ISBN: ' + user.isbn;
+                    userDiv.appendChild(birthday);
 
-                    const dateOfRent = new Date(user.date_of_rent);
+
+                    const dateOfRent = new Date(user.date_of_reservation);
                     dateOfRent.setDate(dateOfRent.getDate() + 1);
                     const datee = dateOfRent.toISOString().split("T")[0];
 
-                    const dateOfRentElement = document.createElement('p');
-                    dateOfRentElement.textContent = 'Date of Rent: ' + datee;
-                    userDiv.appendChild(dateOfRentElement);
+                    const email = document.createElement('p');
+                    email.textContent = 'Date of Reservation: ' + datee;
+                    userDiv.appendChild(email);
 
                     const copies = document.createElement('p');
                     copies.textContent = 'Copies: ' + user.copys;
                     userDiv.appendChild(copies);
 
-                    const availableCopies = document.createElement('p');
-                    availableCopies.textContent = 'Available Copies: ' + user.available_copys;
-                    userDiv.appendChild(availableCopies);
+                    const acopys = document.createElement('p');
+                    acopys.textContent = 'Available Copies: ' + user.available_copys;
+                    userDiv.appendChild(acopys);
 
                     const buttonsContainer = document.createElement('div');
                     buttonsContainer.classList.add('buttons-container');
@@ -523,7 +521,7 @@
                     deleteButton.textContent = 'Delete';
                     deleteButton.classList.add('delete-button');
                     deleteButton.addEventListener('click', () => {
-                        deleteUser(user.rent_id);
+                        deleteUser(user.reservation_id);
                     });
                     buttonsContainer.appendChild(deleteButton);
 
@@ -531,8 +529,11 @@
                     approveButton.textContent = 'Approve';
                     approveButton.classList.add('approve-button');
                     approveButton.addEventListener('click', () => {
-                        approveUser(user.user_id, user.rent_id, user.isbn, user.available_copys, user.user_id);
+                        approveUser(user.reservation_id, user.isbn, user.available_copys, user.user_id, user.school_id, user.user_id);
                     });
+
+
+
                     buttonsContainer.appendChild(approveButton);
 
                     userDiv.appendChild(buttonsContainer);
