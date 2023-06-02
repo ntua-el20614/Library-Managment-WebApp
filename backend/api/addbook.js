@@ -11,8 +11,8 @@ const addData = (isbn, title, publisher, pages, summary, book_language, keywords
     }
 
     // Execute a SQL query to add a user
-    const query = 'INSERT INTO book (isbn, title, publisher, pages, summary, image, book_language, keywords) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const values = [isbn, title, publisher, pages, summary, image, book_language, keywords];
+    const query = 'INSERT INTO book (isbn, title, publisher, pages, summary, book_language, keywords) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const values = [isbn, title, publisher, pages, summary, book_language, keywords];
     connection.query(query, values, (err, result) => {
       // Release the connection back to the pool
       connection.release();

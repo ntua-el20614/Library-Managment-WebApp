@@ -151,7 +151,7 @@ app.use("/addauthor/:authorname", addauthor);
 app.use("/addcategory/:categoryname", addcategory);
 app.use("/addreview/:userid/:schoolid/:isbn/:comments/:likert", addreview);
 app.use("/addschool/:school_name/:address/:city/:telephone/:email/:principal_fullname", addschool);
-app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords", addbook);
+app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:book_language/:keywords", addbook);
 app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
 app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);

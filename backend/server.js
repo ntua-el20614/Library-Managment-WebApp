@@ -684,9 +684,9 @@ app.get('/addschool/:school_name/:address/:city/:telephone/:email/:principal_ful
 });
 
 // Define a route handler for adding a book
-app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/:keywords', (req, res) => {
-  const { isbn, title, publisher, pages, summary, image, book_language, keywords } = req.params; // Get the user data from the request body
-  addBook(isbn, title, publisher, pages, summary, image, book_language, keywords, (err, result) => {
+app.get('/addbook/:isbn/:title/:publisher/:pages/:summary/:book_language/:keywords', (req, res) => {
+  const { isbn, title, publisher, pages, summary, book_language, keywords } = req.params; // Get the user data from the request body
+  addBook(isbn, title, publisher, pages, summary, book_language, keywords, (err, result) => {
     if (err) {
       console.error('Error adding book:', err);
       res.status(500).send('Internal Server Error');
