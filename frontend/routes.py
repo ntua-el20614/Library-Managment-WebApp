@@ -127,6 +127,10 @@ def reviews_of_a_book():
 
 #~Handler moves
 ####################################################################################~
+@app.route("/avg_likert")
+def average_likert():
+    return render_template("/queries/avglikert.html", pageTitle="Average Likert")
+
 @app.route("/handler/books")
 def see_all_books():
     return render_template("/handlerbooks.html", pageTitle="All Books")
