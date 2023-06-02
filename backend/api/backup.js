@@ -13,7 +13,7 @@ const backupDatabase = (callback) => {
     }
 
     // Dump the database using mysqldump
-    const backupFileName = 'database_backup.sql';
+    const backupFileName = '../papabase_sql/database_backup.sql';
     const dumpCommand = `mysqldump --host=localhost --user=papamaster --password=password --skip-column-statistics library_project`;
 
     // Execute the dump command
