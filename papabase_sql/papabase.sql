@@ -16,6 +16,20 @@ USE library_project;
     PRIMARY KEY(school_id)
 );
 
+CREATE TABLE reservation(
+	reservation_id integer(5) NOT NULL auto_increment,
+    user_id integer(4) NOT NULL,
+    isbn char(13) NOT NULL,
+    school_id integer(4) NOT NULL,
+    date_of_reservation timestamp NOT NULL,
+    approved boolean NOT NULL DEFAULT 0,
+		CONSTRAINT reserved_by_user FOREIGN KEY (user_id)
+        REFERENCES users(user_id) ON  DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT reserved_book FOREIGN KEY (isbn,school_id)
+        REFERENCES book_school(isbn,school_id) ON  DELETE CASCADE ON UPDATE CASCADE,
+	PRIMARY KEY (reservation_id)
+);
+
 CREATE TABLE author(
 	author_id integer(4) NOT NULL auto_increment,
     author_name varchar(50) NOT NULL,
@@ -142,20 +156,6 @@ CREATE TABLE rent(
         CONSTRAINT rented_book FOREIGN KEY (isbn,school_id)
         REFERENCES book_school(isbn,school_id) ON  DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (rent_id)
-);
-
-CREATE TABLE reservation(
-	reservation_id integer(5) NOT NULL auto_increment,
-    user_id integer(4) NOT NULL,
-    isbn char(13) NOT NULL,
-    school_id integer(4) NOT NULL,
-    date_of_reservation timestamp NOT NULL,
-    approved boolean NOT NULL DEFAULT 0,
-		CONSTRAINT reserved_by_user FOREIGN KEY (user_id)
-        REFERENCES users(user_id) ON  DELETE CASCADE ON UPDATE CASCADE,
-        CONSTRAINT reserved_book FOREIGN KEY (isbn,school_id)
-        REFERENCES book_school(isbn,school_id) ON  DELETE CASCADE ON UPDATE CASCADE,
-	PRIMARY KEY (reservation_id)
 );
 
 CREATE TABLE review(
