@@ -99,6 +99,7 @@ const fetchData = ([userid, username, categoryname], callback) => {
 
         // Define the query based on the provided parameters
         let query = '';
+        const params = [];
         if (username !== '-1' && categoryname === '-1') {
             // Only username provided
             query =
@@ -110,8 +111,10 @@ const fetchData = ([userid, username, categoryname], callback) => {
                 'JOIN book_school bs ON r.isbn = bs.isbn ' +
                 'JOIN handlers h ON bs.school_id = h.school_id ' +
                 'WHERE u.username = ? ' +
-                'AND h.user_id = ? ' +
+                'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ?) ' +
                 'GROUP BY u.username, c.category_name';
+
+            params.push(username, userid);
         } else if (username === '-1' && categoryname !== '-1') {
             // Only categoryname provided
             query =
@@ -123,8 +126,10 @@ const fetchData = ([userid, username, categoryname], callback) => {
                 'JOIN book_school bs ON r.isbn = bs.isbn ' +
                 'JOIN handlers h ON bs.school_id = h.school_id ' +
                 'WHERE c.category_name = ? ' +
-                'AND h.user_id = ? ' +
+                'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ?) ' +
                 'GROUP BY u.username, c.category_name';
+
+            params.push(categoryname, userid);
         } else if (username !== '-1' && categoryname !== '-1') {
             // Both username and categoryname provided
             query =
@@ -137,10 +142,12 @@ const fetchData = ([userid, username, categoryname], callback) => {
                 'JOIN handlers h ON bs.school_id = h.school_id ' +
                 'WHERE u.username = ? ' +
                 'AND c.category_name = ? ' +
-                'AND h.user_id = ? ' +
+                'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ?) ' +
                 'GROUP BY u.username, c.category_name';
+
+            params.push(username, categoryname, userid);
         } else if (username === '-1' && categoryname === '-1') {
-            // No parameters
+            // No parameters provided
             query =
                 'SELECT u.username, c.category_name, AVG(r.likert) AS average_likert ' +
                 'FROM review r ' +
@@ -149,15 +156,11 @@ const fetchData = ([userid, username, categoryname], callback) => {
                 'JOIN category c ON bc.category_id = c.category_id ' +
                 'JOIN book_school bs ON r.isbn = bs.isbn ' +
                 'JOIN handlers h ON bs.school_id = h.school_id ' +
-                'WHERE h.user_id = ? ' +
+                'WHERE r.school_id = (SELECT school_id FROM handlers WHERE user_id = ?) ' +
                 'GROUP BY u.username, c.category_name';
-        }
 
-        // Prepare the query parameters
-        const params = [];
-        if (username !== '-1') params.push(username);
-        if (categoryname !== '-1') params.push(categoryname);
-        params.push(userid);
+            params.push(userid);
+        }
 
         // Execute the query
         connection.query(query, params, (err, results) => {
