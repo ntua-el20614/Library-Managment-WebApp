@@ -54,6 +54,7 @@ const addbook = require("./api/addbook");
 const addauthortobook = require("./api/addauthortobook");
 const addcategorytobook = require("./api/addcategorytobook");
 const addrent = require("./api/addrent");
+const add_rent_approved = require("./api/add_rent_approved");
 const addreservation = require("./api/addreservation");
 const addbooktoschool = require("./api/addbooktoschool");
 ////////////////////////////////////////////////////////////////
@@ -151,6 +152,7 @@ app.use("/addbook/:isbn/:title/:publisher/:pages/:summary/:image/:book_language/
 app.use("/addauthortobook/:isbn/:authorid", addauthortobook);
 app.use("/addcategorytobook/:isbn/:categoryid", addcategorytobook);
 app.use("/addrent/:user_id/:isbn/:school_id/:date_of_rent", addrent);
+app.use("/add_rent_approved/:user_id/:isbn/:school_id/:date_of_rent", add_rent_approved);
 app.use("/addreservation/:user_id/:isbn/:school_id/:date_of_reservation", addreservation);
 app.use("/addbooktoschool/:isbn/:school_id/:copys", addbooktoschool);
 ////////////////////////////////////////////////////////////////
