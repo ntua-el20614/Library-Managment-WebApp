@@ -30,7 +30,7 @@ CREATE TABLE category(
 );
 
 CREATE TABLE book(
-	isbn char(10) NOT NULL,
+	isbn char(13) NOT NULL,
     title varchar(50) NOT NULL,
     publisher varchar(50) ,
     pages integer(4) ,
@@ -42,7 +42,7 @@ CREATE TABLE book(
 );
 
 CREATE TABLE book_author(
-	isbn char(10) NOT NULL,
+	isbn char(13) NOT NULL,
 	author_id integer(4) NOT NULL,
         CONSTRAINT book_info1 FOREIGN KEY (isbn)
         REFERENCES book(isbn) ON  DELETE CASCADE ON UPDATE CASCADE,
@@ -55,7 +55,7 @@ CREATE TABLE book_author(
 
 
 CREATE TABLE book_school(
-	isbn char(10) NOT NULL,
+	isbn char(13) NOT NULL,
 	school_id integer(4) NOT NULL,
     copys integer(3) NOT NULL,
     available_copys integer(3) NOT NULL,
@@ -64,11 +64,13 @@ CREATE TABLE book_school(
         CONSTRAINT book_info2 FOREIGN KEY (isbn)
         REFERENCES book(isbn) ON  DELETE CASCADE ON UPDATE CASCADE,
         primary key(isbn, school_id),
-        CHECK (available_copys <= copys)
+        CHECK 	(available_copys <= copys),
+		CHECK		(copys >= 0),
+		CHECK	(available_copys >= 0)
 );
 
 CREATE TABLE book_category (
-    isbn char(10) NOT NULL,
+    isbn char(13) NOT NULL,
     category_id integer(3) NOT NULL,
     CONSTRAINT category_info FOREIGN KEY (category_id)
 		REFERENCES category(category_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -130,7 +132,7 @@ CREATE TABLE mastoras(
 CREATE TABLE rent(
 	rent_id integer(5) NOT NULL auto_increment,
     user_id integer(4) NOT NULL,
-    isbn char(10) NOT NULL,
+    isbn char(13) NOT NULL,
     school_id integer(4) NOT NULL,
     date_of_rent timestamp NOT NULL,
     returned boolean NOT NULL DEFAULT 0,
@@ -145,7 +147,7 @@ CREATE TABLE rent(
 CREATE TABLE reservation(
 	reservation_id integer(5) NOT NULL auto_increment,
     user_id integer(4) NOT NULL,
-    isbn char(10) NOT NULL,
+    isbn char(13) NOT NULL,
     school_id integer(4) NOT NULL,
     date_of_reservation timestamp NOT NULL,
     approved boolean NOT NULL DEFAULT 0,
@@ -159,7 +161,7 @@ CREATE TABLE reservation(
 CREATE TABLE review(
 	review_id integer(5) NOT NULL auto_increment,
     user_id integer(4) NOT NULL,
-    isbn char(10) NOT NULL,
+    isbn char(13) NOT NULL,
     school_id integer(4) NOT NULL,
     likert integer(1) NOT NULL,
 	comments varchar(255),
