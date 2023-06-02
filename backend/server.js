@@ -310,11 +310,12 @@ app.get('/all_rents/:year/:month', (req, res) => {
 });
 
 // Define a route handler for /all_rents
-app.get('/avg_likert/:userid/:categoryid', (req, res) => {
-  const userid = req.params.userid; // Get the year and month from the request parameters
-  const categoryid = req.params.categoryid;
+app.get('/avg_likert/:userid/:username/:categoryname', (req, res) => {
+  const userid = req.params.userid;
+  const username = req.params.username; // Get the year and month from the request parameters
+  const categoryname = req.params.categoryname
 
-  fetchAvgLikert([userid, categoryid], (err, results) => {
+  fetchAvgLikert([userid, username, categoryname], (err, results) => {
     if (err) {
       console.error('Error fetching likert data:', err);
       res.status(500).send('Internal Server Error');

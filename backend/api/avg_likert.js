@@ -2,7 +2,7 @@ const pool = require('../dbconnector');
 
 // Function to fetch data from the database
 
-const fetchData = ([userid, categoryid], callback) => {
+const fetchData = ([userid, username, categoryname], callback) => {
     // Get a connection from the pool
     pool.getConnection((err, connection) => {
         if (err) {
@@ -13,35 +13,62 @@ const fetchData = ([userid, categoryid], callback) => {
 
         // Define the query based on the provided parameters
         let query = '';
-        if (userid !== '0' && categoryid === '0') {
+        if (username !== '-1' && categoryname === '-1') {
             // Only userid provided
             query =
-                'SELECT AVG(likert) AS average_likert ' +
-                'FROM review ' +
-                'WHERE user_id = ' + userid;
-        } else if (userid === '0' && categoryid !== '0') {
+            'SELECT u.username, c.category_name, AVG(r.likert) AS average_likert ' +
+            'FROM review r ' +
+            'JOIN users u ON r.user_id = u.user_id ' +
+            'JOIN book_category bc ON r.isbn = bc.isbn ' +
+            'JOIN category c ON bc.category_id = c.category_id ' +
+            'JOIN book_school bs ON r.isbn = bs.isbn ' +
+            'JOIN handlers h ON u.user_id = h.user_id ' +
+            "WHERE u.username = '" + username + "' " + 
+              'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ') '
+            'GROUP BY u.username, c.category_name';
+        } else if (username === '-1' && categoryname !== '-1') {
             // Only categoryid provided
             query =
-                'SELECT AVG(likert) AS average_likert ' +
-                'FROM review ' +
-                'WHERE isbn IN (SELECT isbn FROM book_category WHERE category_id = ' + categoryid + ' )';
-        } else if (userid !== '0' && categoryid !== '0') {
+            'SELECT u.username, c.category_name, AVG(r.likert) AS average_likert ' +
+            'FROM review r ' +
+            'JOIN users u ON r.user_id = u.user_id ' +
+            'JOIN book_category bc ON r.isbn = bc.isbn ' +
+            'JOIN category c ON bc.category_id = c.category_id ' +
+            'JOIN book_school bs ON r.isbn = bs.isbn ' +
+            'JOIN handlers h ON u.user_id = h.user_id ' +
+            "WHERE c.category_name = '" + categoryname + "' " +
+              'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ') '
+            'GROUP BY u.username, c.category_name';
+        } else if (username !== '-1' && categoryname !== '-1') {
             // Both userid and categoryid provided
             query =
-                'SELECT AVG(likert) AS average_likert ' +
-                'FROM review ' +
-                'WHERE user_id = ' + userid + ' AND isbn IN (SELECT isbn FROM book_category WHERE category_id = ' + categoryid + ')';
-        } else if (userid === '0' && categoryid === '0') {
+            'SELECT u.username, c.category_name, AVG(r.likert) AS average_likert ' +
+            'FROM review r ' +
+            'JOIN users u ON r.user_id = u.user_id ' +
+            'JOIN book_category bc ON r.isbn = bc.isbn ' +
+            'JOIN category c ON bc.category_id = c.category_id ' +
+            'JOIN book_school bs ON r.isbn = bs.isbn ' +
+            'JOIN handlers h ON u.user_id = h.user_id ' +
+            "WHERE u.username = '" + username + "' " + 
+              "AND c.category_name = '" + categoryname + "' " +
+              'AND r.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ') '
+            'GROUP BY u.username, c.category_name';
+        } else if (username === '-1' && categoryname === '-1') {
             // No parameters
             query =
-                'SELECT AVG(likert) AS average_likert ' +
-                'FROM review ';
+            'SELECT u.username, c.category_name, AVG(r.likert) AS average_likert ' +
+            'FROM review r ' +
+            'JOIN users u ON r.user_id = u.user_id ' +
+            'JOIN book_category bc ON r.isbn = bc.isbn ' +
+            'JOIN category c ON bc.category_id = c.category_id ' +
+            'JOIN book_school bs ON r.isbn = bs.isbn WHERE r.school_id = (SELECT school_id FROM handlers WHERE user_id = ' + userid + ' )' +
+            'GROUP BY u.username, c.category_name';
         }
 
 
 
         // Execute the query
-        connection.query(query, [userid, categoryid], (err, results) => {
+        connection.query(query, [userid, username, categoryname], (err, results) => {
             // Release the connection back to the pool
             connection.release();
 

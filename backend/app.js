@@ -138,7 +138,7 @@ app.use("/allteachers_fromusers_school/:id", allteachers_fromusers_school);
 app.use("/allhandlers_fromusers_school/:id", allhandlers_fromusers_school);
 app.use("/users_school/:userid", users_school);
 app.use("/handlers_over20books", handlers_over20books);
-app.use("/avg_likert/:userid/:categoryid", avg_likert);
+app.use("/avg_likert/:userid/:username/:categoryname", avg_likert);
 app.use("/book_user_parameter/:schoolid/:categoryname/:title/:authorname", book_user_parameters);
 app.use("/book_handler_parameter/:userid/:categoryname/:title/:authorname/:copys", book_handler_parameters);
 app.use("/late_rents/:userid/:name/:dayz", late_rents);
