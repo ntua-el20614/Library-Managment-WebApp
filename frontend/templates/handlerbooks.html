@@ -18,7 +18,9 @@
             <a id="backButton" onclick="redirectToPreviousPage()">
                 <span>&#8617;</span>
             </a>
-        </a>
+        </a> 
+    <button id="addBookButton" onclick="redirectToAddBook()">Add Book</button>
+
     </h1>
 
     <!-- Search bars -->
@@ -45,7 +47,14 @@
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
  
+        function redirectToPreviousPage() {
+            history.back();
+        }
 
+        function redirectToAddBook(){
+            window.location.href = `/addbook`;
+
+        }
 
         async function fetchHandlers() {
             try {
@@ -121,9 +130,6 @@
                 console.error('Error fetching filtered books:', error);
                 return null;
             }
-        }
-        function redirectToPreviousPage() {
-            history.back();
         }
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
