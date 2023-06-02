@@ -17,13 +17,13 @@ const fetchData = (callback) => {
     'JOIN users u ON h.user_id = u.user_id ' +
     'WHERE r.date_of_rent >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) ' +
     'GROUP BY h.user_id, u.user_name, h.school_id ' +
-    'HAVING rented_books > 2 ' +
+    'HAVING rented_books > 20 ' +
     'AND rented_books IN ( ' +
         'SELECT COUNT(DISTINCT CASE WHEN r2.approved = 1 THEN r2.rent_id END) ' +
         'FROM rent r2 ' +
         'WHERE r2.date_of_rent >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) ' +
         'GROUP BY r2.school_id ' +
-        'HAVING COUNT(DISTINCT CASE WHEN r2.approved = 1 THEN r2.rent_id END) > 2 ' +
+        'HAVING COUNT(DISTINCT CASE WHEN r2.approved = 1 THEN r2.rent_id END) > 20 ' +
         'AND r2.school_id <> h.school_id ) ';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
