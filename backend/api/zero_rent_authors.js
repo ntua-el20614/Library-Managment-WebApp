@@ -12,12 +12,14 @@ const fetchData = (callback) => {
 
     // Execute a SQL query to fetch data
     const query =
-      'SELECT DISTINCT a.author_name, a.author_id ' +
-      'FROM author a ' +
-      'LEFT JOIN book_author ba ON a.author_id = ba.author_id ' +
-      'LEFT JOIN rent r ON ba.isbn = r.isbn ' +
-      'WHERE r.isbn IS NULL ' +
-      'GROUP BY a.author_id';
+    'SELECT a.author_id, a.author_name ' +
+    'FROM author a ' +
+    'WHERE NOT EXISTS ( ' +
+        'SELECT 1 ' +
+        'FROM book_author ba ' +
+        'INNER JOIN book b ON ba.isbn = b.isbn ' +
+        'INNER JOIN rent r ON b.isbn = r.isbn ' +
+        'WHERE ba.author_id = a.author_id )';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
