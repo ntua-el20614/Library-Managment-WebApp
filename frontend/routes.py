@@ -61,31 +61,6 @@ def page_for_mastoras():
     return render_template("/mastoras.html", pageTitle="Home Page")
 
 
-@app.route("/approve/students")
-def approve_students():
-    return render_template("/approves/approvestudents.html", pageTitle="Approve Students")
-
-@app.route("/approve/teachers")
-def approve_teachers():
-    return render_template("/approves/approveteachers.html", pageTitle="Approve Teachers")
-
-@app.route("/approve/handlers")
-def approve_handlers():
-    return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
- 
-@app.route("/approve/reviews")
-def approve_reviews():
-    return render_template("/approves/approvereviews.html", pageTitle="Approve Reviews")
-
-@app.route("/approve/rents")
-def approve_rents():
-    return render_template("/approves/approverents.html", pageTitle="Approve Rents")
-
-@app.route("/approve/reservations")
-def approve_reservations():
-    return render_template("/approves/approvereservations.html", pageTitle="Approve Rents")
-
-
 
 
 
@@ -136,9 +111,51 @@ def reviews_of_a_book():
 ####################################################################################~
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #~Handler moves
 ####################################################################################~
 @app.route("/handler/books")
 def see_all_books():
     return render_template("/handlerbooks.html", pageTitle="All Books")
+
+@app.route("/approve/students")
+def approve_students():
+    return render_template("/approves/approvestudents.html", pageTitle="Approve Students")
+
+@app.route("/approve/teachers")
+def approve_teachers():
+    return render_template("/approves/approveteachers.html", pageTitle="Approve Teachers")
+
+@app.route("/approve/handlers")
+def approve_handlers():
+    return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
+ 
+@app.route("/approve/reviews")
+def approve_reviews():
+    return render_template("/approves/approvereviews.html", pageTitle="Approve Reviews")
+
+@app.route("/approve/rents")
+def approve_rents():
+    return render_template("/approves/approverents.html", pageTitle="Approve Rents")
+
+@app.route("/approve/reservations")
+def approve_reservations():
+    return render_template("/approves/approvereservations.html", pageTitle="Approve Rents")
+
+@app.route("/approve/returns")
+def approve_returns():
+    return render_template("/approves/approvereturns.html", pageTitle="Approve Returns")
 ####################################################################################~

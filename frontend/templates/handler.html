@@ -84,6 +84,13 @@
             <div id="notApprovedCountReservations" class="red-circle"></div>
         </div>
 
+        
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/approve/returns';">Show</button>
+            <p class="rectangle-content">Book Returns</p>
+            <div id="notReturned" class="red-circle"></div>
+        </div>
+
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/handler/books';">Show</button>
             <p class="rectangle-content">The list of all books</p>
@@ -164,7 +171,6 @@
             window.location.href = '/';
 
 
-        //app.use("/all_reviews/:isbn", all_reviews);
 
         async function fetchReviews() {
             try {
@@ -180,6 +186,16 @@
         async function fetchReservations() {
             try {
                 const response = await fetch(`http://localhost:3305/all_school_reservations/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+        async function fetchNotReturned() {
+            try {
+                const response = await fetch(`http://localhost:3305/rents_not_returned/${user.user_id}`);
                 const reservationsData = await response.json();
                 return reservationsData;
             } catch (error) {
@@ -333,8 +349,11 @@
                     notApprovedCountReservations++;
                 }
             }
-
-
+ 
+            const NotReturnedData= await fetchNotReturned();
+            const NotReturnedListData = NotReturnedData.filter(user => (user.returned === 0 && user.approved === 1));
+            const notReturned = NotReturnedListData.length;
+ 
 
             const schoolsData = await fetchSchoolsData();
             let schoolsname;
@@ -361,6 +380,7 @@
             document.getElementById("notApprovedCountR").textContent = notApprovedCountR;
             document.getElementById("notApprovedCountRents").textContent = notApprovedCountRents;
             document.getElementById("notApprovedCountReservations").textContent = notApprovedCountReservations;
+            document.getElementById("notReturned").textContent = notReturned;
         })();
 
 
