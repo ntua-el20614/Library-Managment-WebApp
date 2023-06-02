@@ -162,4 +162,8 @@ def approve_reservations():
 @app.route("/approve/returns")
 def approve_returns():
     return render_template("/approves/approvereturns.html", pageTitle="Approve Returns")
+
+@app.route("/dduser")
+def delete_or_deactivate():
+    return render_template("/approves/deletedeactivate.html", pageTitle="Delete/Deactivate")
 ####################################################################################~
