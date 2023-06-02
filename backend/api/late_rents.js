@@ -14,7 +14,7 @@ const fetchData = (userid, name, dayz, callback) => {
     //all
     if (name !== '0' && dayz !== '0') {
       query =
-      "SELECT u.user_id, u.username, u.user_name, r.isbn, r.title, r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
+      "SELECT u.user_id, u.username, u.user_name, (SELECT title FROM book WHERE isbn = r.isbn), r.title, r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
       "FROM users u " +
       "INNER JOIN rent r ON u.user_id = r.user_id " +
       "INNER JOIN handlers h ON h.school_id = r.school_id " +
@@ -28,7 +28,7 @@ const fetchData = (userid, name, dayz, callback) => {
     //dayz
     else if (name === '0' && dayz !== '0') {
       query =
-      "SELECT u.user_id, u.username, u.user_name, r.isbn,  r.title, r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
+      "SELECT u.user_id, u.username, u.user_name, r.isbn,  (SELECT title FROM book WHERE isbn = r.isbn), r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
       "FROM users u " +
       "INNER JOIN rent r ON u.user_id = r.user_id " +
       "INNER JOIN handlers h ON h.school_id = r.school_id " +
@@ -41,7 +41,7 @@ const fetchData = (userid, name, dayz, callback) => {
     //name
     else if (name !== '0' && dayz === '0') {
       query =
-      "SELECT u.user_id, u.username, u.user_name, r.isbn,  r.title, r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
+      "SELECT u.user_id, u.username, u.user_name, r.isbn,  (SELECT title FROM book WHERE isbn = r.isbn), r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
       "FROM users u " +
       "INNER JOIN rent r ON u.user_id = r.user_id " +
       "INNER JOIN handlers h ON h.school_id = r.school_id " +
@@ -54,7 +54,7 @@ const fetchData = (userid, name, dayz, callback) => {
     //none
     else if (name === '0' && dayz === '0') {
       query =
-      "SELECT u.user_id, u.username, u.user_name, r.isbn,  r.title, r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
+      "SELECT u.user_id, u.username, u.user_name, r.isbn,  (SELECT title FROM book WHERE isbn = r.isbn), r.school_id, DATEDIFF(NOW(), r.date_of_rent) - 7 AS days_passed " +
       "FROM users u " +
       "INNER JOIN rent r ON u.user_id = r.user_id " +
       "INNER JOIN handlers h ON h.school_id = r.school_id " +
