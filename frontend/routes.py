@@ -131,6 +131,10 @@ def reviews_of_a_book():
 def average_likert():
     return render_template("/queries/avglikert.html", pageTitle="Average Likert")
 
+@app.route("/delayed")
+def delayed_returns():
+    return render_template("/queries/delayed.html", pageTitle="Delayed Returns")
+
 @app.route("/handler/books")
 def see_all_books():
     return render_template("/handlerbooks.html", pageTitle="All Books")

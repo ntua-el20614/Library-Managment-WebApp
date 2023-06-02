@@ -224,7 +224,7 @@
                     username.textContent = 'Name - Surname: ' + user.user_name;
                     userDiv.appendChild(username);
 
-                    const dateOfRent = new Date(user.date_of_rent);
+                    const dateOfRent = new Date(user.birthday);
                     dateOfRent.setDate(dateOfRent.getDate() + 1);
                     const datee = dateOfRent.toISOString().split("T")[0];
                     const date = document.createElement('p');
