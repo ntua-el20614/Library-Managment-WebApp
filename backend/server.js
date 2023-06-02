@@ -21,6 +21,7 @@ const { fetchData: fetchRents } = require('./api/all_rents');
 const { fetchData: fetchReviews } = require('./api/all_reviews');
 const { fetchData: fetchAllSchoolReviews } = require('./api/all_school_reviews');
 const { fetchData: fetchAllSchoolRents } = require('./api/all_school_rents');
+const { fetchData: fetchRentsNotReturned } = require('./api/rents_not_returned');
 const { fetchData: fetchAllSchoolReservations } = require('./api/all_school_reservations');
 const { fetchData: fetchTeacherLoans } = require('./api/teacher_loans');
 const { fetchData: fetchTeachersAuthors } = require('./api/authors_teachers_category');
@@ -368,6 +369,20 @@ app.get('/all_school_rents/:userid', (req, res) => {
   });
 });
 
+// Define a route handler for /rents_not_returned
+app.get('/rents_not_returned/:userid', (req, res) => {
+  const userid = req.params.userid; // Get the year and month from the request parameters
+
+  fetchRentsNotReturned([userid], (err, results) => {
+    if (err) {
+      console.error('Error fetching rent data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 // Define a route handler for /all_school_reservations
 app.get('/all_school_reservations/:userid', (req, res) => {
