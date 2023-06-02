@@ -20,7 +20,26 @@
             </a>
         </a>
     </h1>
+
+    <!-- Search bars -->
+    <div class="search-bar">
+        <input type="text" id="categorySearch" placeholder="Search by category">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="authorSearch" placeholder="Search by author's name">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="titleSearch" placeholder="Search by title">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="copysSearch" placeholder="Search by # of copies">
+    </div>
+
     <div id="book-list"></div>
+
 
     <script>
         let user = JSON.parse(localStorage.getItem("user"));
@@ -51,6 +70,58 @@
             }
         }
 
+
+        
+
+        async function fetchAuthors() {
+            try {
+                const response = await fetch('http://localhost:3305/all_authors');
+                const authorsData = await response.json();
+
+                return authorsData;
+            } catch (error) {
+                console.error('Error fetching authors info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchTitles(userID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_titles/${userID}`);
+                const titlesData = await response.json();
+
+                return titlesData;
+            } catch (error) {
+                console.error('Error fetching titles info:', error);
+                return null;
+            }
+        }
+
+        async function fetchCategories() {
+            try {
+                const response = await fetch('http://localhost:3305/all_categories');
+                const categoriessData = await response.json();
+
+                return categoriessData;
+            } catch (error) {
+                console.error('Error fetching categoriess info:', error);
+                return null;
+            }
+        }
+
+        async function fetchFilteredBooks(handlerID, category, title, author, copys) {
+            try {
+                const url = `http://localhost:3305/book_handler_parameter/${handlerID}/${category}/${title}/${author}/${copys}`;
+                const response = await fetch(url);
+                const filteredBooks = await response.json();
+
+                return filteredBooks;
+            } catch (error) {
+                console.error('Error fetching filtered books:', error);
+                return null;
+            }
+        }
         function redirectToPreviousPage() {
             history.back();
         }
@@ -58,6 +129,13 @@
         backButton.addEventListener('click', () => {
             history.back();
         });
+        
+        function redirectToReviews(book) {
+            // document.cookie = "book=" + book;
+            console.log(book);
+            localStorage.setItem("book", book);
+            window.location.href = `/review`;
+        }
 
         (async () => {
             // const studentsData = await fetchStudents();
@@ -84,67 +162,93 @@
                 alert('You are not a Handler!');
                 window.location.href = '/';
             }
-            console.log(schoolID);
-
-            const booksData = await fetchBooksData(schoolID);
             const bookList = document.getElementById('book-list');
+            const categorySearchInput = document.getElementById('categorySearch');
+            const authorSearchInput = document.getElementById('authorSearch');
+            const titleSearchInput = document.getElementById('titleSearch');
+            const copysSearchInput = document.getElementById('copysSearch');
 
-            booksData.forEach((book) => {
-                // Create book item container
-                const bookItem = document.createElement('div');
-                bookItem.classList.add('book-item');
+            // Event listeners for search inputs
+            categorySearchInput.addEventListener('input', searchBooks);
+            authorSearchInput.addEventListener('input', searchBooks);
+            titleSearchInput.addEventListener('input', searchBooks);
+            copysSearchInput.addEventListener('input', searchBooks);
 
-                // Create book title with toggle functionality
-                const title = document.createElement('h2');
-                title.textContent = book.title;
-                bookItem.appendChild(title);
+            async function searchBooks() {
+                let category = categorySearchInput.value.trim();
+                let author = authorSearchInput.value.trim();
+                let title = titleSearchInput.value.trim();
+                let copys = copysSearchInput.value.trim();
+                if (category === '') {
+                    category = -1;
+                }
+                if (author === '') {
+                    author = -1;
+                }
+                if (title === '') {
+                    title = -1;
+                }
+                if (copys === '') {
+                    copys = -1;
+                }
+                if (category === -1 && author === -1 && title === -1 && copys === -1)
+                    location.reload();
+                const filteredBooks = await fetchFilteredBooks(user.user_id, category, title, author,copys);
+                displayBooks(filteredBooks);
+            }
 
-                // Create expand button
-                const expandButton = document.createElement('span');
-                expandButton.classList.add('expand-button');
-                expandButton.textContent = '▼';
-                expandButton.addEventListener('click', () => {
-                    const details = bookItem.querySelector('.book-details');
-                    const isExpanded = details.style.display === 'block';
-                    details.style.display = isExpanded ? 'none' : 'block';
-                    expandButton.classList.toggle('expanded', !isExpanded);
+
+
+            function displayBooks(booksData) {
+                // Clear previous book list
+                bookList.innerHTML = '';
+
+                booksData.forEach((book) => {
+
+                    // Create book item container
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+
+                    // Create book title with toggle functionality
+                    const title = document.createElement('h2');
+                    title.textContent = book.title;
+                    bookItem.appendChild(title);
+
+                    // Create expand button
+                    const expandButton = document.createElement('span');
+                    expandButton.classList.add('expand-button');
+                    expandButton.textContent = '▼';
+                    expandButton.addEventListener('click', () => {
+                        const details = bookItem.querySelector('.book-details');
+                        const isExpanded = details.style.display === 'block';
+                        details.style.display = isExpanded ? 'none' : 'block';
+                        expandButton.classList.toggle('expanded', !isExpanded);
+                    });
+
+                    // Create book details container
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('book-details');
+
+                    // Create book details
+                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                                      <b>ISBN:</b> ${book.isbn}<br>
+                                      <b>Available Copies:</b> ${book.available_copys}<br>
+                                      <b>Author(s):</b> ${book.authors}<br>
+                                      <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
+
+                    // Append expand button and details to the book item
+                    bookItem.appendChild(expandButton);
+                    bookItem.appendChild(detailsContainer);
+
+                    // Append book item to the book list
+                    bookList.appendChild(bookItem);
                 });
+            }
 
-                // Create book details container
-                const detailsContainer = document.createElement('div');
-                detailsContainer.classList.add('book-details');
-
-                // Create book details
-                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
-                                              <b>ISBN:</b> ${book.isbn}<br>
-                                              <b>Publisher:</b> ${book.publisher}<br>
-                                              <b>Pages:</b> ${book.pages}<br>
-                                              <b>Summary:</b> ${book.summary}<br>
-                                              <b>Language:</b> ${book.book_language}<br>
-                                              <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>Available Copies:</b> ${book.available_copys}<br>
-                                              <b>Author:</b> ${book.authors}<br>
-                                              <b>Category:</b> ${book.categories}<br>
-                                              <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
-
-                // Append expand button and details to the book item
-
-                bookItem.appendChild(expandButton);
-                bookItem.appendChild(detailsContainer);
-
-                // Append book item to the book list
-                bookList.appendChild(bookItem);
-            });
+            // Initial display of all books
+            const booksData = await fetchBooksData(schoolID);
+            displayBooks(booksData);
         })();
-
-        function redirectToReviews(book) {
-            // document.cookie = "book=" + book;
-            console.log(book);
-            localStorage.setItem("book", book);
-            window.location.href = `/review`;
-
-
-        }
     </script>
 </body>
 

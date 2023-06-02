@@ -6,18 +6,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/BookList.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        /* Custom CSS for search bars */
-        .search-bar {
-            margin-bottom: 10px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 5px;
-        }
-    </style>
 </head>
 
 <body>
@@ -127,17 +115,17 @@
         }
 
         async function fetchFilteredBooks(schoolID, category, title, author) {
-                try {
-                    const url = `http://localhost:3305/book_user_parameter/${schoolID}/${category}/${title}/${author}`;
-                    const response = await fetch(url);
-                    const filteredBooks = await response.json();
+            try {
+                const url = `http://localhost:3305/book_user_parameter/${schoolID}/${category}/${title}/${author}`;
+                const response = await fetch(url);
+                const filteredBooks = await response.json();
 
-                    return filteredBooks;
-                } catch (error) {
-                    console.error('Error fetching filtered books:', error);
-                    return null;
-                }
+                return filteredBooks;
+            } catch (error) {
+                console.error('Error fetching filtered books:', error);
+                return null;
             }
+        }
 
         function redirectToPreviousPage() {
             history.back();
@@ -146,118 +134,15 @@
         backButton.addEventListener('click', () => {
             history.back();
         });
-
-        async function loadSearchOptions() {
-            const searchBy = document.getElementById('search-by').value;
-            const searchOptionsContainer = document.getElementById('search-options-container');
-
-            if (searchBy === 'category') {
-                const categoriesData = await fetchCategories();
-                const categorySearchInput = document.getElementById('category-search');
-                categorySearchInput.value = '';
-
-                // Generate the list of categories
-                let optionsHTML = '';
-                categoriesData.forEach((category) => {
-                    optionsHTML += `<option value="${category}">${category}</option>`;
-                });
-                categorySearchInput.setAttribute('list', 'category-options');
-                categorySearchInput.innerHTML = optionsHTML;
-            } else if (searchBy === 'author') {
-                const authorsData = await fetchAuthors();
-                const authorSearchSelect = document.getElementById('author-search');
-                authorSearchSelect.innerHTML = '<option value="">-- Select Author --</option>';
-
-                // Generate the list of authors
-                authorsData.forEach((author) => {
-                    const option = document.createElement('option');
-                    option.value = author;
-                    option.textContent = author;
-                    authorSearchSelect.appendChild(option);
-                });
-            } else if (searchBy === 'title') {
-                const titlesData = await fetchTitles();
-                const titleSearchSelect = document.getElementById('title-search');
-                titleSearchSelect.innerHTML = '<option value="">-- Select Title --</option>';
-
-                // Generate the list of titles
-                titlesData.forEach((title) => {
-                    const option = document.createElement('option');
-                    option.value = title;
-                    option.textContent = title;
-                    titleSearchSelect.appendChild(option);
-                });
-            }
-
-            // Show the search options container
-            searchOptionsContainer.style.display = 'block';
+ 
+        function redirectToReviews(book) {
+            // document.cookie = "book=" + book;
+            console.log(book);
+            localStorage.setItem("book", book);
+            window.location.href = `/review`;
         }
 
-        function searchBooks() {
-            const categoryInput = document.getElementById('category-search').value;
-            const authorInput = document.getElementById('author-search').value;
-            const titleInput = document.getElementById('title-search').value;
-
-
-            console.log(categoryInput, authorInput, titleInput); 
-            const bookList = document.getElementById('book-list');
-            bookList.innerHTML = '';
-
-            filteredBooksData.forEach((book) => {
-
-
-                console.log("Hey");
-                const bookItem = document.createElement('div');
-                bookItem.classList.add('book-item');
-
-                // Create book title with toggle functionality
-                const title = document.createElement('h2');
-                title.textContent = book.title;
-                bookItem.appendChild(title);
-
-                // Create expand button
-                const expandButton = document.createElement('span');
-                expandButton.classList.add('expand-button');
-                expandButton.textContent = '▼';
-                expandButton.addEventListener('click', () => {
-                    const details = bookItem.querySelector('.book-details');
-                    const isExpanded = details.style.display === 'block';
-                    details.style.display = isExpanded ? 'none' : 'block';
-                    expandButton.classList.toggle('expanded', !isExpanded);
-                });
-
-                // Create book details container
-                const detailsContainer = document.createElement('div');
-                detailsContainer.classList.add('book-details');
-
-                // Create book details
-                detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
-                                              <b>ISBN:</b> ${book.isbn}<br>
-                                              <b>Publisher:</b> ${book.publisher}<br>
-                                              <b>Pages:</b> ${book.pages}<br>
-                                              <b>Summary:</b> ${book.summary}<br>
-                                              <b>Language:</b> ${book.book_language}<br>
-                                              <b>Keywords:</b> ${book.keywords}<br>
-                                              <b>Available Copies:</b> ${book.available_copys}<br>
-                                              <b>Author:</b> ${book.authors}<br>
-                                              <b>Category:</b> ${book.categories}<br>
-                                              <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
-
-                // Append expand button and details to the book item
-
-                bookItem.appendChild(expandButton);
-                bookItem.appendChild(detailsContainer);
-
-                // Append book item to the book list
-                bookList.appendChild(bookItem);
-            });
-        }
-
-
-        (async () => {
-            // const studentsData = await fetchStudents();
-
-            // let flag = false;
+        (async () => { 
 
 
             const studentsData = await fetchStudents();
@@ -338,7 +223,6 @@
 
                 booksData.forEach((book) => {
 
-                    //console.log(book.category_names, book.authors);
                     // Create book item container
                     const bookItem = document.createElement('div');
                     bookItem.classList.add('book-item');
@@ -372,8 +256,8 @@
                                       <b>Language:</b> ${book.book_language}<br>
                                       <b>Keywords:</b> ${book.keywords}<br>
                                       <b>Available Copies:</b> ${book.available_copys}<br>
-                                      <b>Author:</b> ${book.authors || 'N/A'}<br>
-                                      <b>Category:</b> ${book.categories || 'N/A'}<br>
+                                      <b>Author(s):</b> ${book.author_names || book.authors}<br>
+                                      <b>Category:</b> ${book.category_names || book.categories}<br>
                                       <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
 
                     // Append expand button and details to the book item
