@@ -61,6 +61,7 @@ const { updateData: updateAvailableCopys } = require('./api/update_available_cop
 const { updateData: updateApproves } = require('./api/update_approves');
 const { updateData: updateReviewApprove } = require('./api/approve_review');
 const { updateData: updateRentApprove } = require('./api/approve_rent');
+const { updateData: updateReturned } = require('./api/update_returned');
 const { updateData: updateReservationApprove } = require('./api/approve_reservation');
 const { updateData: updateTeacher } = require('./api/update_teacher');
 const { updateData: updateCopys } = require('./api/update_copys');
@@ -847,6 +848,19 @@ app.get('/approve_rent/:approved/:rentid', (req, res) => {
       return;
     }
     res.status(200).send('Approved status changed successfully');
+  });
+});
+
+// Define a route handler for /update_returned
+app.get('/update_returned/:rentid', (req, res) => {
+  const { rentid } = req.params; // Get the user data from the request body
+  updateReturned(rentid, (err, result) => {
+    if (err) {
+      console.error('Error changing returned status:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.status(200).send('Returned status changed successfully');
   });
 });
 

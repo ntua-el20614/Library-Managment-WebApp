@@ -64,6 +64,7 @@ const update_available_copys = require("./api/update_available_copys");
 const update_approves = require("./api/update_approves");
 const approve_review = require("./api/approve_review");
 const approve_rent = require("./api/approve_rent");
+const update_returned = require("./api/update_returned");
 const approve_reservation = require("./api/approve_reservation");
 const update_teacher = require("./api/update_teacher");
 const update_copys = require("./api/update_copys");
@@ -163,6 +164,7 @@ app.use("/update_available_copys/:isbn/:userid/:copynum", update_available_copys
 app.use("/update_approves/:approved/:userid", update_approves);
 app.use("/approve_review/:approved/:reviewid", approve_review);
 app.use("/approve_rent/:approved/:rentid", approve_rent);
+app.use("/update_returned/:rentid", update_returned);
 app.use("/approve_reservation/:approved/:reservationid", approve_reservation);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email/:password", update_teacher);
 app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
