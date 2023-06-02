@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: lightyellow;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .review {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+
+<body>
+    <h1>
+        <a>
+            Delayed Returns
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+
+    <!-- Search bars -->
+
+    <div class="search-bar">
+        <input type="text" id="userSearch" placeholder="Search by user's name and surname">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="categorySearch" placeholder="Search by # of days late">
+    </div>
+
+    <div id="book-list"></div>
+
+    <div class="container">
+        <div id="reviewsContainer"></div>
+    </div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+        const handlerID = user.user_id;
+
+        async function fetchHandlers() {
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+
+        async function fetchCategories() {
+            try {
+                const response = await fetch('http://localhost:3305/all_categories');
+                const categoriesData = await response.json();
+                return categoriesData;
+            } catch (error) {
+                console.error('Error fetching categories info:', error);
+                return null;
+            }
+        }
+
+        async function fetchFilteredLikert(username, dayz) {
+            try {
+                const url = `http://localhost:3305/late_rents/${handlerID}/${username}/${dayz}`;
+                const response = await fetch(url);
+                const likertData = await response.json();
+                return likertData;
+            } catch (error) {
+                console.error('Error fetching likert info:', error);
+                return null;
+            }
+        }
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            history.back();
+        });
+
+        (async () => {
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        let schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+
+            const categorySearchInput = document.getElementById('categorySearch');
+            const userSearchInput = document.getElementById('userSearch');
+
+            // Event listeners for search inputs
+            categorySearchInput.addEventListener('input', searchBooks);
+            userSearchInput.addEventListener('input', searchBooks);
+
+            async function searchBooks() {
+                let category = categorySearchInput.value.trim();
+                let user = userSearchInput.value.trim();
+                if (category === '') {
+                    category = 0;
+                } if (user === '') {
+                    user = 0;
+                }
+
+                const filteredLikert = await fetchFilteredLikert(user, category);
+                renderReviews(filteredLikert);
+            }
+
+            // Function to render the reviews on the page
+            function renderReviews(rentsData) {
+                const reviewsContainer = document.getElementById('reviewsContainer');
+                reviewsContainer.innerHTML = '';
+
+                if (rentsData && rentsData.length > 0) {
+                    rentsData.forEach((rent) => {
+                        console.log(rent);
+
+                        const alldetails = document.createElement('p');
+                        alldetails.classList.add('review');
+
+                        const usernameElement = document.createElement('p');
+                        usernameElement.classList.add('comment');
+                        usernameElement.innerText = "User's username: " + rent.username;
+                        alldetails.appendChild(usernameElement);
+
+                        const nameElement = document.createElement('p');
+                        nameElement.classList.add('comment');
+                        nameElement.innerText = "User's name and surname: " + rent.user_name;
+                        alldetails.appendChild(nameElement);
+
+                        const titleElement = document.createElement('p');
+                        titleElement.classList.add('comment');
+                        titleElement.innerText = "Book's Title: " + rent.title;
+                        alldetails.appendChild(titleElement);
+
+                        const isbnElement = document.createElement('p');
+                        isbnElement.classList.add('comment');
+                        isbnElement.innerText = "Book's ISBN: " + rent.isbn;
+                        alldetails.appendChild(isbnElement);
+
+                        const reviewElement = document.createElement('p');
+                        reviewElement.classList.add('comment');
+                        reviewElement.innerText = "Days delayed: " + rent.days_passed;
+                        alldetails.appendChild(reviewElement);
+
+
+                        reviewsContainer.appendChild(alldetails);
+                    });
+                } else {
+                    const noReviewsElement = document.createElement('p');
+                    noReviewsElement.innerText = 'No reviews available.';
+                    reviewsContainer.appendChild(noReviewsElement);
+                }
+            }
+
+            // Call the fetchFilteredLikert function initially to load all reviews
+
+
+            //const booksData = await fetchFilteredLikert();
+            searchBooks();
+
+        })();
+    </script>
+</body>
+
+</head>
+
+</html>
