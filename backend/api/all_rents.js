@@ -12,11 +12,24 @@ const fetchData = ([rent_year, rent_month], callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = " SELECT s.school_id, s.school_name, COUNT(*) AS total_loans " +
+
+    let query = "SELECT s.school_id, s.school_name, COUNT(*) AS total_loans " +
       "FROM rent AS r " +
       "JOIN school AS s ON r.school_id = s.school_id " +
-      "WHERE YEAR(r.date_of_rent) = " + rent_year + " AND MONTH(r.date_of_rent) = " + rent_month +
-      " GROUP BY r.school_id";
+      "WHERE 1=1 ";
+
+    if (rent_year != 0) {
+      query += "AND YEAR(r.date_of_rent) LIKE '" + rent_year + "%' ";
+    }
+
+    if (rent_month != 0) {
+      query += "AND MONTH(r.date_of_rent) LIKE '" + rent_month + "%' ";
+    }
+
+    query += "GROUP BY s.school_id";
+
+
+
     connection.query(query, [rent_year, rent_month], (err, results) => {
       // Release the connection back to the pool
       connection.release();
