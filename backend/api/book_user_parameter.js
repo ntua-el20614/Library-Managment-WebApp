@@ -21,9 +21,9 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND (c.category_name = '" + categoryname + "' " +
-        " AND b.title = '" + title + "' " +
-        " AND a.author_name = '" + authorname + "' )" +
+        " AND (c.category_name LIKE '" + categoryname + "%' " +
+        " AND b.title LIKE '" + title + "%' " +
+        " AND a.author_name LIKE '" + authorname + "%' )" +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //author - title
@@ -37,8 +37,8 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND b.title = '" + title + "' " +
-        " AND a.author_name = '" + authorname + "'" +
+        " AND b.title LIKE '" + title + "%' " +
+        " AND a.author_name LIKE '" + authorname + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //category - title
@@ -52,8 +52,8 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND c.category_name = '" + categoryname + "' " +
-        " AND b.title = '" + title + "'" +
+        " AND c.category_name LIKE '" + categoryname + "%' " +
+        " AND b.title LIKE '" + title + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //author - category
@@ -67,8 +67,8 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND c.category_name = '" + categoryname + "' " +
-        " AND a.author_name = '" + authorname + "'" +
+        " AND c.category_name LIKE '" + categoryname + "%' " +
+        " AND a.author_name LIKE '" + authorname + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //category
@@ -82,7 +82,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND c.category_name = '" + categoryname + "'" +
+        " AND c.category_name LIKE '" + categoryname + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //author
@@ -96,7 +96,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND a.author_name = '" + authorname + "'" +
+        " AND a.author_name LIKE '" + authorname + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     //title
@@ -110,7 +110,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        " AND b.title = '" + title + "'" +
+        " AND b.title LIKE '" + title + "%' " +
         "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
     // No filter
@@ -124,7 +124,7 @@ const fetchData = (schoolid, categoryname, title, authorname, callback) => {
         "JOIN book_category bc ON b.isbn = bc.isbn " +
         "JOIN category c ON bc.category_id = c.category_id " +
         "WHERE bs.school_id =  " + schoolid +
-        "GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
+        " GROUP BY bs.isbn, b.title, bs.school_id, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.available_copys";
     }
 
     // Execute the query
