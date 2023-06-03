@@ -224,91 +224,105 @@
 
 async function editBook() {
 
-  console.log("Hello");
-  const passcodeElement = document.getElementById("title");
-  console.log(passcodeElement);
-  const editButton = document.getElementsByClassName("edit-button")[0];
+    const handlersData = await fetchHandlers();
+            let flag = false;
+            let schoolID;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
 
-
-  const usernameElement = document.getElementById("username");
-  const nameElement = document.getElementById("user-name");
-  const emailElement = document.getElementById("email");
-  const birthdayElement = document.getElementById("birthday");
-
+  const BooksIsbn = document.getElementById("isbn").textContent;
+  const titleElement = document.getElementById("title");
+  const publisherElement = document.getElementById("publisher");
+  const pagesElement = document.getElementById("pages");
+  const summaryElement = document.getElementById("summary");
+  const languageElement = document.getElementById("language");
+  const keywordsElement = document.getElementById("keywords");
+  const copiesElement = document.getElementById("copies");
+  const editButton = document.getElementById("editbutton");
+    console.log(titleElement);
 
   if (!isEditing) {
     // Enter edit mode
-    originalUsername = usernameElement.textContent;
-    originalName = nameElement.textContent;
-    originalEmail = emailElement.textContent;
-    originalBirthday = birthdayElement.textContent;
+    const originaltitle = titleElement.textContent;
+    const originalpublisher = publisherElement.textContent;
+    const originalpages = pagesElement.textContent;
+    const originalsummary = summaryElement.textContent;
+    const originallanguage = languageElement.textContent;
+    const originalkeywords = keywordsElement.textContent;
+    const originalcopies = copiesElement.textContent;
     //save tis palies times
-    passcodeElement.textContent = user.passcode;
+
+    titleElement.contentEditable = true;
+    publisherElement.contentEditable = true;
+    pagesElement.contentEditable = true;//mporw na ta kanw edit
+    summaryElement.contentEditable = true;
+    languageElement.contentEditable = true;
+    keywordsElement.contentEditable = true;
+    copiesElement.contentEditable = true;
 
 
-    usernameElement.contentEditable = true;
-    passcodeElement.contentEditable = true;
-    nameElement.contentEditable = true;//mporw na ta kanw edit
-    emailElement.contentEditable = true;
-    birthdayElement.contentEditable = true;
-
-
-    usernameElement.style.border = "1px solid black";
-    passcodeElement.style.border = "1px solid black";
-    nameElement.style.border = "1px solid black";
-    emailElement.style.border = "1px solid black";
-    birthdayElement.style.border = "1px solid black";
+    titleElement.style.border = "1px solid black";
+    publisherElement.style.border = "1px solid black";
+    pagesElement.style.border = "1px solid black";
+    summaryElement.style.border = "1px solid black";
+    languageElement.style.border = "1px solid black";
+    keywordsElement.style.border = "1px solid black";
+    copiesElement.style.border = "1px solid black";
     editButton.innerHTML = "OK";
   } else {
     // Save changes and exit edit mode
-    const newUsername = usernameElement.textContent;
-    const newPasscode = passcodeElement.textContent;
-    const newName = nameElement.textContent;
-    const newEmail = emailElement.textContent;
-    const newBirthday = birthdayElement.textContent;
+    const newtitle = titleElement.textContent;
+    const newpublisher = publisherElement.textContent;
+    const newpages = pagesElement.textContent;
+    const newsummary = summaryElement.textContent;
+    const newlanguage = languageElement.textContent;
+    const newkeywords = keywordsElement.textContent;
+    const newcopies = copiesElement.textContent;
+
+    titleElement.contentEditable = false;
+    publisherElement.contentEditable = false;
+    pagesElement.contentEditable = false;//mporw na ta kanw edit
+    summaryElement.contentEditable = false;
+    languageElement.contentEditable = false;
+    keywordsElement.contentEditable = false;
+    copiesElement.contentEditable = false;
+
+    titleElement.style.border = "none";
+    publisherElement.style.border = "none";
+    pagesElement.style.border = "none";
+    summaryElement.style.border = "none";
+    languageElement.style.border = "none";
+    keywordsElement.style.border = "none";
+    copiesElement.style.border = "none";
+    
 
 
-    user.username = newUsername;
-    user.passcode = newPasscode;
-    user.user_name = newName;
-    user.email = newEmail;
-    user.birthday = newBirthday;
-
-    usernameElement.contentEditable = false;
-    passcodeElement.contentEditable = false;
-    nameElement.contentEditable = false;
-    emailElement.contentEditable = false;
-    birthdayElement.contentEditable = false;
-
-
-    usernameElement.style.border = "none";
-    passcodeElement.style.border = "none";
-    nameElement.style.border = "none";
-    emailElement.style.border = "none";
-    birthdayElement.style.border = "none";
-    editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
-    console.log("Now, book is:", book);
-
-
-    const changeTeacher = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
-
+    const changeBook = `http://localhost:3305/updatebook/${BooksIsbn}/${newtitle}/${newpublisher}/${newpages}/${newsummary}/${newlanguage}/${newkeywords}`;
+    const changeBook_copies = `http://localhost:3305/update_copies/${schoolID}/${BooksIsbn}/${newcopies}`
 
     try {
-      const response = await fetch(changeTeacher);
+      const response = await fetch(changeBook);
+      const response2 = await fetch(changeBook_copies);
 
 
-
-
-      if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
-        console.log("Teacher information updated!");
-        console.log(user);
-        alert("Teacher information updated successfully!\nPlease log-in again!");
-
-
-        user = undefined;
-        localStorage.removeItem("user");
-        window.location.href = '/';
-
+      if (response.ok && response2.ok && (newtitle !== originaltitle || newpublisher !== originalpublisher || newpages  !==  originalpages  || newsummary !==  originalsummary || newlanguage !== originallanguage || newkeywords !== originalkeywords || newcopies !== originalcopies)) { 
+        console.log(`Book ${BooksIsbn} information updated!`);
+        alert("Book information updated successfully!");
+        location.reload();
 
       } else {
         console.log("Could not update teacher information or no changes were made.");
@@ -482,22 +496,20 @@ async function editBook() {
                     detailsContainer.classList.add('book-details'); 
 
                     // Create book details
-                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>      
-                                                    <span id="title"></span>
-
-                                        <b>ISBN:</b> ${book.isbn}<br>
-                                        <b>Publisher:</b> ${book.publisher}<br>
-                                        <b>Pages:</b> ${book.pages}<br>
-                                        <b>Summary:</b> ${book.summary}<br>
-                                        <b>Language:</b> ${book.book_language}<br>
-                                        <b>Keywords:</b> ${book.keywords}<br>
-                                        <b>Copies:</b> ${book.copys}<br>
-                                        <b>Available Copies:</b> ${book.available_copys}<br>
-                                        <b>Author(s):</b> ${book.authors}<br>
-                                        <b>Category/ies:</b> ${book.categories}<br>
-                                        <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>
-                                        <button class="edit-button" onclick="editBook()">
-                                        <i class="fas fa-pencil-alt edit-icon"></i>`;
+                    detailsContainer.innerHTML = `
+                    <b>Title:</b> <span id="title"  >${book.title}</span><br>
+                    <b>ISBN:</b> <span id="isbn"  >${book.isbn}</span><br>
+                    <b>Publisher:</b> <span id="publisher"  >${book.publisher}</span><br>
+                    <b>Pages:</b> <span id="pages"  >${book.pages}</span><br>
+                    <b>Summary:</b> <span id="summary"  >${book.summary}</span><br>
+                    <b>Language:</b> <span id="language"  >${book.book_language}</span><br>
+                    <b>Keywords:</b> <span id="keywords"  >${book.keywords}</span><br>
+                    <b>Copies:</b> <span id="copies"  >${book.copys}</span><br>
+                    <b>Available Copies:</b> <span id="availableCopies"  >${book.available_copys}</span><br>
+                    <b>Author(s):</b> <span id="authors" >${book.authors}</span><br>
+                    <b>Category/ies:</b> <span id="categories">${book.category || book.categories}</span><br>
+                    <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>
+                    <button class="edit-button" onclick="editBook()"><i class="fas fa-pencil-alt edit-icon"><span id="editbutton"></span></i></button>`;
                     // Append expand button and details to the book item
                     bookItem.appendChild(expandButton);
                     bookItem.appendChild(detailsContainer);
