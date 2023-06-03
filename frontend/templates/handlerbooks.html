@@ -3,9 +3,10 @@
 
 <head>
     <title>books</title>
-    <meta charset="UTF-8">  
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/BookList.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 </head>
 
@@ -18,8 +19,8 @@
             <a id="backButton" onclick="redirectToPreviousPage()">
                 <span>&#8617;</span>
             </a>
-        </a> 
-    <button id="addBookButton" onclick="redirectToAddBook()">Add Book</button>
+        </a>
+        <button id="addBookButton" onclick="redirectToAddBook()">Add Book</button>
 
     </h1>
 
@@ -46,12 +47,12 @@
     <script>
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
- 
+
         function redirectToPreviousPage() {
             history.back();
         }
 
-        function redirectToAddBook(){
+        function redirectToAddBook() {
             window.location.href = `/addbook`;
 
         }
@@ -80,7 +81,7 @@
         }
 
 
-        
+
 
         async function fetchAuthors() {
             try {
@@ -135,13 +136,260 @@
         backButton.addEventListener('click', () => {
             history.back();
         });
-        
+
         function redirectToReviews(book) {
             // document.cookie = "book=" + book;
             console.log(book);
             localStorage.setItem("book", book);
             window.location.href = `/review`;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let isEditing = false;
+
+
+async function editBook() {
+
+  console.log("Hello");
+  const passcodeElement = document.getElementById("title");
+  console.log(passcodeElement);
+  const editButton = document.getElementsByClassName("edit-button")[0];
+
+
+  const usernameElement = document.getElementById("username");
+  const nameElement = document.getElementById("user-name");
+  const emailElement = document.getElementById("email");
+  const birthdayElement = document.getElementById("birthday");
+
+
+  if (!isEditing) {
+    // Enter edit mode
+    originalUsername = usernameElement.textContent;
+    originalName = nameElement.textContent;
+    originalEmail = emailElement.textContent;
+    originalBirthday = birthdayElement.textContent;
+    //save tis palies times
+    passcodeElement.textContent = user.passcode;
+
+
+    usernameElement.contentEditable = true;
+    passcodeElement.contentEditable = true;
+    nameElement.contentEditable = true;//mporw na ta kanw edit
+    emailElement.contentEditable = true;
+    birthdayElement.contentEditable = true;
+
+
+    usernameElement.style.border = "1px solid black";
+    passcodeElement.style.border = "1px solid black";
+    nameElement.style.border = "1px solid black";
+    emailElement.style.border = "1px solid black";
+    birthdayElement.style.border = "1px solid black";
+    editButton.innerHTML = "OK";
+  } else {
+    // Save changes and exit edit mode
+    const newUsername = usernameElement.textContent;
+    const newPasscode = passcodeElement.textContent;
+    const newName = nameElement.textContent;
+    const newEmail = emailElement.textContent;
+    const newBirthday = birthdayElement.textContent;
+
+
+    user.username = newUsername;
+    user.passcode = newPasscode;
+    user.user_name = newName;
+    user.email = newEmail;
+    user.birthday = newBirthday;
+
+    usernameElement.contentEditable = false;
+    passcodeElement.contentEditable = false;
+    nameElement.contentEditable = false;
+    emailElement.contentEditable = false;
+    birthdayElement.contentEditable = false;
+
+
+    usernameElement.style.border = "none";
+    passcodeElement.style.border = "none";
+    nameElement.style.border = "none";
+    emailElement.style.border = "none";
+    birthdayElement.style.border = "none";
+    editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+    console.log("Now, book is:", book);
+
+
+    const changeTeacher = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
+
+
+    try {
+      const response = await fetch(changeTeacher);
+
+
+
+
+      if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
+        console.log("Teacher information updated!");
+        console.log(user);
+        alert("Teacher information updated successfully!\nPlease log-in again!");
+
+
+        user = undefined;
+        localStorage.removeItem("user");
+        window.location.href = '/';
+
+
+      } else {
+        console.log("Could not update teacher information or no changes were made.");
+      }
+    } catch (error) {
+      console.log("This username is already taken!");
+    }
+  }
+
+
+  isEditing = !isEditing;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         (async () => {
             // const studentsData = await fetchStudents();
@@ -156,7 +404,7 @@
                 if (handlersDataItem.user_id === user.user_id) {
                     if (user.approved === 1) {
                         flag = true;
-                         schoolID = handlersDataItem.school_id;
+                        schoolID = handlersDataItem.school_id;
                         console.log('You are allowed to stay here!');
                     } else {
                         alert("You are not approved yet");
@@ -199,12 +447,10 @@
                 }
                 if (category === -1 && author === -1 && title === -1 && copys === -1)
                     location.reload();
-                const filteredBooks = await fetchFilteredBooks(user.user_id, category, title, author,copys);
+                const filteredBooks = await fetchFilteredBooks(user.user_id, category, title, author, copys);
                 displayBooks(filteredBooks);
             }
-
-
-
+ 
             function displayBooks(booksData) {
                 // Clear previous book list
                 bookList.innerHTML = '';
@@ -233,15 +479,25 @@
 
                     // Create book details container
                     const detailsContainer = document.createElement('div');
-                    detailsContainer.classList.add('book-details');
+                    detailsContainer.classList.add('book-details'); 
 
                     // Create book details
-                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
-                                      <b>ISBN:</b> ${book.isbn}<br>
-                                      <b>Available Copies:</b> ${book.available_copys}<br>
-                                      <b>Author(s):</b> ${book.authors}<br>
-                                      <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
+                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>      
+                                                    <span id="title"></span>
 
+                                        <b>ISBN:</b> ${book.isbn}<br>
+                                        <b>Publisher:</b> ${book.publisher}<br>
+                                        <b>Pages:</b> ${book.pages}<br>
+                                        <b>Summary:</b> ${book.summary}<br>
+                                        <b>Language:</b> ${book.book_language}<br>
+                                        <b>Keywords:</b> ${book.keywords}<br>
+                                        <b>Copies:</b> ${book.copys}<br>
+                                        <b>Available Copies:</b> ${book.available_copys}<br>
+                                        <b>Author(s):</b> ${book.authors}<br>
+                                        <b>Category/ies:</b> ${book.categories}<br>
+                                        <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>
+                                        <button class="edit-button" onclick="editBook()">
+                                        <i class="fas fa-pencil-alt edit-icon"></i>`;
                     // Append expand button and details to the book item
                     bookItem.appendChild(expandButton);
                     bookItem.appendChild(detailsContainer);
