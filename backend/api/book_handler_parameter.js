@@ -11,7 +11,7 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
     }
     
     let query =
-      `SELECT b.title, b.isbn, bs.available_copys, GROUP_CONCAT(a.author_name) AS authors
+      `SELECT b.title, b.publisher, b.pages, b.summary, b.language, b.keywords, bs,copys, b.isbn, bs.available_copys, GROUP_CONCAT(c.category_name) AS category, GROUP_CONCAT(a.author_name) AS authors
       FROM book b
       JOIN book_school bs ON b.isbn = bs.isbn
       JOIN book_category bc ON b.isbn = bc.isbn
@@ -24,25 +24,27 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
     const queryParams = [userid];
 
     if (categoryname !== '-1') {
-      query += " AND c.category_name = ?";
-      queryParams.push(categoryname);
+      query += " AND c.category_name LIKE ?" ;
+      queryParams.push(`%${categoryname}%`);
     }
 
     if (title !== '-1') {
-      query += " AND b.title = ?";
-      queryParams.push(title);
+      query += " AND b.title LIKE ?" ;
+      queryParams.push(`%${title}%`);
     }
 
     if (authorname !== '-1') {
-      query += " AND a.author_name = ?";
-      queryParams.push(authorname);
+      query += " AND a.author_name LIKE ?" ;
+      queryParams.push(`%${authorname}%`);
     }
 
     if (copys !== '-1') {
-      query += " AND bs.copys = ?";
+      query += " AND bs.copys = ?" ;
       queryParams.push(copys);
     }
-    query += " GROUP BY b.title, b.isbn, bs.available_copys"
+    
+    query += " GROUP BY b.title, b.isbn, bs.available_copys";
+
     connection.query(query, queryParams, (err, results) => {
       // Release the connection back to the pool
       connection.release();
@@ -57,4 +59,5 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
     });
   });
 };
-module.exports = {fetchData};
+
+module.exports = { fetchData };
