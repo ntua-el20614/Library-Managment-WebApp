@@ -168,7 +168,7 @@ app.use("/update_returned/:rentid", update_returned);
 app.use("/approve_reservation/:approved/:reservationid", approve_reservation);
 app.use("/update_teacher/:userid/:name/:username/:birthday/:email/:password", update_teacher);
 app.use("/update_copys/:schoolid/:isbn/:copys", update_copys);
-app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image", updatebook);
+app.use("/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords", updatebook);
 ////////////////////////////////////////////////////////////////
 app.use("/delete_user/:userid", delete_user);
 app.use("/delete_school/:schoolid", delete_school);
