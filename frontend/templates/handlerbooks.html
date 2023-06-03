@@ -152,73 +152,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         let isEditing = false;
 
 
@@ -251,9 +184,9 @@ async function editBook() {
   const summaryElement = document.getElementById("summary");
   const languageElement = document.getElementById("language");
   const keywordsElement = document.getElementById("keywords");
-  const copiesElement = document.getElementById("copies");
   const editButton = document.getElementById("editbutton");
-    console.log(titleElement);
+    
+
 
   if (!isEditing) {
     // Enter edit mode
@@ -263,7 +196,6 @@ async function editBook() {
     const originalsummary = summaryElement.textContent;
     const originallanguage = languageElement.textContent;
     const originalkeywords = keywordsElement.textContent;
-    const originalcopies = copiesElement.textContent;
     //save tis palies times
 
     titleElement.contentEditable = true;
@@ -272,7 +204,6 @@ async function editBook() {
     summaryElement.contentEditable = true;
     languageElement.contentEditable = true;
     keywordsElement.contentEditable = true;
-    copiesElement.contentEditable = true;
 
 
     titleElement.style.border = "1px solid black";
@@ -281,7 +212,6 @@ async function editBook() {
     summaryElement.style.border = "1px solid black";
     languageElement.style.border = "1px solid black";
     keywordsElement.style.border = "1px solid black";
-    copiesElement.style.border = "1px solid black";
     editButton.innerHTML = "OK";
   } else {
     // Save changes and exit edit mode
@@ -291,7 +221,6 @@ async function editBook() {
     const newsummary = summaryElement.textContent;
     const newlanguage = languageElement.textContent;
     const newkeywords = keywordsElement.textContent;
-    const newcopies = copiesElement.textContent;
 
     titleElement.contentEditable = false;
     publisherElement.contentEditable = false;
@@ -299,7 +228,6 @@ async function editBook() {
     summaryElement.contentEditable = false;
     languageElement.contentEditable = false;
     keywordsElement.contentEditable = false;
-    copiesElement.contentEditable = false;
 
     titleElement.style.border = "none";
     publisherElement.style.border = "none";
@@ -307,96 +235,28 @@ async function editBook() {
     summaryElement.style.border = "none";
     languageElement.style.border = "none";
     keywordsElement.style.border = "none";
-    copiesElement.style.border = "none";
     
 
 
     const changeBook = `http://localhost:3305/updatebook/${BooksIsbn}/${newtitle}/${newpublisher}/${newpages}/${newsummary}/${newlanguage}/${newkeywords}`;
-    const changeBook_copies = `http://localhost:3305/update_copies/${schoolID}/${BooksIsbn}/${newcopies}`
+    //const changeBook_copies = `http://localhost:3305/update_copies/${schoolID}/${BooksIsbn}/${newcopies}`
 
-    try {
+    try { 
       const response = await fetch(changeBook);
-      const response2 = await fetch(changeBook_copies);
-
-
-      if (response.ok && response2.ok && (newtitle !== originaltitle || newpublisher !== originalpublisher || newpages  !==  originalpages  || newsummary !==  originalsummary || newlanguage !== originallanguage || newkeywords !== originalkeywords || newcopies !== originalcopies)) { 
-        console.log(`Book ${BooksIsbn} information updated!`);
-        alert("Book information updated successfully!");
+       if (response.ok && (newtitle !== originaltitle && newpublisher !== originalpublisher && newpages  !==  originalpages  && newsummary !==  originalsummary && newlanguage !== originallanguage && newkeywords !== originalkeywords && newcopies !== originalcopies)) { 
+            alert("Book information updated successfully!");
+            location.reload();
+      } else {            
         location.reload();
-
-      } else {
-        console.log("Could not update teacher information or no changes were made.");
-      }
+    }
     } catch (error) {
-      console.log("This username is already taken!");
+      location.reload();
     }
   }
 
 
   isEditing = !isEditing;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
