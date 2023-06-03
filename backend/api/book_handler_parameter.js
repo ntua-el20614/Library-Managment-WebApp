@@ -43,7 +43,7 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
       queryParams.push(copys);
     }
     
-    query += " GROUP BY b.title, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.copys, b.isbn, bs.available_copys";
+    query += " GROUP BY b.title";
 
     connection.query(query, queryParams, (err, results) => {
       // Release the connection back to the pool
