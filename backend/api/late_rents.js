@@ -22,7 +22,7 @@ const fetchData = (userid, name, dayz, callback) => {
         " AND r.approved = 1 " +
         "AND r.returned = 0 " +
         "AND DATEDIFF(NOW(), r.date_of_rent) > 7 " +
-        "AND u.user_name = '" + name + "%' " +
+        "AND u.user_name LIKE '%" + name + "%' " +
         "AND DATEDIFF(NOW(), r.date_of_rent) - 7 = " + dayz;
     }
     //dayz
@@ -49,7 +49,7 @@ const fetchData = (userid, name, dayz, callback) => {
         " AND r.approved = 1 " +
         "AND r.returned = 0 " +
         "AND DATEDIFF(NOW(), r.date_of_rent) > 7 " +
-        "AND u.user_name = '" + name + "%'";
+        "AND u.user_name LIKE '%" + name + "%'";
     }
     //none
     else if (name === '0' && dayz === '0') {
