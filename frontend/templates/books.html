@@ -63,6 +63,16 @@
                 return null;
             }
         }
+        async function fetchCategories() {
+            try {
+                const response = await fetch('http://localhost:3305/all_categories');
+                const categoriessData = await response.json();
+
+                return categoriessData;
+            } catch (error) {
+                console.error('Error fetching categoriess info:', error);
+                return null;
+            }
 
 
         async function fetchTitles(userID) {
@@ -77,16 +87,6 @@
             }
         }
 
-        async function fetchCategories() {
-            try {
-                const response = await fetch('http://localhost:3305/all_categories');
-                const categoriessData = await response.json();
-
-                return categoriessData;
-            } catch (error) {
-                console.error('Error fetching categoriess info:', error);
-                return null;
-            }
         }
 
         async function fetchTeachers() {
