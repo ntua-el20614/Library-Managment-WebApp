@@ -11,7 +11,7 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
     }
     
     let query =
-      `SELECT b.title, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.copys, b.isbn, bs.available_copys, GROUP_CONCAT(c.category_name) AS category, GROUP_CONCAT(a.author_name) AS authors
+      `SELECT b.title, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.copys, b.isbn, bs.available_copys, GROUP_CONCAT(DISTINCT c.category_name) AS category, GROUP_CONCAT(DISTINCT a.author_name) AS authors
       FROM book b
       JOIN book_school bs ON b.isbn = bs.isbn
       JOIN book_category bc ON b.isbn = bc.isbn
@@ -43,7 +43,7 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
       queryParams.push(copys);
     }
     
-    query += " GROUP BY b.title";
+    query += " GROUP BY b.title, b.publisher, b.pages, b.summary, b.book_language, b.keywords, bs.copys, b.isbn, bs.available_copys";
 
     connection.query(query, queryParams, (err, results) => {
       // Release the connection back to the pool
