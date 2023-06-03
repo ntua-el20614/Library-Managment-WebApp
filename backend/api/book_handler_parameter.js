@@ -25,17 +25,17 @@ const fetchData = (userid, categoryname, title, authorname, copys, callback) => 
 
     if (categoryname !== '-1') {
       query += " AND c.category_name LIKE ?" ;
-      queryParams.push(`${categoryname}%`);
+      queryParams.push(`%${categoryname}%`);
     }
 
     if (title !== '-1') {
       query += " AND b.title LIKE ?" ;
-      queryParams.push(`${title}%`);
+      queryParams.push(`%${title}%`);
     }
 
     if (authorname !== '-1') {
       query += " AND a.author_name LIKE ?" ;
-      queryParams.push(`${authorname}%`);
+      queryParams.push(`%${authorname}%`);
     }
 
     if (copys !== '-1') {
