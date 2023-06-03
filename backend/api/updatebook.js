@@ -2,7 +2,7 @@ const pool = require('../dbconnector')
 
 // Function to fetch data from the database
 
-const updateData = (isbn, title, publisher, page, summary, language, keywords, image, callback) => {
+const updateData = (isbn, title, publisher, page, summary, language, keywords, callback) => {
   // Get a connection from the pool
   pool.getConnection((err, connection) => {
     if (err) {
@@ -18,11 +18,10 @@ const updateData = (isbn, title, publisher, page, summary, language, keywords, i
       'publisher = ' + "'" + publisher + "', " +
       'pages = ' + page + ", " +
       'summary = ' + "'" + summary + "', " +
-      'image = ' + image + ", " +
       'book_language = ' + "'" + language + "', " +
       'keywords = ' + "'" + keywords + "' " +
       'WHERE isbn = ' + "'" + isbn + "'";
-    connection.query(query, [isbn, title, publisher, page, summary, language, keywords, image], (err, result) => {
+    connection.query(query, [isbn, title, publisher, page, summary, language, keywords], (err, result) => {
       // Release the connection back to the pool
       connection.release();
 

@@ -892,7 +892,7 @@ app.get('/update_teacher/:userid/:name/:username/:birthday/:email/:password', (r
 });
 
 // Define a route handler for book update
-app.get('/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords/:image', (req, res) => {
+app.get('/updatebook/:isbn/:title/:publisher/:page/:summary/:language/:keywords', (req, res) => {
   const { isbn, title, publisher, page, summary, language, keywords, image } = req.params; // Get the user data from the request body
   updateBook(isbn, title, publisher, page, summary, language, keywords, image, (err, result) => {
     if (err) {
