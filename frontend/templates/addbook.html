@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(234, 234, 185, 0.848);
+            padding: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Adjust select option styles for visibility */
+        select option {
+            color: black;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Add Book</h1>
+    <form id="addBookForm">
+        <label for="title">Title of Book:</label>
+        <input type="text" id="title" name="title">
+
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn">
+
+        <label for="publisher">Publisher:</label>
+        <input type="text" id="publisher" name="publisher">
+
+        <label for="pages">Number of Pages:</label>
+        <input type="text" id="pages" name="pages">
+
+        <label for="summary">Summary:</label>
+        <input type="text" id="summary" name="summary">
+
+        <label for="bookLanguage">Book Language:</label>
+        <input type="text" id="bookLanguage" name="bookLanguage">
+
+        <label for="keywords">Keywords:</label>
+        <input type="text" id="keywords" name="keywords">
+
+        <label for="numCopies"># of Copies:</label>
+        <input type="text" id="numCopies" name="numCopies">
+
+        <label for="author">Author(s):</label>
+        <div id="authorContainer">
+            <select name="author[]"></select>
+        </div>
+        <button type="button" onclick="addAuthorInput()">Add Another Author</button>
+        <button type="button" onclick="addNewAuthor()">Add New Author</button>
+        <label for="newAuthor" id="newAuthorLabel">New Author:</label>
+        <input type="text" id="newAuthor" name="newAuthor">
+        <button type="button" id="sendNewAuthorButton" style="display: none;">OK</button>
+
+        <label for="category">Category/ies:</label>
+        <div id="categoryContainer">
+            <select name="category[]"></select>
+        </div>
+        <button type="button" onclick="addCategoryInput()">Add Another Category</button>
+        <button type="button" onclick="addNewCategory()">Add New Category</button>
+        <label for="newCategory" id="newCategoryLabel">New Category:</label>
+        <input type="text" id="newCategory" name="newCategory">
+        <button type="button" id="sendNewCategoryButton" style="display: none;">OK</button>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <a href="#" id="backButton" onclick="redirectToPreviousPage()">Back</a>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchHandlers() {
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+        fetchAuthors().then(authorsData => {
+            const authorSelect = document.querySelector("#authorContainer select");
+
+            authorsData.forEach(author => {
+                const option = document.createElement("option");
+                option.value = author.author_id;
+                option.textContent = author.author_name;
+                authorSelect.appendChild(option);
+            });
+        });
+
+        // Fetch categories data and populate the category select dropdown
+        fetchCategories().then(categoriesData => {
+            const categorySelect = document.querySelector("#categoryContainer select");
+
+            categoriesData.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.category_id;
+                option.textContent = category.category_name;
+                categorySelect.appendChild(option);
+            });
+        });
+        function addNewAuthor() {
+            const newAuthorLabel = document.getElementById("newAuthorLabel");
+            const newAuthorInput = document.getElementById("newAuthor");
+            const sendNewAuthorButton = document.getElementById("sendNewAuthorButton");
+
+            if (newAuthorLabel.style.display === "none") {
+                newAuthorLabel.style.display = "block";
+                newAuthorInput.style.display = "block";
+                sendNewAuthorButton.style.display = "block";
+            } else {
+                newAuthorLabel.style.display = "none";
+                newAuthorInput.style.display = "none";
+                sendNewAuthorButton.style.display = "none";
+            }
+        }
+
+        
+        function addNewCategory() {
+            const newCategoryLabel = document.getElementById("newCategoryLabel");
+            const newCategoryInput = document.getElementById("newCategory");
+            const sendNewCategoryButton = document.getElementById("sendNewCategoryButton");
+
+            if (newCategoryLabel.style.display === "none") {
+                newCategoryLabel.style.display = "block";
+                newCategoryInput.style.display = "block";
+                sendNewCategoryButton.style.display = "block";
+            } else {
+                newCategoryLabel.style.display = "none";
+                newCategoryInput.style.display = "none";
+                sendNewCategoryButton.style.display = "none";
+            }
+        }
+
+        async function sendNewAuthor(authorName) {
+            if (authorName !== "") {
+                const addAuthorUrl = `http://localhost:3305/addauthor/${encodeURIComponent(authorName)}`;
+                await fetch(addAuthorUrl);
+                newAuthorInput.value = ""; // Clear the input field
+                location.reload();
+            }
+
+        }
+
+        
+        async function sendNewCategory(authorName) {
+            if (authorName !== "") {
+                const addAuthorUrl = `http://localhost:3305/addcategory/${encodeURIComponent(authorName)}`;
+                await fetch(addAuthorUrl);
+                newCategoryInput.value = ""; // Clear the input field
+                location.reload();
+            }
+
+        }
+
+        document.getElementById("sendNewAuthorButton").addEventListener("click", function () {
+            const newAuthorInput = document.getElementById("newAuthor");
+            const authorName = newAuthorInput.value.trim();
+
+            if (authorName === "") {
+                alert("Please enter the name of the new author.");
+                return;
+            }
+
+            sendNewAuthor(authorName);
+        });
+        document.getElementById("sendNewCategoryButton").addEventListener("click", function () {
+            const newAuthorInput = document.getElementById("newCategory");
+            const authorName = newCategoryInput.value.trim();
+
+            if (authorName === "") {
+                alert("Please enter the name of the new Category.");
+                return;
+            }
+
+            sendNewCategory(authorName);
+        });
+
+        (async () => {
+
+
+            let schoolID;
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+
+
+
+        })();
+
+        let newAuthorLabel = document.getElementById("newAuthorLabel");
+        let newAuthorInput = document.getElementById("newAuthor");
+        newAuthorLabel.style.display = "none";
+        newAuthorInput.style.display = "none";
+
+        
+        let newCategoryLabel = document.getElementById("newCategoryLabel");
+        let newCategoryInput = document.getElementById("newCategory");
+        newCategoryLabel.style.display = "none";
+        newCategoryInput.style.display = "none";
+
+        function addAuthorInput() {
+            const authorContainer = document.getElementById("authorContainer");
+            const select = document.createElement("select");
+            select.name = "author[]";
+            authorContainer.appendChild(select);
+
+            fetchAuthors().then(authorsData => {
+                authorsData.forEach(author => {
+                    const option = document.createElement("option");
+                    option.value = author.author_id;
+                    option.textContent = author.author_name;
+                    select.appendChild(option);
+                });
+            });
+
+            // Hide the "New Author" input field if it is currently visible
+            newAuthorLabel.style.display = "none";
+            newAuthorInput.style.display = "none";
+        }
+
+        function addCategoryInput() {
+            const categoryContainer = document.getElementById("categoryContainer");
+            const select = document.createElement("select");
+            select.name = "category[]";
+            categoryContainer.appendChild(select);
+
+            fetchCategories().then(categoriesData => {
+                categoriesData.forEach(category => {
+                    const option = document.createElement("option");
+                    option.value = category.category_id;
+                    option.textContent = category.category_name;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        document.getElementById("addBookForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+
+
+            let schoolID;
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+            const title = document.getElementById("title").value;
+            const isbn = document.getElementById("isbn").value;
+            const publisher = document.getElementById("publisher").value;
+            const pages = document.getElementById("pages").value;
+            const summary = document.getElementById("summary").value;
+            const bookLanguage = document.getElementById("bookLanguage").value;
+            const keywords = document.getElementById("keywords").value;
+            const numCopies = document.getElementById("numCopies").value;
+
+            const authorSelect = document.querySelectorAll("#authorContainer select");
+            const categorySelect = document.querySelectorAll("#categoryContainer select");
+
+            const selectedAuthors = [];
+            const selectedCategories = [];
+
+            // Loop over authorSelect NodeList
+            authorSelect.forEach(select => {
+                const options = Array.from(select.options).filter(option => option.selected);
+                selectedAuthors.push(...options.map(option => option.value));
+            });
+
+            // Loop over categorySelect NodeList
+            categorySelect.forEach(select => {
+                const options = Array.from(select.options).filter(option => option.selected);
+                selectedCategories.push(...options.map(option => option.value));
+            });
+            // Submitting book details
+            const bookUrl = `http://localhost:3305/addbook/${isbn}/${encodeURIComponent(title)}/${encodeURIComponent(publisher)}/${pages}/${encodeURIComponent(summary)}/${encodeURIComponent(bookLanguage)}/${encodeURIComponent(keywords)}`;
+            await fetch(bookUrl);
+
+            // Adding authors to book
+            for (const authorId of selectedAuthors) {
+                const addAuthorToBookUrl = `http://localhost:3305/addauthortobook/${isbn}/${authorId}`;
+                await fetch(addAuthorToBookUrl);
+            }
+
+            // Adding categories to book
+            for (const categoryId of selectedCategories) {
+                const addCategoryToBookUrl = `http://localhost:3305/addcategorytobook/${isbn}/${categoryId}`;
+                await fetch(addCategoryToBookUrl);
+            }
+
+            // Adding book to school
+            const addBookToSchoolUrl = `http://localhost:3305/addbooktoschool/${isbn}/${schoolID}/${numCopies}`;
+            await fetch(addBookToSchoolUrl);
+
+            alert("Book added successfully!");
+            location.reload();
+        });
+
+        async function fetchAuthors() {
+            try {
+                const response = await fetch("http://localhost:3305/all_authors");
+                const authorsData = await response.json();
+
+                return authorsData;
+            } catch (error) {
+                console.error("Error fetching authors info:", error);
+                return null;
+            }
+        }
+
+        async function fetchCategories() {
+            try {
+                const response = await fetch("http://localhost:3305/all_categories");
+                const categoriesData = await response.json();
+
+                return categoriesData;
+            } catch (error) {
+                console.error("Error fetching categories info:", error);
+                return null;
+            }
+        }
+    </script>
+</body>
+
+</html>

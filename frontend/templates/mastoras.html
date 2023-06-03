@@ -48,9 +48,9 @@
 
         <script>
 
-            async function fetchHandlers() {
+            async function fetchHndlrs() {
                 try {
-                    const response = await fetch('http://localhost:3305/allhandlers');
+                    const response = await fetch(`http://localhost:3305/allhandlers_fromusers_school/${user.user_id}`);
                     const handlersData = await response.json();
                     return handlersData;
                 } catch (error) {
@@ -84,7 +84,7 @@
                 }
 
 
-                const handlersData = await fetchHandlers();
+                const handlersData = await fetchHndlrs();
                 const notApprovedUsers = handlersData.filter(user => user.approved === 0);
                 const notApprovedCount = notApprovedUsers.length;
 
