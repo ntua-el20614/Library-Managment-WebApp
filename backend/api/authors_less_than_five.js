@@ -12,19 +12,17 @@ const fetchData = (callback) => {
 
     // Execute a SQL query to fetch data
     const query =
-      'SELECT a1.author_id, a1.author_name ' +
-      'FROM author a1 ' +
-      'WHERE ( ' +
-      'SELECT COUNT(*) ' +
-      'FROM book_author ba1 ' +
-      'WHERE ba1.author_id = a1.author_id ' +
-      ') <= ( ' +
-      'SELECT COUNT(*) ' +
-      'FROM book_author ba2 ' +
-      'GROUP BY ba2.author_id ' +
-      'ORDER BY COUNT(*) DESC ' +
-      'LIMIT 1 ' +
-      ') - 5';
+    'SELECT a1.author_id, a1.author_name, COUNT(ba1.isbn) AS numerium ' +
+    'FROM author a1 ' +
+    'JOIN book_author ba1 ON ba1.author_id = a1.author_id ' +
+    'GROUP BY a1.author_id, a1.author_name ' +
+    'HAVING COUNT(ba1.isbn) <= ( ' +
+    'SELECT COUNT(*) - 5 ' +
+    'FROM book_author ba2 ' +
+    'GROUP BY ba2.author_id ' +
+    'ORDER BY COUNT(*) DESC ' +
+    'LIMIT 1 ' +
+    ')';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
