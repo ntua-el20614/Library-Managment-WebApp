@@ -24,7 +24,7 @@ const fetchData = (callback) => {
   'LEFT JOIN teacher t ON s.school_id = t.school_id ' +
   'LEFT JOIN users u ON h.user_id = u.user_id ' +
   'LEFT JOIN book_school bs ON s.school_id = bs.school_id ' +
-  'GROUP BY s.school_name ';
+  'GROUP BY s.school_name, handler_name ';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
