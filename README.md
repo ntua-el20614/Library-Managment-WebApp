@@ -4,7 +4,7 @@ Project for the Databases 2022-2023 class in NTUA ECE that simulates a virtual l
 ## Authors
 + Giorgos Pittakis el20605
 + Eracklis Nikolaides el20607
-+ Chrystodoulos Stylianides el20614
++ Christodoulos Stylianides el20614
 
 ## ER Diagram
 ![er](https://github.com/ChrisOPellouis/Papabases/assets/133709757/0835bfb8-5c9b-4ff9-be31-84202b1d64cf)
