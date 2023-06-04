@@ -11,8 +11,12 @@ const fetchData = (callback) => {
     }
 
     // Execute a SQL query to fetch data
-    const query = 'SELECT * FROM handlers h ' +
-        'JOIN users u ON h.user_id = h.user_id ';
+    const query = 
+    'SELECT handlers.user_id, h.school_id, h.approved ' +
+    'FROM handlers ' +
+    'JOIN users ON handlers.user_id = users.user_id '+
+    'GROUP BY h.user_id';
+    ;
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
