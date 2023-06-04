@@ -20,6 +20,10 @@
             </a>
         </a>
     </h1>
+    
+    <label for="user-id">Enter your ID:</label>
+    <input type="text" id="user-id" name="user-id"> 
+
     <div id="book-list"></div>
 
     <script>
@@ -181,6 +185,9 @@
 
         async function rentBook(book) {
             console.log('Renting book:', book);
+            const userIdInput = document.getElementById("user-id");
+            const userId = userIdInput.value;
+            console.log("for user:",userId);
 
             const studs = await fetchHandlers();
             let schoolID;

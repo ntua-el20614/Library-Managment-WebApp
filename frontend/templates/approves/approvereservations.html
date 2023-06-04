@@ -299,7 +299,7 @@
 
                         user = JSON.parse(localStorage.getItem("user"));
 
-                        console.log(rentid, user.user_id, isbn, copies);
+                        console.log(rentid, isbn, copies, usersid, schoolsid, user_id);
                         let approveRent;
                         if (copies !== 0) {
                             approveRent = `http://localhost:3305/approve_reservation/1/${rentid}`;
@@ -314,32 +314,20 @@
                             if (response.ok) {
                                 console.log("Reservation approved!");
                                 //prepei na meiwsoume ta available copies kata ena
-                                const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+
+                                const today = new Date();
+                                const year = today.getFullYear();
+                                const month = String(today.getMonth() + 1).padStart(2, '0');
+                                const day = String(today.getDate()).padStart(2, '0');
+                                const currentDate = `${year}-${month}-${day}`;
+
+                                const rent_req = `http://localhost:3305/addrent/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
                                 try {
-                                    const response = await fetch(reduce_copies);
+                                    const response = await fetch(rent_req);
                                     if (response.ok) {
-                                        console.log("Available copies reduced!");
-                                        const today = new Date();
-                                        const year = today.getFullYear();
-                                        const month = String(today.getMonth() + 1).padStart(2, '0');
-                                        const day = String(today.getDate()).padStart(2, '0');
-                                        const currentDate = `${year}-${month}-${day}`;
-
-                                        const rent_req = `http://localhost:3305/add_rent_approved/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
-
-                                        try {
-                                            const response = await fetch(rent_req);
-
-                                            if (response.ok) {
-                                                console.log("Approved rent!");
-                                                alert("The book has been rented to the user!");
-                                                location.reload();
-                                            } else {
-                                                console.log("could not rent the book!");
-                                            }
-                                        } catch (error) {
-                                            console.log("An error occurred:", error);
-                                        }
+                                        console.log("Added to rents");
+                                        alert("Approved! Waiting for Student/Teacher\nto come and pick up the book");
+                                        location.reload();
 
 
 
@@ -389,7 +377,7 @@
 
                 user = JSON.parse(localStorage.getItem("user"));
 
-                console.log(rentid, user.user_id, isbn, copies);
+                console.log(rentid, isbn, copies, usersid, schoolsid, user_id);
                 let approveRent;
                 if (copies !== 0) {
                     approveRent = `http://localhost:3305/approve_reservation/1/${rentid}`;
@@ -404,32 +392,20 @@
                     if (response.ok) {
                         console.log("Reservation approved!");
                         //prepei na meiwsoume ta available copies kata ena
-                        const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = String(today.getMonth() + 1).padStart(2, '0');
+                        const day = String(today.getDate()).padStart(2, '0');
+                        const currentDate = `${year}-${month}-${day}`;
+
+                        const rent_req = `http://localhost:3305/addrent/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
                         try {
-                            const response = await fetch(reduce_copies);
+                            const response = await fetch(rent_req);
                             if (response.ok) {
-                                console.log("Available copies reduced!");
-                                const today = new Date();
-                                const year = today.getFullYear();
-                                const month = String(today.getMonth() + 1).padStart(2, '0');
-                                const day = String(today.getDate()).padStart(2, '0');
-                                const currentDate = `${year}-${month}-${day}`;
-
-                                const rent_req = `http://localhost:3305/add_rent_approved/${user_id}/${isbn}/${schoolsid}/${currentDate}`;
-
-                                try {
-                                    const response = await fetch(rent_req);
-
-                                    if (response.ok) {
-                                        console.log("Approved rent!");
-                                        alert("The book has been rented to the user!");
-                                        location.reload();
-                                    } else {
-                                        console.log("could not rent the book!");
-                                    }
-                                } catch (error) {
-                                    console.log("An error occurred:", error);
-                                }
+                                console.log("Added to rents");
+                                alert("Approved! Waiting for Student/Teacher\nto come and pick up the book");
+                                location.reload();
 
 
 
@@ -451,8 +427,6 @@
                     console.log("An error for rents:", error);
                 }
             }
-
-
 
 
             async function deleteUser(userId) {
