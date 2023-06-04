@@ -9,6 +9,7 @@ const backup = require("./api/backup");
 const restore = require("./api/restore");
 ////////////////////////////////////////////////////////////////
 const all_users = require("./api/all_users");
+const schools_info = require("./api/schools_info");
 const all_categories = require("./api/all_categories");
 const all_titles = require("./api/all_titles");
 const allstudents = require("./api/allstudents");
@@ -110,6 +111,7 @@ app.use("/backup", backup);
 app.use("/restore", restore);
 ////////////////////////////////////////////////////////////////
 app.use("/all_users", all_users);
+app.use("/schools_info", schools_info);
 app.use("/all_categories", all_categories);
 app.use("/all_titles/:userid", all_titles);
 app.use("/allstudents", allstudents);

@@ -9,6 +9,7 @@ const { backupDatabase: BuckupPaPabase } = require('./api/backup');
 const { restoreDatabase: RestorePaPabase } = require('./api/restore');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const { fetchData: fetchUsers } = require('./api/all_users');
+const { fetchData: fetchSchoolsInfo } = require('./api/schools_info');
 const { fetchData: fetchCategories } = require('./api/all_categories');
 const { fetchData: fetchTitles } = require('./api/all_titles');
 const { fetchData: fetchStudents } = require('./api/allstudents');
@@ -131,6 +132,19 @@ app.get('/all_users', (req, res) => {
   fetchUsers((err, results) => {
     if (err) {
       console.error('Error fetching user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /schools_info
+app.get('/schools_info', (req, res) => {
+  fetchSchoolsInfo((err, results) => {
+    if (err) {
+      console.error('Error fetching school info:', err);
       res.status(500).send('Internal Server Error');
       return;
     }
