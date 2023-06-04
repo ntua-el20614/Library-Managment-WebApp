@@ -8,10 +8,50 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
+<style>
+
+.backupButton{
+    
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background-color: #c83333ba;
+    color: black;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.backupButton:hover {
+    background-color: #994444;
+}
+
+.restoreButton{
+
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background-color: #c83333ba;
+    color: black;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.restoreButton:hover {
+    background-color: #994444;
+}
+
+</style>
+
 <body>
     <h1>My Profile</h1>
     <button class="logout-button" onclick="logout()">Logout</button>
-
+    <button class="backupButton" onclick="backup()">backup</button>
+    <button class="restoreButton" onclick="restore()">restore</button>
+ 
     <div class="profile">
         <div class="profile-item">
             <label>User Type:</label>
@@ -24,10 +64,6 @@
         <div class="profile-item">
             <label>Username:</label>
             <span id="username"></span>
-        </div>
-        <div class="profile-item">
-            <label>Password:</label>
-            <span id="password">*********</span>
         </div>
         <div class="profile-item">
             <label>Name-Surname:</label>
@@ -61,11 +97,11 @@
         </div>
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/queries/youngs';">Show</button>
-            <p class="rectangle-content">Young Teachers with most books</p> 
+            <p class="rectangle-content">Young Teachers with most books</p>
         </div>
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/queries/authors_no_rents';">Show</button>
-            <p class="rectangle-content">Authors with no rents</p> 
+            <p class="rectangle-content">Authors with no rents</p>
         </div>
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/queries/handlers_more_20';">Show</button>
@@ -80,8 +116,42 @@
             <p class="rectangle-content">Authors with a lot of books</p>
         </div>
 
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/add_new_school';">Add</button>
+            <p class="rectangle-content">Add new school</p>
+        </div>
 
         <script>
+
+            async function backup(){
+                try{
+                    const response = await fetch("http://localhost:3305/backup")
+                    if (response.ok){
+                        alert("Backup was successfull");
+                        location.reload();
+                    }else{
+                        alert("Backup was unsuccessfull");
+                        location.reload();
+                    }
+                }catch(error){
+                    console.log(error);
+                }
+            }
+
+            async function restore(){
+                try{
+                    const response = await fetch("http://localhost:3305/restore")
+                    if (response.ok){
+                        alert("Restore was successfull");
+                        location.reload();
+                    }else{
+                        alert("Restore was unsuccessfull");
+                        location.reload();
+                    }
+                }catch(error){
+                    console.log(error);
+                }
+            }
 
             async function fetchHndlrs() {
                 try {
@@ -107,95 +177,78 @@
                 window.location.href = '/';
 
 
-                let isEditing = false;
-        let originalPassword = user.passcode;
+            let isEditing = false;
+            let originalPassword = user.passcode;
 
-        async function editProfile() {
+            async function editProfile() {
 
-            const passcodeElement = document.getElementById("password");
-            const editButton = document.getElementsByClassName("edit-button")[0];
+                const editButton = document.getElementsByClassName("edit-button")[0];
 
-            const usernameElement = document.getElementById("username");
-            const nameElement = document.getElementById("user-name");
-            const emailElement = document.getElementById("email");
-            const birthdayElement = document.getElementById("birthday");
+                const nameElement = document.getElementById("user-name");
+                const emailElement = document.getElementById("email");
+                const birthdayElement = document.getElementById("birthday");
 
-            if (!isEditing) {
-                // Enter edit mode
-                originalUsername = usernameElement.textContent;
-                originalPasscode = user.passcode;
-                originalName = nameElement.textContent;
-                originalEmail = emailElement.textContent;
-                originalBirthday = birthdayElement.textContent;
-                //save tis palies times
-                passcodeElement.textContent = user.passcode;
+                if (!isEditing) {
+                    // Enter edit mode
+                    originalName = nameElement.textContent;
+                    originalEmail = emailElement.textContent;
+                    originalBirthday = birthdayElement.textContent;
+                    //save tis palies times
 
-                usernameElement.contentEditable = true;
-                passcodeElement.contentEditable = true;
-                nameElement.contentEditable = true;//mporw na ta kanw edit
-                emailElement.contentEditable = true;
-                birthdayElement.contentEditable = true;
+                    nameElement.contentEditable = true;//mporw na ta kanw edit
+                    emailElement.contentEditable = true;
+                    birthdayElement.contentEditable = true;
 
-                usernameElement.style.border = "1px solid black";
-                passcodeElement.style.border = "1px solid black";
-                nameElement.style.border = "1px solid black";
-                emailElement.style.border = "1px solid black";
-                birthdayElement.style.border = "1px solid black";
-                editButton.innerHTML = "OK";
-            } else {
-                // Save changes and exit edit mode
-                const newUsername = usernameElement.textContent;
-                const newPasscode = passcodeElement.textContent;
-                const newName = nameElement.textContent;
-                const newEmail = emailElement.textContent;
-                const newBirthday = birthdayElement.textContent;
-
-                user.username = newUsername;
-                user.passcode = newPasscode;
-                user.user_name = newName;
-                user.email = newEmail;
-                user.birthday = newBirthday;
-                passcodeElement.textContent = "***********";
-
-                usernameElement.contentEditable = false;
-                passcodeElement.contentEditable = false;
-                nameElement.contentEditable = false;
-                emailElement.contentEditable = false;
-                birthdayElement.contentEditable = false;
-
-                usernameElement.style.border = "none";
-                passcodeElement.style.border = "none";
-                nameElement.style.border = "none";
-                emailElement.style.border = "none";
-                birthdayElement.style.border = "none";
-                editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
-                console.log("Now, user is:", user);
-
-                const changehandler = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
-
-                try {
-                    const response = await fetch(changehandler);
+                    nameElement.style.border = "1px solid black";
+                    emailElement.style.border = "1px solid black";
+                    birthdayElement.style.border = "1px solid black";
+                    editButton.innerHTML = "OK";
+                } else {
+                    // Save changes and exit edit mode
+                    const newName = nameElement.textContent;
+                    const newEmail = emailElement.textContent;
+                    const newBirthday = birthdayElement.textContent;
 
 
-                    if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
-                        console.log("Handler information updated!");
-                        console.log(user);
-                        alert("Handler information updated successfully!\nPlease log-in again!");
+                    user.user_name = newName;
+                    user.email = newEmail;
+                    user.birthday = newBirthday;
 
-                        user = undefined;
-                        localStorage.removeItem("user");
-                        window.location.href = '/';
+                    nameElement.contentEditable = false;
+                    emailElement.contentEditable = false;
+                    birthdayElement.contentEditable = false;
 
-                    } else {
-                        console.log("Could not update handler information or no changes were made.");
+                    nameElement.style.border = "none";
+                    emailElement.style.border = "none";
+                    birthdayElement.style.border = "none";
+                    editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+                    console.log("Now, user is:", user);
+
+                    const changehandler = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
+
+                    try {
+                        const response = await fetch(changehandler);
+
+
+                        if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
+                            console.log("Handler information updated!");
+                            console.log(user);
+                            alert("Handler information updated successfully!\nPlease log-in again!");
+
+                            user = undefined;
+                            localStorage.removeItem("user");
+                            window.location.href = '/';
+
+                        } else {
+                            console.log("Could not update handler information or no changes were made.");
+                        }
+                    } catch (error) {
+                        console.log("This username is already taken!");
                     }
-                } catch (error) {
-                    console.log("This username is already taken!");
                 }
-            }
 
-            isEditing = !isEditing;
-        }
+                isEditing = !isEditing;
+            }
             (async () => {
 
                 if (user.username === 'Mastoras' && user.passcode === 'password') {
@@ -212,7 +265,7 @@
                 const handlersData = await fetchHndlrs();
                 const notApprovedUsers = handlersData.filter(user => user.approved === 0);
                 const notApprovedCount = notApprovedUsers.length;
-                
+
 
 
                 document.getElementById("userType").textContent = "Mastoras";

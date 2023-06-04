@@ -211,4 +211,8 @@ def top_cat_comb():
 @app.route("/queries/authors_5_less")
 def authors_5_less():
     return render_template("/queries/authors_5_less.html", pageTitle="Authors 5 less")
+
+@app.route("/add_new_school")
+def add_new_school():
+    return render_template("/addschool.html", pageTitle="Add School")
 ####################################################################################~
