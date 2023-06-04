@@ -210,7 +210,6 @@
 
             userData.forEach(user => {
                 if (user.approved === 0) {
-                console.log(user);
                     const userContainer = document.getElementById('userContainer');
 
                     const userDiv = document.createElement('div');
@@ -282,6 +281,7 @@
 
                             if (response.ok) {
                                 console.log("student approved!");
+                                alert("Student Approved!");
                                 location.reload();
 
                             } else {
