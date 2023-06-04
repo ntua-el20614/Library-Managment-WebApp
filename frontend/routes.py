@@ -83,17 +83,9 @@ def show_books():
 def show_reservations():
     return render_template("/reserve/reservations.html", pageTitle="My rents")
 
-@app.route("/student/rent_a_book")
-def rent_a_book_student():
-    return render_template("/rent/rent_a_book1.html", pageTitle="My rents")
-
 @app.route("/student/reserve_a_book")
 def reserve_a_book_student():
     return render_template("/reserve/reserve_a_book1.html", pageTitle="My rents")
-
-@app.route("/teacher/rent_a_book")
-def rent_a_book_teacher():
-    return render_template("/rent/rent_a_book2.html", pageTitle="My rents")
 
 @app.route("/teacher/reserve_a_book")
 def reserve_a_book_teacher():
@@ -149,7 +141,11 @@ def approve_teachers():
 @app.route("/approve/handlers")
 def approve_handlers():
     return render_template("/approves/approvehandlers.html", pageTitle="Approve Handlers")
- 
+
+@app.route("/rent_a_book")
+def rent_a_book():
+    return render_template("/rent/rent_a_book.html", pageTitle="My rents")
+
 @app.route("/approve/reviews")
 def approve_reviews():
     return render_template("/approves/approvereviews.html", pageTitle="Approve Reviews")
