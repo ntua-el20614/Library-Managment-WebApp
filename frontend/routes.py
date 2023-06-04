@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from flask_mysqldb import MySQL
 from frontend import app, db  # initially created by __init__.py, need to be used here
-from frontend.forms import *
 import requests
 
 @app.route("/")
