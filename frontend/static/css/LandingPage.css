@@ -1,7 +1,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: rgba(234, 234, 185, 0.848);
+  background-image: url("https://imgur.com/a/S7mU9oS");
   padding: 20px;
 }
 
@@ -64,4 +64,12 @@ body {
   input[type="button"] {
     background-color: #808080; /* Gray */
     margin-top: 10px;
+  }
+  
+  .welcome-message{
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center; 
+  font-weight: bold; /* make the content bold */
+  font-size: 35px; /* increase the font size */
   }
