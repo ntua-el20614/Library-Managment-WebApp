@@ -91,7 +91,7 @@ const fetchData = (Category, callback) => {
       'GROUP BY u.user_id', [Category]);
 
     const authorquery = connection.query(
-      'SELECT DISTINCT a.author_name ' +
+      'SELECT DISTINCT a.author_name, a.author_id ' +
       'FROM author a ' +
       'JOIN book_author ba ON a.author_id = ba.author_id ' +
       'JOIN book_category bc ON ba.isbn = bc.isbn ' +
@@ -107,7 +107,7 @@ const fetchData = (Category, callback) => {
         json_list.push({
           id: row.user_id,
           name: row.user_name,
-          works_as: "teacher",
+          works_as: "Teacher",
         });
       })
       .on('end', () => {
@@ -117,7 +117,7 @@ const fetchData = (Category, callback) => {
             json_list.push({
               id: row.author_id,
               name: row.author_name,
-              works_as: "author",
+              works_as: "Author",
             });
           })
           .on('end', () => {
