@@ -14,7 +14,8 @@ const fetchData = (callback) => {
     const query = 
         'SELECT * FROM handlers h ' +
         'JOIN users u ON h.user_id = h.user_id ' +
-        'WHERE u.approved = 0';
+        'WHERE u.approved = 0 ' +
+        'GROUP BY u.user_id';
     connection.query(query, (err, results) => {
       // Release the connection back to the pool
       connection.release();
