@@ -86,7 +86,7 @@ const fetchData = (Category, callback) => {
       'JOIN book_school bs ON r.isbn = bs.isbn AND r.school_id = bs.school_id ' +
       'JOIN book_category bc ON bs.isbn = bc.isbn ' +
       'JOIN category c ON bc.category_id = c.category_id ' +
-      'WHERE c.category_name = ' + "'" + Category + "'" +
+      'WHERE c.category_id = ' + "'" + Category + "'" +
       ' AND r.date_of_rent >= DATE_SUB(NOW(), INTERVAL 1 YEAR) ' +
       'GROUP BY u.user_id', [Category]);
 
@@ -96,7 +96,7 @@ const fetchData = (Category, callback) => {
       'JOIN book_author ba ON a.author_id = ba.author_id ' +
       'JOIN book_category bc ON ba.isbn = bc.isbn ' +
       'JOIN category c ON bc.category_id = c.category_id ' +
-      'WHERE c.category_name = ' + "'" + Category + "' " +
+      'WHERE c.category_id = ' + "'" + Category + "' " +
       'GROUP BY a.author_id', [Category]);
 
     let json_list = []; // Create a list
