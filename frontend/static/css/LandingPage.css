@@ -1,9 +1,19 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: lightyellow;
+  background-color: rgb(187, 122, 221);
   background-image: url("../Background.jpg");
-  padding: 20px;
+  background-size: 100% 1050px;
+  background-image: center;
+  background-repeat: no-repeat;
+}
+
+.copyrights{
+  color:wheat;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  
 }
 
 .container {
@@ -16,7 +26,7 @@ body {
     width: 250px;
     height: 300px;
     border: 1px solid black;
-    background-color: #cacaca;
+    background-color: #cacaca96;
     padding: 10px;
   }
   
@@ -73,4 +83,6 @@ body {
   align-items: center; 
   font-weight: bold; /* make the content bold */
   font-size: 35px; /* increase the font size */
+  color: white;
+  border: 1px orange;
   }
