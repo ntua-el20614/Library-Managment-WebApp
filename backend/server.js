@@ -14,6 +14,7 @@ const { fetchData: fetchTitles } = require('./api/all_titles');
 const { fetchData: fetchStudents } = require('./api/allstudents');
 const { fetchData: fetchTeachers } = require('./api/allteachers');
 const { fetchData: fetchHandlers } = require('./api/allhandlers');
+const { fetchData: fetchUnapprovedHandlers } = require('./api/unapproved_handlers');
 const { fetchData: fetchSchools } = require('./api/all_schools');
 const { fetchData: fetchAuthors } = require('./api/all_authors');
 const { fetchData: fetchBooks } = require('./api/all_books');
@@ -242,6 +243,19 @@ app.get('/allhandlers', (req, res) => {
   fetchHandlers((err, results) => {
     if (err) {
       console.error('Error fetching user data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
+
+// Define a route handler for /unapproved_handlers
+app.get('/unapproved_handlers', (req, res) => {
+  fetchUnapprovedHandlers((err, results) => {
+    if (err) {
+      console.error('Error fetching handler data:', err);
       res.status(500).send('Internal Server Error');
       return;
     }

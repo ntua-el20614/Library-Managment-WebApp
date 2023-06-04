@@ -42,6 +42,7 @@ const avg_likert = require("./api/avg_likert");
 const book_user_parameters = require("./api/book_user_parameter");
 const book_handler_parameters = require("./api/book_handler_parameter");
 const late_rents = require("./api/late_rents");
+const unapproved_handlers = require("./api/unapproved_handlers");
 ////////////////////////////////////////////////////////////////
 const adduser = require("./api/adduser");
 const addteacher = require("./api/addteacher");
@@ -142,6 +143,7 @@ app.use("/avg_likert/:userid/:username/:categoryname", avg_likert);
 app.use("/book_user_parameter/:schoolid/:categoryname/:title/:authorname", book_user_parameters);
 app.use("/book_handler_parameter/:userid/:categoryname/:title/:authorname/:copys", book_handler_parameters);
 app.use("/late_rents/:userid/:name/:dayz", late_rents);
+app.use("/unapproved_handlers", unapproved_handlers);
 ////////////////////////////////////////////////////////////////
 app.use("/adduser/:username/:password/:user_name/:birthday/:email", adduser);
 app.use("/addteacher/:userid/:schoolid", addteacher);
