@@ -20,7 +20,6 @@ All the required tools for the project to work as shown in the requirements.txt 
 > Flask-MySQLdb==1.0.1  
 > Flask-WTF==1.0.1  
 > mysqlclient==2.1.0  
-> python-dateutil==2.8.2  
 > flask_mysqldb==1.0.1  
 > WTForms==3.0.1  
 > requests==2.31.0
