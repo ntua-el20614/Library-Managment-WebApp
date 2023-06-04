@@ -10,7 +10,7 @@ Project for the Databases 2022-2023 class in NTUA ECE that simulates a virtual l
 ![er](https://github.com/ChrisOPellouis/Papabases/assets/133709757/0835bfb8-5c9b-4ff9-be31-84202b1d64cf)
 
 ## Relational Diagram
-![relational](https://github.com/ChrisOPellouis/Papabases/assets/133709757/2d6c86b1-e29c-4700-8c9c-8ed8ae46573a)
+![relational_papagram](https://github.com/ChrisOPellouis/Papabases/assets/133709757/9e3b6e9b-73cf-4491-8378-963408a7117e)
 
 ## Required Imports
 All the required tools for the project to work as shown in the requirements.txt are  
