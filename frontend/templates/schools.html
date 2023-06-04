@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<body>
+    <h1>
+        <a>
+            Information for each school
+        </a>
+        <a href="http://localhost:3000/mastoras" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+
+    <div id="book-list"></div>
+
+    <div class="container">
+        <div id="reviewsContainer"></div>
+    </div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+ 
+ 
+        async function fetchTask() {
+            try {
+                const response = await fetch(`http://localhost:3305/schools_info`);
+                const Data = await response.json();
+                return Data;
+            } catch (error) {
+                console.error('Error fetching Data info:', error);
+                return null;
+            }
+        }
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+
+        (async () => {
+
+            if (user.username === 'Mastoras' && user.passcode === 'password') {
+                console.log("You are allowed to stay here!");
+
+            }
+            else {
+                alert("You are not Mastoras!");
+                window.location.href = '/';
+
+            }
+
+            const tasksData = await fetchTask();
+
+            //console.log(tasksData.length);
+            const reviewsContainer = document.getElementById('reviewsContainer');
+                reviewsContainer.innerHTML = ''; 
+
+                if (tasksData && tasksData.length > 0) {
+                    tasksData.forEach((user) => {
+
+                        const alldetails = document.createElement('p');
+                        alldetails.classList.add('review');
+
+                        const nameElement = document.createElement('p');
+                        nameElement.classList.add('user');
+                        nameElement.innerText = "School's Name:" + user.school_name;
+                        alldetails.appendChild(nameElement);
+
+                        const usernameElement = document.createElement('p');
+                        usernameElement.classList.add('comment');
+                        usernameElement.innerText = "Combination count: " + user.combination_count;
+                        alldetails.appendChild(usernameElement);
+                        
+                        const isbnElement = document.createElement('p');
+                        isbnElement.classList.add('comment');
+                        isbnElement.innerText = "School's number of : " + user.isbn;
+                        alldetails.appendChild(isbnElement);
+
+                        const reviewElement = document.createElement('p');
+                        reviewElement.classList.add('comment');
+                        reviewElement.innerText = "School's number of : " + user.isbn;
+                        alldetails.appendChild(reviewElement);
+
+
+                        reviewsContainer.appendChild(alldetails);
+                    });
+                } else {
+                    const noReviewsElement = document.createElement('p');
+                    noReviewsElement.innerText = 'There are no Schools!';
+                    reviewsContainer.appendChild(noReviewsElement);
+                }
+
+
+             
+
+        })();
+    </script>
+</body>
+
+</head>
+
+</html>
