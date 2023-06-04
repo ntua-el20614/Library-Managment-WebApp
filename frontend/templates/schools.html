@@ -77,18 +77,23 @@
 
                         const usernameElement = document.createElement('p');
                         usernameElement.classList.add('comment');
-                        usernameElement.innerText = "Handler's name: " + user.handlers_name;
+                        usernameElement.innerText = "Handler's name: " + user.handler_name;
                         alldetails.appendChild(usernameElement);
                         
                         const isbnElement = document.createElement('p');
                         isbnElement.classList.add('comment');
-                        isbnElement.innerText = "School's number of : " + user.isbn;
+                        isbnElement.innerText = "School's number of Students: " + user.num_students;
                         alldetails.appendChild(isbnElement);
 
                         const reviewElement = document.createElement('p');
                         reviewElement.classList.add('comment');
-                        reviewElement.innerText = "School's number of : " + user.isbn;
+                        reviewElement.innerText = "School's number of Teachers: " + user.num_teachers;
                         alldetails.appendChild(reviewElement);
+
+                        const booksElement = document.createElement('p');
+                        booksElement.classList.add('comment');
+                        booksElement.innerText = "School's number of Books: " + user.num_books;
+                        alldetails.appendChild(booksElement);
 
 
                         reviewsContainer.appendChild(alldetails);
