@@ -118,7 +118,7 @@
                 reservationButton.classList.add('reservation-button');
                 reservationButton.style.backgroundColor = 'green';
                 reservationButton.addEventListener('click', () => {
-                    if (reservedBooksCount < 2) {
+                    if (reservedBooksCount < 1) {
                         reserveBook(book);
                     } else {
                         alert("You have already reserved a book. You are only allowed one book per week.");

@@ -5,7 +5,6 @@
     <title>My Reservations</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/Rlists.css">
-
 </head>
 
 <body>
@@ -22,6 +21,7 @@
                 <th>Summary</th>
                 <th>Book Language</th>
                 <th>Approved</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody id="reservations-table-body"></tbody>
@@ -31,7 +31,6 @@
     </a>
 
     <script>
-
         function redirectToPreviousPage() {
             history.back();
         }
@@ -50,6 +49,7 @@
                 return null;
             }
         }
+
         async function fetchTeachers() {
             try {
                 const response = await fetch('http://localhost:3305/allteachers');
@@ -61,6 +61,7 @@
                 return null;
             }
         }
+
         async function fetchReservations() {
             try {
                 const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
@@ -71,7 +72,24 @@
                 return null;
             }
         }
-        async function checkifvalid() {
+
+        async function deleteReservation(reservationId) {
+            try {
+                const response = await fetch(`http://localhost:3305/delete_reservation/${reservationId}`);
+                if(response.ok){
+                    alert("Deleted Reservation Successfully!");
+                    location.reload();
+                }else{
+                    alert("Couldnt Delete Reservation!");
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error deleting reservation:', error);
+                return null;
+            }
+        }
+
+        async function checkIfValid() {
             const studentsData = await fetchStudents();
             const teachersData = await fetchTeachers();
             let schoolID;
@@ -81,14 +99,11 @@
             for (const studentsDataItem of studentsData) {
                 if (studentsDataItem.user_id === user.user_id) {
                     if (user.approved === 1) {
-                        flag = true;
-                        schoolID = studentsDataItem.school_id;
                         found_student = true;
                         console.log('You are allowed to stay here!');
                     } else {
                         alert("You are not approved yet");
                         window.location.href = '/';
-
                     }
                 }
             }
@@ -96,35 +111,33 @@
             for (const teachersDataItem of teachersData) {
                 if (teachersDataItem.user_id === user.user_id) {
                     if (user.approved === 1) {
-                        schoolID = studentsDataItem.school_id;
+                        schoolID = teachersDataItem.school_id;
                         found_teacher = true;
                         console.log('You are allowed to stay here!');
                     } else {
                         alert("You are not approved yet");
                         window.location.href = '/';
-
                     }
                 }
             }
-
 
             if (!found_student && !found_teacher) {
                 alert("You shouldn't be here!");
                 window.location.href = '/';
             }
         }
-        checkifvalid();
+
         async function displayReservations() {
             const reservations = await fetchReservations();
             const tableBody = document.getElementById('reservations-table-body');
 
             if (!reservations) {
-                tableBody.innerHTML = '<tr><td colspan="8">Error fetching reservations</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9">Error fetching reservations</td></tr>';
                 return;
             }
 
             if (reservations.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="8">No reservations found</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9">No reservations found</td></tr>';
                 return;
             }
 
@@ -140,6 +153,7 @@
             <td>${reservation.summary}</td>
             <td>${reservation.book_language}</td>
             <td>${reservation.approved === 1 ? 'Yes' : 'No'}</td>
+            <td><button onclick="deleteReservation(${reservation.reservation_id})">Delete</button></td>
           </tr>
         `;
             });
@@ -147,6 +161,7 @@
             tableBody.innerHTML = tableHTML;
         }
 
+        checkIfValid();
         displayReservations();
     </script>
 </body>
