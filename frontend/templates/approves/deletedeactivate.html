@@ -121,10 +121,6 @@
         let user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/handlers';
-        });
 
         async function fetchHandlers() {
             try {

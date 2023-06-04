@@ -114,10 +114,6 @@
             history.back();
         }
 
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            history.back();
-        });
 
         (async () => {
             const handlersData = await fetchHandlers();

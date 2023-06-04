@@ -68,10 +68,6 @@
             }
         }
 
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/student';
-        });
 
         (async () => {
             const studentsData = await fetchTeachers();

@@ -14,7 +14,7 @@
         <a>
             Book list ~ Reserve a book
         </a>
-        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+        <a href="http://localhost:3000/teacher" style="text-decoration: none; margin-left: 10px;">
             <a id="backButton" onclick="redirectToPreviousPage()">
                 <span>&#8617;</span>
             </a>
@@ -67,12 +67,7 @@
                 console.error('Error fetching books info:', error);
                 return null;
             }
-        }
-
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/student';
-        });
+        } 
 
         (async () => {
             const studentsData = await fetchTeachers();
