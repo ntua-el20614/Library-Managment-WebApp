@@ -210,4 +210,8 @@ def authors_5_less():
 @app.route("/add_new_school")
 def add_new_school():
     return render_template("/addschool.html", pageTitle="Add School")
+
+@app.route("/schools")
+def schools_info():
+    return render_template("/schools.html", pageTitle="Schools")
 ####################################################################################~
