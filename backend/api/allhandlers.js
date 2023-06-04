@@ -12,7 +12,7 @@ const fetchData = (callback) => {
 
     // Execute a SQL query to fetch data
     const query =
-      'SELECT handlers.user_id, school_id,users.username, approved ' +
+      'SELECT handlers.user_id, school_id,users.username, user_name, birthday, email, approved ' +
       'FROM handlers ' +
       'JOIN users ON handlers.user_id = users.user_id ';
 
