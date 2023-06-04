@@ -3,6 +3,7 @@
 
 <head>
   <title>Home</title>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="/static/css/HomePage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -96,6 +97,17 @@
           return null;
         }
       }
+      
+      async function fetchReservations() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
       async function fetchSchoolsData() {
         try {
           const response = await fetch('http://localhost:3305/all_schools');

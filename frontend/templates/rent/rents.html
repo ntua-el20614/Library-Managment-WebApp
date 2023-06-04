@@ -2,7 +2,9 @@
 <html>
 
 <head>
-    <title>My Rents</title>
+    <title>My Rents</title>    
+    <meta charset="UTF-8">
+
     <link rel="stylesheet" href="/static/css/Rlists.css">
 </head>
 
@@ -37,11 +39,6 @@
         function redirectToPreviousPage() {
             history.back();
         }
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/student';
-        });
-
 
         async function fetchStudents() {
             try {
