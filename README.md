@@ -28,7 +28,7 @@ All the required tools for the project to work as shown in the requirements.txt 
 The user interface (UI) developed for this simulation allows the user, who is assumed to be a handler, teacher or student to access the results of different queries. Additionally, they have the ability to manipulate the entire database, including creating, updating, and deleting tables related to entities and their relationships.
 
 ## User Interface
-![intro](https://github.com/ChrisOPellouis/Papabases/assets/133709757/7558e606-ba00-47f7-9c1d-0ff457c0d2ab)
+![landingpage](https://github.com/ChrisOPellouis/Papabases/assets/133709757/dd04bd06-b558-41a1-a4e5-4a40cf5b2d22)
 ![signup](https://github.com/ChrisOPellouis/Papabases/assets/133709757/284127d6-9db4-47d8-aecb-32940e56eff0)
 ![student](https://github.com/ChrisOPellouis/Papabases/assets/133709757/8a98eb57-43b8-4477-89e7-c7cc2106b4b1)
 ![handler](https://github.com/ChrisOPellouis/Papabases/assets/133709757/0b17c081-8881-4e34-9444-c5df86a56eae)
