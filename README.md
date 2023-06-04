@@ -29,11 +29,11 @@ The user interface (UI) developed for this simulation allows the user, who is as
 
 ## User Interface
 ![intro](https://github.com/ChrisOPellouis/Papabases/assets/133709757/7558e606-ba00-47f7-9c1d-0ff457c0d2ab)
-![signup](https://github.com/ChrisOPellouis/Papabases/assets/133709757/16047e7a-1241-4a64-8dd4-cc2872059341)
-![student](https://github.com/ChrisOPellouis/Papabases/assets/133709757/0e6011f1-ceaf-4bb0-918b-1556a08835e6)
-![handler](https://github.com/ChrisOPellouis/Papabases/assets/133709757/251b9220-f97c-4048-b9b2-53866b5a9260)
-![listt](https://github.com/ChrisOPellouis/Papabases/assets/133709757/d0c1f823-23b6-45a1-99be-3c62318cbb3f)
-![delete_deactivate](https://github.com/ChrisOPellouis/Papabases/assets/133709757/b1246f44-6b00-4677-939f-287bbef2f799)
+![signup](https://github.com/ChrisOPellouis/Papabases/assets/133709757/284127d6-9db4-47d8-aecb-32940e56eff0)
+![student](https://github.com/ChrisOPellouis/Papabases/assets/133709757/8a98eb57-43b8-4477-89e7-c7cc2106b4b1)
+![handler](https://github.com/ChrisOPellouis/Papabases/assets/133709757/0b17c081-8881-4e34-9444-c5df86a56eae)
+![listt](https://github.com/ChrisOPellouis/Papabases/assets/133709757/36e33889-0f0a-4732-b248-f5ec47fc5371)
+![delete_deactivate](https://github.com/ChrisOPellouis/Papabases/assets/133709757/8689ccd2-afc9-4ead-90cb-0c5cdc26a0d0)
 
 
 ## Disclaimer
