@@ -124,6 +124,7 @@
 
 
           if (user.username === 'Mastoras' && user.passcode === 'password') {
+            const mastoras=true;
             window.location.href = `mastoras`;
 
           }
@@ -199,7 +200,7 @@
                 }
               }
             }
-            if (!flag) {
+            if (!flag && !mastoras) {
               alert('You are not a Handler!');
               location.reload();
             }

@@ -240,10 +240,6 @@
             history.back();
         }
 
-        const backButton = document.getElementById('backButton');
-        backButton.addEventListener('click', () => {
-            window.location.href = '/student';
-        });
         async function fetchTeachers() {
             try {
                 const response = await fetch('http://localhost:3305/allteachers');

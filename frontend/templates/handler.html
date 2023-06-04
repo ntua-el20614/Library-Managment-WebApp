@@ -85,7 +85,7 @@
             <div id="notApprovedCountReservations" class="red-circle"></div>
         </div>
 
-        
+
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/approve/returns';">Show</button>
             <p class="rectangle-content">Book Returns</p>
@@ -97,25 +97,31 @@
             <p class="rectangle-content">The list of all books</p>
         </div>
 
-        <div class="rectangle">
-            <button class="rectangle-button" onclick="window.location.href='/avg_likert';">Show</button>
-            <p class="rectangle-content">Average likert</p>
-        </div>
 
- 
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/dduser';">Show</button>
             <p class="rectangle-content">Delete or Deactivate Users</p>
         </div>
 
- 
- 
+
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/teacher/rent_a_book';">Rent</button>
+            <p class="rectangle-content">Rent a book</p>
+        </div>
+
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/avg_likert';">Show</button>
+            <p class="rectangle-content">Average likert</p>
+        </div>
+
+
+
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/delayed';">Show</button>
             <p class="rectangle-content">Users with a delayed return</p>
         </div>
 
- 
+
 
 
 
@@ -369,11 +375,11 @@
                     notApprovedCountReservations++;
                 }
             }
- 
-            const NotReturnedData= await fetchNotReturned();
+
+            const NotReturnedData = await fetchNotReturned();
             const NotReturnedListData = NotReturnedData.filter(user => (user.returned === 0 && user.approved === 1));
             const notReturned = NotReturnedListData.length;
- 
+
 
             const schoolsData = await fetchSchoolsData();
             let schoolsname;

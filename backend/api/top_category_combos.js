@@ -12,7 +12,7 @@ const fetchData = (callback) => {
 
     // Execute a SQL query to fetch data
     const query =
-      'SELECT c1.category_name AS category1, c2.category_name AS category2 ' +
+      'SELECT c1.category_name AS category1, c2.category_name AS category2, combination_count ' +
       'FROM ( ' +
       'SELECT bc1.category_id AS category_id1, bc2.category_id AS category_id2, COUNT(*) AS combination_count ' +
       'FROM book_category bc1 ' +
@@ -23,7 +23,7 @@ const fetchData = (callback) => {
       ') AS combinations ' +
       'JOIN category c1 ON combinations.category_id1 = c1.category_id ' +
       'JOIN category c2 ON combinations.category_id2 = c2.category_id ' +
-      'GROUP BY category1, category2 ' +
+      'GROUP BY category1, category2, combination_count ' +
       'ORDER BY combination_count DESC ' +
       'LIMIT 3';
     connection.query(query, (err, results) => {

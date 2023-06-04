@@ -121,10 +121,6 @@ def reviews_of_a_book():
 
 
 
-
-
-
-
 #~Handler moves
 ####################################################################################~
 @app.route("/avg_likert")
@@ -174,4 +170,45 @@ def approve_returns():
 @app.route("/dduser")
 def delete_or_deactivate():
     return render_template("/approves/deletedeactivate.html", pageTitle="Delete/Deactivate")
+####################################################################################~
+
+
+
+
+
+
+
+
+
+
+
+#~Mastoras moves
+####################################################################################~
+@app.route("/queries/all_rents")
+def all_rents():
+    return render_template("/queries/all_rents.html", pageTitle="All Rents")
+
+@app.route("/queries/category")
+def categories():
+    return render_template("/queries/category.html", pageTitle="Categories")
+
+@app.route("/queries/youngs")
+def youngs():
+    return render_template("/queries/youngs.html", pageTitle="Young Teachers")
+
+@app.route("/queries/authors_no_rents")
+def authors_no_rents():
+    return render_template("/queries/authors_no_rents.html", pageTitle="Authors no Rents")
+
+@app.route("/queries/handlers_more_20")
+def handlers_more_20():
+    return render_template("/queries/handlers_more_20.html", pageTitle="Handlers more 20")
+
+@app.route("/queries/top_cat_comb")
+def top_cat_comb():
+    return render_template("/queries/top_cat_comb.html", pageTitle="Top Categ Comb")
+
+@app.route("/queries/authors_5_less")
+def authors_5_less():
+    return render_template("/queries/authors_5_less.html", pageTitle="Authors 5 less")
 ####################################################################################~

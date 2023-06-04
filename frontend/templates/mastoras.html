@@ -26,6 +26,10 @@
             <span id="username"></span>
         </div>
         <div class="profile-item">
+            <label>Password:</label>
+            <span id="password">*********</span>
+        </div>
+        <div class="profile-item">
             <label>Name-Surname:</label>
             <span id="user-name"></span>
         </div>
@@ -36,14 +40,44 @@
         <div class="profile-item">
             <label>Birthday:</label>
             <span id="birthday"></span>
+            <button class="edit-button" onclick="editProfile()">
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </button>
         </div>
     </div>
-
     <div class="rectangle-container">
         <div class="rectangle">
             <button class="rectangle-button" onclick="window.location.href='/approve/handlers';">Show</button>
             <p class="rectangle-content">Approve Handlers</p>
             <div id="notApprovedCount" class="red-circle"></div>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/all_rents';">Show</button>
+            <p class="rectangle-content">All Rents</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/category';">Show</button>
+            <p class="rectangle-content">Category</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/youngs';">Show</button>
+            <p class="rectangle-content">Young Teachers with most books</p> 
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/authors_no_rents';">Show</button>
+            <p class="rectangle-content">Authors with no rents</p> 
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/handlers_more_20';">Show</button>
+            <p class="rectangle-content">Handlers with more than 20 rents</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/top_cat_comb';">Show</button>
+            <p class="rectangle-content">Top Category Combination</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/authors_5_less';">Show</button>
+            <p class="rectangle-content">Authors with a lot of books</p>
         </div>
 
 
@@ -51,7 +85,7 @@
 
             async function fetchHndlrs() {
                 try {
-                    const response = await fetch(`http://localhost:3305/allhandlers_fromusers_school/${user.user_id}`);
+                    const response = await fetch(`http://localhost:3305/allhandlers`);
                     const handlersData = await response.json();
                     return handlersData;
                 } catch (error) {
@@ -72,6 +106,96 @@
             if (user === undefined || user === null)
                 window.location.href = '/';
 
+
+                let isEditing = false;
+        let originalPassword = user.passcode;
+
+        async function editProfile() {
+
+            const passcodeElement = document.getElementById("password");
+            const editButton = document.getElementsByClassName("edit-button")[0];
+
+            const usernameElement = document.getElementById("username");
+            const nameElement = document.getElementById("user-name");
+            const emailElement = document.getElementById("email");
+            const birthdayElement = document.getElementById("birthday");
+
+            if (!isEditing) {
+                // Enter edit mode
+                originalUsername = usernameElement.textContent;
+                originalPasscode = user.passcode;
+                originalName = nameElement.textContent;
+                originalEmail = emailElement.textContent;
+                originalBirthday = birthdayElement.textContent;
+                //save tis palies times
+                passcodeElement.textContent = user.passcode;
+
+                usernameElement.contentEditable = true;
+                passcodeElement.contentEditable = true;
+                nameElement.contentEditable = true;//mporw na ta kanw edit
+                emailElement.contentEditable = true;
+                birthdayElement.contentEditable = true;
+
+                usernameElement.style.border = "1px solid black";
+                passcodeElement.style.border = "1px solid black";
+                nameElement.style.border = "1px solid black";
+                emailElement.style.border = "1px solid black";
+                birthdayElement.style.border = "1px solid black";
+                editButton.innerHTML = "OK";
+            } else {
+                // Save changes and exit edit mode
+                const newUsername = usernameElement.textContent;
+                const newPasscode = passcodeElement.textContent;
+                const newName = nameElement.textContent;
+                const newEmail = emailElement.textContent;
+                const newBirthday = birthdayElement.textContent;
+
+                user.username = newUsername;
+                user.passcode = newPasscode;
+                user.user_name = newName;
+                user.email = newEmail;
+                user.birthday = newBirthday;
+                passcodeElement.textContent = "***********";
+
+                usernameElement.contentEditable = false;
+                passcodeElement.contentEditable = false;
+                nameElement.contentEditable = false;
+                emailElement.contentEditable = false;
+                birthdayElement.contentEditable = false;
+
+                usernameElement.style.border = "none";
+                passcodeElement.style.border = "none";
+                nameElement.style.border = "none";
+                emailElement.style.border = "none";
+                birthdayElement.style.border = "none";
+                editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+                console.log("Now, user is:", user);
+
+                const changehandler = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
+
+                try {
+                    const response = await fetch(changehandler);
+
+
+                    if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
+                        console.log("Handler information updated!");
+                        console.log(user);
+                        alert("Handler information updated successfully!\nPlease log-in again!");
+
+                        user = undefined;
+                        localStorage.removeItem("user");
+                        window.location.href = '/';
+
+                    } else {
+                        console.log("Could not update handler information or no changes were made.");
+                    }
+                } catch (error) {
+                    console.log("This username is already taken!");
+                }
+            }
+
+            isEditing = !isEditing;
+        }
             (async () => {
 
                 if (user.username === 'Mastoras' && user.passcode === 'password') {
@@ -88,7 +212,7 @@
                 const handlersData = await fetchHndlrs();
                 const notApprovedUsers = handlersData.filter(user => user.approved === 0);
                 const notApprovedCount = notApprovedUsers.length;
-
+                
 
 
                 document.getElementById("userType").textContent = "Mastoras";
@@ -101,6 +225,7 @@
                 userBirthday.setDate(userBirthday.getDate() + 1);
                 const birthday = userBirthday.toISOString().split("T")[0];
                 birthdayElement.textContent = birthday;
+                document.getElementById("notApprovedCount").textContent = notApprovedCount;
             })();
         </script>
 </body>
