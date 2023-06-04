@@ -14,15 +14,12 @@ Project for the Databases 2022-2023 class in NTUA ECE that simulates a virtual l
 
 ## Required Imports
 All the required tools for the project to work as shown in the requirements.txt are  
-> click==8.1.2  
-> dnspython==2.2.1  
 > Faker==13.3.4  
 > Flask==2.1.1  
 > Flask-MySQLdb==1.0.1  
 > Flask-WTF==1.0.1  
 > mysqlclient==2.1.0  
 > python-dateutil==2.8.2  
-> Werkzeug==2.1.1  
 > WTForms==3.0.1  
 > requests==23.1.2
 
