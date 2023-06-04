@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(234, 234, 185, 0.848);
+            padding: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Adjust select option styles for visibility */
+        select option {
+            color: black;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Add a new School</h1>
+    <form id="addBookForm">
+        <label for="title">School's Name:</label>
+        <input type="text" id="title" name="title">
+
+        <label for="isbn">Address:</label>
+        <input type="text" id="isbn" name="isbn">
+
+        <label for="publisher">City:</label>
+        <input type="text" id="publisher" name="publisher">
+
+        <label for="pages">School's Phone:</label>
+        <input type="text" id="pages" name="pages">
+
+        <label for="summary">School's Email:</label>
+        <input type="text" id="summary" name="summary">
+
+        <label for="bookLanguage">Principal's Fullname:</label>
+        <input type="text" id="bookLanguage" name="bookLanguage">
+        <input type="submit" value="Submit">
+
+    </form>
+
+    <a href="#" id="backButton" onclick="redirectToPreviousPage()">Back</a>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+
+        (async () => {
+
+
+            if (user.username === 'Mastoras' && user.passcode === 'password') {
+                console.log("You are allowed to stay here!");
+
+            }
+            else {
+                alert("You are not Mastoras!");
+                window.location.href = '/';
+
+            }
+
+
+        })();
+
+        document.getElementById("addBookForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const school_name = document.getElementById("title").value;
+            const address = document.getElementById("isbn").value;
+            const city = document.getElementById("publisher").value;
+            const phone = document.getElementById("pages").value;
+            const email = document.getElementById("summary").value;
+            const principal = document.getElementById("bookLanguage").value;
+
+            // Submitting school details
+            const bookUrl = `http://localhost:3305/addschool/${school_name}/${address}/${city}/${phone}/${email}/${principal}`;
+            try {
+                let response = await fetch(bookUrl);
+                if (response.ok) {
+                    alert("School added successfully!");
+                    location.reload();
+
+                }else{                
+                    alert("All boxes must be filled!")
+                }
+            } catch (error) {
+                alert("All boxes must be filled!")
+                console.log(error);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
