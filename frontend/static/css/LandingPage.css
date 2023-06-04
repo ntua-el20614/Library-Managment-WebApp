@@ -1,7 +1,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-image: url("https://imgur.com/a/S7mU9oS");
+  background-color: lightyellow;
+  background-image: url("../Background.jpg");
   padding: 20px;
 }
 
