@@ -21,7 +21,7 @@ All the required tools for the project to work as shown in the requirements.txt 
 > mysqlclient==2.1.0  
 > python-dateutil==2.8.2  
 > WTForms==3.0.1  
-> requests==23.1.2
+> requests==2.31.0
 
 ## Application
 The user interface (UI) developed for this simulation allows the user, who is assumed to be a handler, teacher or student to access the results of different queries. Additionally, they have the ability to manipulate the entire database, including creating, updating, and deleting tables related to entities and their relationships.
