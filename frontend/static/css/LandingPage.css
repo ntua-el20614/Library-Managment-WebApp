@@ -1,8 +1,19 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: rgba(234, 234, 185, 0.848);
-  padding: 20px;
+  background-color: rgb(187, 122, 221);
+  background-image: url("../Background.jpg");
+  background-size: 100% 1050px;
+  background-image: center;
+  background-repeat: no-repeat;
+}
+
+.copyrights{
+  color:wheat;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  
 }
 
 .container {
@@ -15,7 +26,7 @@ body {
     width: 250px;
     height: 300px;
     border: 1px solid black;
-    background-color: #cacaca;
+    background-color: #cacaca96;
     padding: 10px;
   }
   
@@ -64,4 +75,14 @@ body {
   input[type="button"] {
     background-color: #808080; /* Gray */
     margin-top: 10px;
+  }
+  
+  .welcome-message{
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center; 
+  font-weight: bold; /* make the content bold */
+  font-size: 35px; /* increase the font size */
+  color: white;
+  border: 1px orange;
   }
