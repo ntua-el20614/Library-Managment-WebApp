@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <h1>
+        <a>
+            Book list
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+
+    <!-- Search bars -->
+    <div class="search-bar">
+        <input type="text" id="categorySearch" placeholder="Search by category">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="authorSearch" placeholder="Search by author's name">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="titleSearch" placeholder="Search by title">
+    </div>
+
+    <div id="book-list"></div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchAuthors() {
+            try {
+                const response = await fetch('http://localhost:3305/all_authors');
+                const authorsData = await response.json();
+
+                return authorsData;
+            } catch (error) {
+                console.error('Error fetching authors info:', error);
+                return null;
+            }
+        }
+        async function fetchCategories() {
+            try {
+                const response = await fetch('http://localhost:3305/all_categories');
+                const categoriessData = await response.json();
+
+                return categoriessData;
+            } catch (error) {
+                console.error('Error fetching categoriess info:', error);
+                return null;
+            }
+
+
+        async function fetchTitles(userID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_titles/${userID}`);
+                const titlesData = await response.json();
+
+                return titlesData;
+            } catch (error) {
+                console.error('Error fetching titles info:', error);
+                return null;
+            }
+        }
+
+        }
+
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+        async function fetchFilteredBooks(schoolID, category, title, author) {
+            try {
+                const url = `http://localhost:3305/book_user_parameter/${schoolID}/${category}/${title}/${author}`;
+                const response = await fetch(url);
+                const filteredBooks = await response.json();
+
+                return filteredBooks;
+            } catch (error) {
+                console.error('Error fetching filtered books:', error);
+                return null;
+            }
+        }
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+        
+        function redirectToReviews(book) {
+            // document.cookie = "book=" + book;
+            console.log(book);
+            localStorage.setItem("book", book);
+            window.location.href = `/review`;
+        }
+
+        (async () => { 
+
+
+            const studentsData = await fetchStudents();
+            const teachersData = await fetchTeachers();
+            let schoolID;
+            let found_teacher = false;
+            let found_student = false;
+
+            for (const studentsDataItem of studentsData) {
+                if (studentsDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        schoolID = studentsDataItem.school_id;
+                        found_student = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+
+                    }
+                }
+            }
+
+            for (const teachersDataItem of teachersData) {
+                if (teachersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        schoolID = teachersDataItem.school_id;
+                        found_teacher = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+
+                    }
+                    break;
+                }
+            }
+
+
+            if (!found_student && !found_teacher) {
+                alert("You shouldn't be here!");
+                window.location.href = '/';
+            }
+
+            const bookList = document.getElementById('book-list');
+            const categorySearchInput = document.getElementById('categorySearch');
+            const authorSearchInput = document.getElementById('authorSearch');
+            const titleSearchInput = document.getElementById('titleSearch');
+
+            // Event listeners for search inputs
+            categorySearchInput.addEventListener('input', searchBooks);
+            authorSearchInput.addEventListener('input', searchBooks);
+            titleSearchInput.addEventListener('input', searchBooks);
+
+            async function searchBooks() {
+                let category = categorySearchInput.value.trim();
+                let author = authorSearchInput.value.trim();
+                let title = titleSearchInput.value.trim();
+                if (category === '') {
+                    category = 0;
+                }
+                if (author === '') {
+                    author = 0;
+                }
+                if (title === '') {
+                    title = 0;
+                }
+                if (category === 0 && author === 0 && title === 0)
+                    location.reload();
+                const filteredBooks = await fetchFilteredBooks(schoolID, category, title, author);
+                displayBooks(filteredBooks);
+            }
+
+
+
+            function displayBooks(booksData) {
+                // Clear previous book list
+                bookList.innerHTML = '';
+
+                booksData.forEach((book) => {
+
+                    // Create book item container
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+
+                    // Create book title with toggle functionality
+                    const title = document.createElement('h2');
+                    title.textContent = book.title;
+                    bookItem.appendChild(title);
+
+                    // Create expand button
+                    const expandButton = document.createElement('span');
+                    expandButton.classList.add('expand-button');
+                    expandButton.textContent = '▼';
+                    expandButton.addEventListener('click', () => {
+                        const details = bookItem.querySelector('.book-details');
+                        const isExpanded = details.style.display === 'block';
+                        details.style.display = isExpanded ? 'none' : 'block';
+                        expandButton.classList.toggle('expanded', !isExpanded);
+                    });
+
+                    // Create book details container
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('book-details');
+
+                    // Create book details
+                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                                      <b>ISBN:</b> ${book.isbn}<br>
+                                      <b>Publisher:</b> ${book.publisher}<br>
+                                      <b>Pages:</b> ${book.pages}<br>
+                                      <b>Summary:</b> ${book.summary}<br>
+                                      <b>Language:</b> ${book.book_language}<br>
+                                      <b>Keywords:</b> ${book.keywords}<br>
+                                      <b>Available Copies:</b> ${book.available_copys}<br>
+                                      <b>Author(s):</b> ${book.author_names || book.authors}<br>
+                                      <b>Category:</b> ${book.category_names || book.categories}<br>
+                                      <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>`;
+
+                    // Append expand button and details to the book item
+                    bookItem.appendChild(expandButton);
+                    bookItem.appendChild(detailsContainer);
+
+                    // Append book item to the book list
+                    bookList.appendChild(bookItem);
+                });
+            }
+
+            // Initial display of all books
+            const booksData = await fetchBooksData(schoolID);
+            displayBooks(booksData);
+        })();
+    </script>
+</body>
+
+</html>

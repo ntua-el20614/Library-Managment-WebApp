@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rent a book</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+    <h1>
+        <a>
+            Book list ~ Rent a book
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+    
+    <label for="user-id">Enter your ID:</label>
+    <input type="text" id="user-id" name="user-id"> 
+
+    <div id="book-list"></div>
+
+    <script>
+        let rentedBooksCount = 0;
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
+                const rentsData = await response.json();
+                return rentsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchHandlers() {
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        } 
+
+
+        (async () => {
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+
+
+
+            const rents = await fetchRents();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7); // Subtract 7 days from the current date
+
+            for (const curr_rent of rents) {
+                const rentDate = new Date(curr_rent.date_of_rent);
+                if (rentDate > oneWeekAgo) {
+                    rentedBooksCount++;
+                }
+            }
+
+            const booksData = await fetchBooksData(schoolID);
+            const bookList = document.getElementById('book-list');
+
+            booksData.forEach((book) => {
+
+
+                if (book.available_copys != 0) {
+                    // Create book item container
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+
+                    const rentButton = document.createElement('button');
+                    rentButton.textContent = 'Rent';
+                    rentButton.classList.add('rent-button');
+                    rentButton.style.backgroundColor = 'green';
+                    rentButton.addEventListener('click', () => {
+                        if (rentedBooksCount < 1) {
+                            rentBook(book);
+                        } else {
+                            alert("You have already rented a book. You are only allowed one book per week.");
+                        }
+                    });
+
+                    // Create book title with toggle functionality
+                    const title = document.createElement('h2');
+                    title.textContent = book.title;
+                    bookItem.appendChild(title);
+
+                    // Create expand button
+                    const expandButton = document.createElement('span');
+                    expandButton.classList.add('expand-button');
+                    expandButton.textContent = '▼';
+                    expandButton.addEventListener('click', () => {
+                        const details = bookItem.querySelector('.book-details');
+                        const isExpanded = details.style.display === 'block';
+                        details.style.display = isExpanded ? 'none' : 'block';
+                        expandButton.classList.toggle('expanded', !isExpanded);
+                    });
+
+                    // Create book details container
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('book-details');
+
+                    // Create book details
+                    detailsContainer.innerHTML = `<b>Title:</b> ${book.title}<br>
+                                              <b>ISBN:</b> ${book.isbn}<br>
+                                              <b>Publisher:</b> ${book.publisher}<br>
+                                              <b>Pages:</b> ${book.pages}<br>
+                                              <b>Summary:</b> ${book.summary}<br>
+                                              <b>Language:</b> ${book.book_language}<br>
+                                              <b>Keywords:</b> ${book.keywords}<br>
+                                              <b>Available Copies:</b> ${book.available_copys}<br>
+                                              <b>Author:</b> ${book.authors}<br>
+                                              <b>Category:</b> ${book.categories}<br>`;
+
+                    // Append expand button and details to the book item
+                    bookItem.appendChild(expandButton);
+                    bookItem.appendChild(detailsContainer);
+                    bookItem.appendChild(rentButton);
+                    // Append book item to the book list
+                    bookList.appendChild(bookItem);
+                }
+            });
+        })();
+
+        async function rentBook(book) {
+            console.log('Renting book:', book);
+            const userIdInput = document.getElementById("user-id");
+            const userId = userIdInput.value;
+            console.log("for user:",userId);
+
+            const studs = await fetchHandlers();
+            let schoolID;
+            for (const curr_user of studs) {
+                if (curr_user.user_id === user.user_id) {
+                    schoolID = curr_user.school_id;
+                    break;
+                }
+
+            }
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const currentDate = `${year}-${month}-${day}`;
+
+            const rent_req = `http://localhost:3305/addrent/${user.user_id}/${book.isbn}/${schoolID}/${currentDate}`;
+
+            try {
+                const response = await fetch(rent_req);
+
+                if (response.ok) {
+
+                    console.log("Pending approval to rent the book!");
+                    alert("You just rented the book!\nPlease wait for the approval from your handler")
+
+                    if (rentedBooksCount > 1) {
+                        rentButton.disabled = true;
+                        rentButton.textContent = 'Max Rented';
+                        rentButton.classList.add('max-rented');
+                    }
+                    location.reload();
+                } else {
+                    console.log("could not rent the book!");
+                    alert("You cant rent this book!");
+                    location.reload();
+                }
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>

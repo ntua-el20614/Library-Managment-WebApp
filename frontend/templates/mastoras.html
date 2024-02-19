@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/HomePage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<style>
+
+.backupButton{
+    
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background-color: #c83333ba;
+    color: black;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.backupButton:hover {
+    background-color: #994444;
+}
+
+.restoreButton{
+
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background-color: #c83333ba;
+    color: black;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.restoreButton:hover {
+    background-color: #994444;
+}
+
+</style>
+
+<body>
+    <h1>My Profile</h1>
+    <button class="logout-button" onclick="logout()">Logout</button>
+    <button class="backupButton" onclick="backup()">backup</button>
+    <button class="restoreButton" onclick="restore()">restore</button>
+ 
+    <div class="profile">
+        <div class="profile-item">
+            <label>User Type:</label>
+            <span id="userType"></span>
+        </div>
+        <div class="profile-item">
+            <label>User ID:</label>
+            <span id="user-id"></span>
+        </div>
+        <div class="profile-item">
+            <label>Username:</label>
+            <span id="username"></span>
+        </div>
+        <div class="profile-item">
+            <label>Name-Surname:</label>
+            <span id="user-name"></span>
+        </div>
+        <div class="profile-item">
+            <label>Email:</label>
+            <span id="email"></span>
+        </div>
+        <div class="profile-item">
+            <label>Birthday:</label>
+            <span id="birthday"></span>
+            <button class="edit-button" onclick="editProfile()">
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="rectangle-container">
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/approve/handlers';">Show</button>
+            <p class="rectangle-content">Approve Handlers</p>
+            <div id="notApprovedCount" class="red-circle"></div>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/all_rents';">Show</button>
+            <p class="rectangle-content">All Rents</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/category';">Show</button>
+            <p class="rectangle-content">Category</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/youngs';">Show</button>
+            <p class="rectangle-content">Young Teachers with most books</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/authors_no_rents';">Show</button>
+            <p class="rectangle-content">Authors with no rents</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/handlers_more_20';">Show</button>
+            <p class="rectangle-content">Handlers with more than 20 rents</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/top_cat_comb';">Show</button>
+            <p class="rectangle-content">Top Category Combination</p>
+        </div>
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/queries/authors_5_less';">Show</button>
+            <p class="rectangle-content">Authors with a lot of books</p>
+        </div>
+
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/add_new_school';">Add</button>
+            <p class="rectangle-content">Add new school</p>
+        </div>
+
+        <div class="rectangle">
+            <button class="rectangle-button" onclick="window.location.href='/schools';">Show</button>
+            <p class="rectangle-content">View school infos</p>
+        </div>
+
+        <script>
+
+            async function backup(){
+                try{
+                    const response = await fetch("http://localhost:3305/backup")
+                    if (response.ok){
+                        alert("Backup was successfull");
+                        location.reload();
+                    }else{
+                        alert("Backup was unsuccessfull");
+                        location.reload();
+                    }
+                }catch(error){
+                    console.log(error);
+                }
+            }
+
+            async function restore(){
+                try{
+                    const response = await fetch("http://localhost:3305/restore")
+                    if (response.ok){
+                        alert("Restore was successfull");
+                        location.reload();
+                    }else{
+                        alert("Restore was unsuccessfull");
+                        location.reload();
+                    }
+                }catch(error){
+                    console.log(error);
+                }
+            }
+
+            async function fetchHndlrs() {
+                try {
+                    const response = await fetch(`http://localhost:3305/allhandlers`);
+                    const handlersData = await response.json();
+                    return handlersData;
+                } catch (error) {
+                    console.error('Error fetching handlers info:', error);
+                    return null;
+                }
+            }
+            function logout() {
+                user = undefined;
+                localStorage.removeItem("user");
+                window.location.href = '/';
+            }
+
+            let user = JSON.parse(localStorage.getItem("user"));
+            console.log(user);
+
+
+            if (user === undefined || user === null)
+                window.location.href = '/';
+
+
+            let isEditing = false;
+            let originalPassword = user.passcode;
+
+            async function editProfile() {
+
+                const editButton = document.getElementsByClassName("edit-button")[0];
+
+                const nameElement = document.getElementById("user-name");
+                const emailElement = document.getElementById("email");
+                const birthdayElement = document.getElementById("birthday");
+
+                if (!isEditing) {
+                    // Enter edit mode
+                    originalName = nameElement.textContent;
+                    originalEmail = emailElement.textContent;
+                    originalBirthday = birthdayElement.textContent;
+                    //save tis palies times
+
+                    nameElement.contentEditable = true;//mporw na ta kanw edit
+                    emailElement.contentEditable = true;
+                    birthdayElement.contentEditable = true;
+
+                    nameElement.style.border = "1px solid black";
+                    emailElement.style.border = "1px solid black";
+                    birthdayElement.style.border = "1px solid black";
+                    editButton.innerHTML = "OK";
+                } else {
+                    // Save changes and exit edit mode
+                    const newName = nameElement.textContent;
+                    const newEmail = emailElement.textContent;
+                    const newBirthday = birthdayElement.textContent;
+
+
+                    user.user_name = newName;
+                    user.email = newEmail;
+                    user.birthday = newBirthday;
+
+                    nameElement.contentEditable = false;
+                    emailElement.contentEditable = false;
+                    birthdayElement.contentEditable = false;
+
+                    nameElement.style.border = "none";
+                    emailElement.style.border = "none";
+                    birthdayElement.style.border = "none";
+                    editButton.innerHTML = '<i class="fas fa-pencil-alt edit-icon"></i>';
+                    console.log("Now, user is:", user);
+
+                    const changehandler = `http://localhost:3305/update_teacher/${user.user_id}/${user.user_name}/${user.username}/${user.birthday}/${user.email}/${user.passcode}`;
+
+                    try {
+                        const response = await fetch(changehandler);
+
+
+                        if (response.ok && (user.username !== originalUsername || user.passcode !== originalPasscode || user.user_name !== originalName || user.email !== originalEmail || user.birthday !== originalBirthday)) {
+                            console.log("Handler information updated!");
+                            console.log(user);
+                            alert("Handler information updated successfully!\nPlease log-in again!");
+
+                            user = undefined;
+                            localStorage.removeItem("user");
+                            window.location.href = '/';
+
+                        } else {
+                            console.log("Could not update handler information or no changes were made.");
+                        }
+                    } catch (error) {
+                        console.log("This username is already taken!");
+                    }
+                }
+
+                isEditing = !isEditing;
+            }
+            (async () => {
+
+                if (user.username === 'Mastoras' && user.passcode === 'password') {
+                    console.log("You are allowed to stay here!");
+
+                }
+                else {
+                    alert("You are not Mastoras!");
+                    window.location.href = '/';
+
+                }
+
+
+                const handlersData = await fetchHndlrs();
+                const notApprovedUsers = handlersData.filter(user => user.approved === 0);
+                const notApprovedCount = notApprovedUsers.length;
+
+
+
+                document.getElementById("userType").textContent = "Mastoras";
+                document.getElementById("user-id").textContent = user.user_id;
+                document.getElementById("username").textContent = user.username;
+                document.getElementById("user-name").textContent = user.user_name;
+                document.getElementById("email").textContent = user.email;
+                const birthdayElement = document.getElementById("birthday");
+                const userBirthday = new Date(user.birthday);
+                userBirthday.setDate(userBirthday.getDate() + 1);
+                const birthday = userBirthday.toISOString().split("T")[0];
+                birthdayElement.textContent = birthday;
+                document.getElementById("notApprovedCount").textContent = notApprovedCount;
+            })();
+        </script>
+</body>
+
+</html>

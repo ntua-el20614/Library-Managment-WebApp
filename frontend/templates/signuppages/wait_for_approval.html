@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wait for Approval</title>
+  <meta charset="UTF-8">
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(234, 234, 185, 0.848);
+    padding: 20px;
+}
+
+
+    .container {
+      max-width: 400px;
+      margin: 100px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      color: #777;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Wait for Approval</h1>
+
+    <p>Hello, <span id="username"></span>! Your account is pending approval or has been deactivated. Please wait for a handler to log you in.</p>
+        <a href="/" class="button">&#8962; Home</a>
+
+  </div>
+
+  <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+    // Assuming you have saved the username in a cookie named 'user.user_name'
+    var username = user.user_name;
+    document.getElementById('username').innerText = username;
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>
+        <a>
+            List of authors for given category and the teachers who have borrowed books from that category in the last year
+        </a>
+        <a href="http://localhost:3000/mastoras" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+
+    <label for="category-select">Select a category:</label>
+    <select id="category-select"></select>
+    <button onclick="searchCategory()">Search</button>
+    <div id="book-list"></div>
+
+    <div class="container">
+        <div id="reviewsContainer"></div>
+    </div>
+
+    <script>
+
+        async function fetchCategories() {
+  try {
+    const response = await fetch('http://localhost:3305/all_categories');
+    const categoriesData = await response.json();
+    return categoriesData;
+  } catch (error) {
+    console.error('Error fetching categories info:', error);
+    return null;
+  }
+}
+
+async function fetchTask(category) {
+  try {
+    const response = await fetch(`http://localhost:3305/teachers_authors/${category}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data info:', error);
+    return null;
+  }
+}
+
+function redirectToPreviousPage() {
+  history.back();
+}
+
+async function searchCategory() {
+  const categorySelect = document.getElementById("category-select");
+  const selectedCategory = categorySelect.value;
+    console.log(selectedCategory);
+  const tasksData = await fetchTask(selectedCategory);
+
+  const reviewsContainer = document.getElementById('reviewsContainer');
+  reviewsContainer.innerHTML = '';
+
+  if (tasksData && tasksData.length > 0) {
+    tasksData.forEach((user) => {
+      const alldetails = document.createElement('p');
+      alldetails.classList.add('review');
+
+      const nameElement = document.createElement('p');
+      nameElement.classList.add('comment');
+      nameElement.innerText = user.works_as + "'s ID: " + user.id;
+      alldetails.appendChild(nameElement);
+
+      const usernameElement = document.createElement('p');
+      usernameElement.classList.add('comment');
+      usernameElement.innerText = user.works_as + "'s name: " + user.name;
+      alldetails.appendChild(usernameElement);
+
+      reviewsContainer.appendChild(alldetails);
+    });
+  } else {
+    const noReviewsElement = document.createElement('p');
+    noReviewsElement.innerText = 'Please select a category!';
+    reviewsContainer.appendChild(noReviewsElement);
+  }
+}
+
+(async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+
+  if (user.username === 'Mastoras' && user.passcode === 'password') {
+    console.log("You are allowed to stay here!");
+  } else {
+    alert("You are not Mastoras!");
+    window.location.href = '/';
+  }
+
+  const categoriesData = await fetchCategories();
+  const categorySelect = document.getElementById("category-select");
+
+  if (categoriesData && categoriesData.length > 0) {
+    categoriesData.forEach((category) => {
+      const option = document.createElement('option');
+      option.value = category.category_id;
+      option.text = category.category_name;
+      categorySelect.appendChild(option);
+    });
+  } else {
+    const option = document.createElement('option');
+    option.text = 'Nothing found';
+    categorySelect.appendChild(option);
+    categorySelect.disabled = true;
+  }
+})();
+    </script>
+</body>
+</html>

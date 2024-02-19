@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Rents</title>    
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/static/css/Rlists.css">
+</head>
+
+<body>
+    <h1>My Rents</h1>
+
+    <table class="rents-table">
+        <thead>
+            <tr>
+                <th>Rent ID</th>
+                <th>ISBN</th>
+                <th>Date of Rent</th>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>Summary</th>
+                <th>Book Language</th>
+                <th>Approved</th>
+                <th>Returned</th>
+            </tr>
+        </thead>
+        <tbody id="rents-table-body"></tbody>
+    </table>
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_rented_by_user/${user.user_id}`);
+                const rentsData = await response.json();
+                return rentsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+        async function displayRents() {
+            const rents = await fetchRents();
+            const tableBody = document.getElementById('rents-table-body');
+
+            if (!rents) {
+                tableBody.innerHTML = '<tr><td colspan="9">Error fetching rents</td></tr>';
+                return;
+            }
+
+            if (rents.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="9">No rents found</td></tr>';
+                return;
+            }
+
+            async function checkifvalid() {
+                const studentsData = await fetchStudents();
+                const teachersData = await fetchTeachers();
+                let schoolID;
+                let found_teacher = false;
+                let found_student = false;
+
+                for (const studentsDataItem of studentsData) {
+                    if (studentsDataItem.user_id === user.user_id) {
+                        if (user.approved === 1) {
+                            flag = true;
+                            schoolID = studentsDataItem.school_id;
+                            found_student = true;
+                            console.log('You are allowed to stay here!');
+                        } else {
+                            alert("You are not approved yet");
+                            window.location.href = '/';
+
+                        }
+                    }
+                }
+
+                for (const teachersDataItem of teachersData) {
+                    if (teachersDataItem.user_id === user.user_id) {
+                        if (user.approved === 1) {
+                            schoolID = studentsDataItem.school_id;
+                            found_teacher = true;
+                            console.log('You are allowed to stay here!');
+                        } else {
+                            alert("You are not approved yet");
+                            window.location.href = '/';
+
+                        }
+                    }
+                }
+
+
+                if (!found_student && !found_teacher) {
+                    alert("You shouldn't be here!");
+                    window.location.href = '/';
+                }
+            }
+            checkifvalid();
+            let tableHTML = '';
+            rents.forEach(rent => {
+                tableHTML += `
+          <tr>
+            <td>${rent.rent_id}</td>
+            <td>${rent.isbn}</td>
+            <td>${new Date(rent.date_of_rent).toLocaleDateString()}</td>
+            <td>${rent.title}</td>
+            <td>${rent.publisher}</td>
+            <td>${rent.summary}</td>
+            <td>${rent.book_language}</td>
+            <td>${rent.approved === 1 ? 'Yes' : 'No'}</td>
+            <td>${rent.returned === 1 ? 'Yes' : 'No'}</td>
+          </tr>
+        `;
+            });
+
+            tableBody.innerHTML = tableHTML;
+        }
+
+        displayRents();
+    </script>
+</body>
+
+</html>

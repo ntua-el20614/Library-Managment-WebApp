@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>books</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/BookList.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <h1>
+        <a>
+            Book list
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+        <button id="addBookButton" onclick="redirectToAddBook()">Add Book</button>
+
+    </h1>
+
+    <!-- Search bars -->
+    <div class="search-bar">
+        <input type="text" id="categorySearch" placeholder="Search by category">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="authorSearch" placeholder="Search by author's name">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="titleSearch" placeholder="Search by title">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="copysSearch" placeholder="Search by # of copies">
+    </div>
+
+    <div id="book-list"></div>
+
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        function redirectToAddBook() {
+            window.location.href = `/addbook`;
+
+        }
+
+        async function fetchHandlers() {
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+
+
+
+        async function fetchAuthors() {
+            try {
+                const response = await fetch('http://localhost:3305/all_authors');
+                const authorsData = await response.json();
+
+                return authorsData;
+            } catch (error) {
+                console.error('Error fetching authors info:', error);
+                return null;
+            }
+        }
+
+
+        async function fetchTitles(userID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_titles/${userID}`);
+                const titlesData = await response.json();
+
+                return titlesData;
+            } catch (error) {
+                console.error('Error fetching titles info:', error);
+                return null;
+            }
+        }
+
+        async function fetchCategories() {
+            try {
+                const response = await fetch('http://localhost:3305/all_categories');
+                const categoriessData = await response.json();
+
+                return categoriessData;
+            } catch (error) {
+                console.error('Error fetching categoriess info:', error);
+                return null;
+            }
+        }
+
+        async function fetchFilteredBooks(handlerID, category, title, author, copys) {
+            try {
+                const url = `http://localhost:3305/book_handler_parameter/${handlerID}/${category}/${title}/${author}/${copys}`;
+                const response = await fetch(url);
+                const filteredBooks = await response.json();
+
+                return filteredBooks;
+            } catch (error) {
+                console.error('Error fetching filtered books:', error);
+                return null;
+            }
+        }
+
+        function redirectToReviews(book) {
+            // document.cookie = "book=" + book;
+            console.log(book);
+            localStorage.setItem("book", book);
+            window.location.href = `/review`;
+        }
+
+
+
+
+
+
+
+
+
+        let isEditing = false;
+
+
+async function editBook() {
+
+    const handlersData = await fetchHandlers();
+            let flag = false;
+            let schoolID;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+
+  const BooksIsbn = document.getElementById("isbn").textContent;
+  const titleElement = document.getElementById("title");
+  const publisherElement = document.getElementById("publisher");
+  const pagesElement = document.getElementById("pages");
+  const summaryElement = document.getElementById("summary");
+  const languageElement = document.getElementById("language");
+  const keywordsElement = document.getElementById("keywords");
+  const editButton = document.getElementById("editbutton");
+    
+
+
+  if (!isEditing) {
+    // Enter edit mode
+    const originaltitle = titleElement.textContent;
+    const originalpublisher = publisherElement.textContent;
+    const originalpages = pagesElement.textContent;
+    const originalsummary = summaryElement.textContent;
+    const originallanguage = languageElement.textContent;
+    const originalkeywords = keywordsElement.textContent;
+    //save tis palies times
+
+    titleElement.contentEditable = true;
+    publisherElement.contentEditable = true;
+    pagesElement.contentEditable = true;//mporw na ta kanw edit
+    summaryElement.contentEditable = true;
+    languageElement.contentEditable = true;
+    keywordsElement.contentEditable = true;
+
+
+    titleElement.style.border = "1px solid black";
+    publisherElement.style.border = "1px solid black";
+    pagesElement.style.border = "1px solid black";
+    summaryElement.style.border = "1px solid black";
+    languageElement.style.border = "1px solid black";
+    keywordsElement.style.border = "1px solid black";
+    editButton.innerHTML = "OK";
+  } else {
+    // Save changes and exit edit mode
+    const newtitle = titleElement.textContent;
+    const newpublisher = publisherElement.textContent;
+    const newpages = pagesElement.textContent;
+    const newsummary = summaryElement.textContent;
+    const newlanguage = languageElement.textContent;
+    const newkeywords = keywordsElement.textContent;
+
+    titleElement.contentEditable = false;
+    publisherElement.contentEditable = false;
+    pagesElement.contentEditable = false;//mporw na ta kanw edit
+    summaryElement.contentEditable = false;
+    languageElement.contentEditable = false;
+    keywordsElement.contentEditable = false;
+
+    titleElement.style.border = "none";
+    publisherElement.style.border = "none";
+    pagesElement.style.border = "none";
+    summaryElement.style.border = "none";
+    languageElement.style.border = "none";
+    keywordsElement.style.border = "none";
+    
+
+
+    const changeBook = `http://localhost:3305/updatebook/${BooksIsbn}/${newtitle}/${newpublisher}/${newpages}/${newsummary}/${newlanguage}/${newkeywords}`;
+    //const changeBook_copies = `http://localhost:3305/update_copies/${schoolID}/${BooksIsbn}/${newcopies}`
+
+    try { 
+      const response = await fetch(changeBook);
+       if (response.ok && (newtitle !== originaltitle && newpublisher !== originalpublisher && newpages  !==  originalpages  && newsummary !==  originalsummary && newlanguage !== originallanguage && newkeywords !== originalkeywords && newcopies !== originalcopies)) { 
+            alert("Book information updated successfully!");
+            location.reload();
+      } else {            
+        location.reload();
+    }
+    } catch (error) {
+      location.reload();
+    }
+  }
+
+
+  isEditing = !isEditing;
+}
+
+
+
+
+
+
+
+
+        (async () => {
+            // const studentsData = await fetchStudents();
+
+            // let flag = false;
+
+
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            let schoolID;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+            const bookList = document.getElementById('book-list');
+            const categorySearchInput = document.getElementById('categorySearch');
+            const authorSearchInput = document.getElementById('authorSearch');
+            const titleSearchInput = document.getElementById('titleSearch');
+            const copysSearchInput = document.getElementById('copysSearch');
+
+            // Event listeners for search inputs
+            categorySearchInput.addEventListener('input', searchBooks);
+            authorSearchInput.addEventListener('input', searchBooks);
+            titleSearchInput.addEventListener('input', searchBooks);
+            copysSearchInput.addEventListener('input', searchBooks);
+
+            async function searchBooks() {
+                let category = categorySearchInput.value.trim();
+                let author = authorSearchInput.value.trim();
+                let title = titleSearchInput.value.trim();
+                let copys = copysSearchInput.value.trim();
+                if (category === '') {
+                    category = -1;
+                }
+                if (author === '') {
+                    author = -1;
+                }
+                if (title === '') {
+                    title = -1;
+                }
+                if (copys === '') {
+                    copys = -1;
+                }
+                if (category === -1 && author === -1 && title === -1 && copys === -1)
+                    location.reload();
+                const filteredBooks = await fetchFilteredBooks(user.user_id, category, title, author, copys);
+                displayBooks(filteredBooks);
+            }
+ 
+            function displayBooks(booksData) {
+                // Clear previous book list
+                bookList.innerHTML = '';
+
+                booksData.forEach((book) => {
+
+                    // Create book item container
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+
+                    // Create book title with toggle functionality
+                    const title = document.createElement('h2');
+                    title.textContent = book.title;
+                    bookItem.appendChild(title);
+
+                    // Create expand button
+                    const expandButton = document.createElement('span');
+                    expandButton.classList.add('expand-button');
+                    expandButton.textContent = '▼';
+                    expandButton.addEventListener('click', () => {
+                        const details = bookItem.querySelector('.book-details');
+                        const isExpanded = details.style.display === 'block';
+                        details.style.display = isExpanded ? 'none' : 'block';
+                        expandButton.classList.toggle('expanded', !isExpanded);
+                    });
+
+                    // Create book details container
+                    const detailsContainer = document.createElement('div');
+                    detailsContainer.classList.add('book-details'); 
+
+                    // Create book details
+                    detailsContainer.innerHTML = `
+                    <b>Title:</b> <span id="title"  >${book.title}</span><br>
+                    <b>ISBN:</b> <span id="isbn"  >${book.isbn}</span><br>
+                    <b>Publisher:</b> <span id="publisher"  >${book.publisher}</span><br>
+                    <b>Pages:</b> <span id="pages"  >${book.pages}</span><br>
+                    <b>Summary:</b> <span id="summary"  >${book.summary}</span><br>
+                    <b>Language:</b> <span id="language"  >${book.book_language}</span><br>
+                    <b>Keywords:</b> <span id="keywords"  >${book.keywords}</span><br>
+                    <b>Copies:</b> <span id="copies"  >${book.copys}</span><br>
+                    <b>Available Copies:</b> <span id="availableCopies"  >${book.available_copys}</span><br>
+                    <b>Author(s):</b> <span id="authors" >${book.authors}</span><br>
+                    <b>Category/ies:</b> <span id="categories">${book.category || book.categories}</span><br>
+                    <button onclick="redirectToReviews('${book.isbn}')">View Reviews</button>
+                    <button class="edit-button" onclick="editBook()"><i class="fas fa-pencil-alt edit-icon"><span id="editbutton"></span></i></button>`;
+                    // Append expand button and details to the book item
+                    bookItem.appendChild(expandButton);
+                    bookItem.appendChild(detailsContainer);
+
+                    // Append book item to the book list
+                    bookList.appendChild(bookItem);
+                });
+            }
+
+            // Initial display of all books
+            const booksData = await fetchBooksData(schoolID);
+            displayBooks(booksData);
+        })();
+    </script>
+</body>
+
+</html>

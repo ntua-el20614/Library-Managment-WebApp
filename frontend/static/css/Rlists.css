@@ -1,0 +1,77 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: lightyellow;
+}
+
+h1 {
+    text-align: center;
+}
+
+.rents-table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+.rents-table th,
+.rents-table td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+}
+
+.rents-table th {
+    background-color: #333;
+    color: white;
+}
+
+.rents-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.rents-table tr:nth-child(odd) {
+    background-color: #e6e6e6;
+}
+
+.reservations-table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+.reservations-table th,
+.reservations-table td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+}
+
+.reservations-table th {
+    background-color: #333;
+    color: white;
+}
+
+.reservations-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.reservations-table tr:nth-child(odd) {
+    background-color: #e6e6e6;
+}
+
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#backButton:hover {
+    background-color: #aaa;
+}

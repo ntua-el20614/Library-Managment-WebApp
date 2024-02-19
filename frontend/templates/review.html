@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book Reviews</title>
+    <meta charset="UTF-8">
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
+    <style>
+        /* CSS styling goes here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: lightyellow;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .review {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rating span {
+            margin-right: 10px;
+        }
+
+        .star {
+            font-size: 20px;
+            color: #ccc;
+        }
+
+        .star.gold {
+            color: #f39c12;
+        }
+
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#backButton:hover {
+    background-color: #aaa;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Book's Reviews</h1>
+        <div id="reviewsContainer"></div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem("user"));
+        const book = localStorage.getItem("book");
+
+        console.log(user); 
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchRents(book) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_reviews/${book}`);
+                const rentsData = await response.json();
+                return rentsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+    // Function to render the reviews on the page
+    function renderReviews(rentsData) {
+      const reviewsContainer = document.getElementById('reviewsContainer');
+
+      if (rentsData && rentsData.length > 0) {
+        rentsData.forEach((rent) => {
+          const reviewElement = document.createElement('div');
+          reviewElement.classList.add('review');
+
+          const commentElement = document.createElement('p');
+          commentElement.classList.add('comment');
+          commentElement.innerText = rent.comments;
+          reviewElement.appendChild(commentElement);
+
+          const ratingElement = document.createElement('div');
+          ratingElement.classList.add('rating');
+
+          const ratingText = document.createElement('span');
+          ratingText.innerText = 'Rating:';
+          ratingElement.appendChild(ratingText);
+
+          for (let i = 1; i <= 5; i++) {
+            const starElement = document.createElement('span');
+            starElement.classList.add('star');
+
+            if (i <= rent.likert) {
+              starElement.classList.add('gold');
+            }
+
+            starElement.innerHTML = '&#9733;'; // Unicode star symbol
+            ratingElement.appendChild(starElement);
+          }
+
+          reviewElement.appendChild(ratingElement);
+
+          reviewsContainer.appendChild(reviewElement);
+        });
+      } else {
+        const noReviewsElement = document.createElement('p');
+        noReviewsElement.innerText = 'No reviews available.';
+        reviewsContainer.appendChild(noReviewsElement);
+      }
+    }
+
+    // Call the fetchRents function and render the reviews
+    fetchRents(book)
+      .then((rentsData) => {
+        renderReviews(rentsData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  </script>
+</body>
+</html>

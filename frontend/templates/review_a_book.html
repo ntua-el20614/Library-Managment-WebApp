@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reviews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: lightyellow;
+        }
+
+        #book-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .book-item {
+            padding: 10px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            position: relative;
+            background-color: rgba(56, 56, 56, 0.21);
+        }
+
+        .book-item h2 {
+            cursor: pointer;
+        }
+
+        .expand-button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background-color: gray;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-button.expanded {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .expand-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid white;
+        }
+
+        .book-reviewForm {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f55d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .back-button::before {
+            content: "Home";
+            transform: translateY(-50%) rotate(90deg);
+            margin-right: 5px;
+        }
+
+
+        .submit-button {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #73d730;
+            border: 0.5px solid black;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #1aa713;
+        }
+
+
+
+        .review-form {
+            margin-top: 10px;
+        }
+
+        .rating {
+            display: inline-block;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            float: right;
+            color: gray;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .rating label:before {
+            content: '★';
+            transition: color 0.3s ease;
+        }
+
+        .rating input:checked~label {
+            color: gold;
+        }
+
+        /* Media queries */
+        @media (min-width: 400px) {
+            #book-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 600px) {
+            #book-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 800px) {
+            #book-list {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1000px) {
+            #book-list {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            #book-list {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (min-width: 1400px) {
+            #book-list {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <a>
+            Book list ~ Review a book
+        </a>
+        <a href="http://localhost:3000/student" style="text-decoration: none; margin-left: 10px;">
+            <a id="backButton" onclick="redirectToPreviousPage()">
+                <span>&#8617;</span>
+            </a>
+        </a>
+    </h1>
+    <div id="book-list"></div>
+
+    <script>
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+
+        async function fetchBooksData(schoolID) {
+            try {
+                const response = await fetch(`http://localhost:3305/all_books/${schoolID}`);
+                const userSchool = await response.json();
+
+                return userSchool;
+            } catch (error) {
+                console.error('Error fetching books info:', error);
+                return null;
+            }
+        }
+
+
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+
+
+
+        (async () => {
+            const studentsData = await fetchStudents();
+            const teachersData = await fetchTeachers();
+            let schoolID;
+            let found_teacher = false;
+            let found_student = false;
+
+            for (const studentsDataItem of studentsData) {
+                if (studentsDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        schoolID = studentsDataItem.school_id;
+                        found_student = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+
+                    }
+                }
+            }
+
+            for (const teachersDataItem of teachersData) {
+                if (teachersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        schoolID = teachersDataItem.school_id;
+                        found_teacher = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+
+                    }
+                    break;
+                }
+            }
+
+
+            if (!found_student && !found_teacher) {
+                alert("You shouldn't be here!");
+                window.location.href = '/';
+            }
+            const booksData = await fetchBooksData(schoolID);
+            const bookList = document.getElementById('book-list');
+
+            booksData.forEach((book) => {
+                const bookItem = document.createElement('div');
+                bookItem.classList.add('book-item');
+
+                const bookTitle = document.createElement('h2');
+                bookTitle.textContent = book.title;
+                bookItem.appendChild(bookTitle);
+
+                const expandButton = document.createElement('span');
+                expandButton.classList.add('expand-button');
+                expandButton.textContent = '▼';
+
+                const reviewForm = document.createElement('div');
+                reviewForm.classList.add('book-reviewForm');
+
+
+                const reviewTextarea = document.createElement('textarea');
+                reviewTextarea.placeholder = 'Type your review here...';
+                reviewTextarea.style.height = '200px'; // Set the default height to 200px
+                reviewTextarea.style.resize = "none";
+                reviewForm.appendChild(reviewTextarea);
+
+                const ratingContainer = document.createElement('div');
+                ratingContainer.classList.add('rating');
+
+                for (let i = 5; i >= 1; i--) {
+                    const ratingInput = document.createElement('input');
+                    ratingInput.type = 'radio';
+                    ratingInput.name = `rating-${book.isbn}`;
+                    ratingInput.value = i;
+                    ratingInput.id = `rating-${book.isbn}-${i}`;
+
+                    const ratingLabel = document.createElement('label');
+                    ratingLabel.htmlFor = `rating-${book.isbn}-${i}`;
+                    ratingLabel.addEventListener('mouseenter', () => {
+                        for (let j = i; j >= 1; j--) {
+                            const starLabel = document.getElementById(`rating-${book.isbn}-${j}`);
+                            starLabel.style.color = 'gold';
+                        }
+                    });
+                    ratingLabel.addEventListener('mouseleave', () => {
+                        for (let j = i; j >= 1; j--) {
+                            const starLabel = document.getElementById(`rating-${book.isbn}-${j}`);
+                            starLabel.style.color = 'gray';
+                        }
+                    });
+
+                    const submitButton = document.createElement('submit-button');
+                    submitButton.classList.add('submit-button');
+                    submitButton.textContent = 'submit';
+
+
+                    submitButton.addEventListener('click', async () => {
+                        let flag = false;
+                        try {
+                            const likert = document.querySelector(`input[name="rating-${book.isbn}"]:checked`).value;
+                            const comments = encodeURIComponent(reviewTextarea.value); // Encode the review comments                        const likert = document.querySelector(`input[name="rating-${book.isbn}"]:checked`).value;
+
+                            await createReview(user.user_id, schoolID, book.isbn, comments, likert);
+
+                        } catch (error) {
+                            flag = true;
+                            alert("Please give a likert rating!");
+                            window.location.href = '/review_a_book';
+                        }
+
+                        // Call the createReview function with the required parameters
+                    });
+
+
+
+                    ratingContainer.appendChild(submitButton);
+
+                    ratingContainer.appendChild(ratingInput);
+                    ratingContainer.appendChild(ratingLabel);
+                }
+
+                reviewForm.appendChild(ratingContainer);
+
+
+                bookItem.appendChild(expandButton);
+                bookItem.appendChild(reviewForm);
+
+                expandButton.addEventListener('click', () => {
+                    const isExpanded = reviewForm.style.display === 'block';
+                    reviewForm.style.display = isExpanded ? 'none' : 'block';
+                    expandButton.classList.toggle('expanded', !isExpanded);
+                });
+
+                bookList.appendChild(bookItem);
+            });
+
+
+            async function createReview(userId, schoolId, isbn, comments, likert) {
+                try {
+                    const addreviewurl = `http://localhost:3305/addreview/${userId}/${schoolId}/${isbn}/${comments}/${likert}`
+
+                    const response = await fetch(addreviewurl);
+
+                    if (response.ok) {
+                        console.log('Review created!');
+                        alert("Review sent!");
+                        location.reload();
+                    } else {
+                        alert("The review has too many characters!");
+                        console.log('Review not created!');
+                        location.reload();
+                    }
+
+                } catch (error) {
+                    console.error('Error creating review:', error);
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Reservations</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/Rlists.css">
+</head>
+
+<body>
+    <h1>My Reservations</h1>
+
+    <table class="reservations-table">
+        <thead>
+            <tr>
+                <th>Rent ID</th>
+                <th>ISBN</th>
+                <th>Date of Rent</th>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>Summary</th>
+                <th>Book Language</th>
+                <th>Approved</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="reservations-table-body"></tbody>
+    </table>
+    <a id="backButton" onclick="redirectToPreviousPage()">
+        <span>&#8617;</span>
+    </a>
+
+    <script>
+        function redirectToPreviousPage() {
+            history.back();
+        }
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:3305/allstudents');
+                const studentsData = await response.json();
+
+                return studentsData;
+            } catch (error) {
+                console.error('Error fetching student info:', error);
+                return null;
+            }
+        }
+
+        async function fetchTeachers() {
+            try {
+                const response = await fetch('http://localhost:3305/allteachers');
+                const teachersData = await response.json();
+
+                return teachersData;
+            } catch (error) {
+                console.error('Error fetching teacher info:', error);
+                return null;
+            }
+        }
+
+        async function fetchReservations() {
+            try {
+                const response = await fetch(`http://localhost:3305/books_reserved_by_user/${user.user_id}`);
+                const reservationsData = await response.json();
+                return reservationsData;
+            } catch (error) {
+                console.error('Error fetching rent info:', error);
+                return null;
+            }
+        }
+
+        async function deleteReservation(reservationId) {
+            try {
+                const response = await fetch(`http://localhost:3305/delete_reservation/${reservationId}`);
+                if(response.ok){
+                    alert("Deleted Reservation Successfully!");
+                    location.reload();
+                }else{
+                    alert("Couldnt Delete Reservation!");
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error deleting reservation:', error);
+                return null;
+            }
+        }
+
+        async function checkIfValid() {
+            const studentsData = await fetchStudents();
+            const teachersData = await fetchTeachers();
+            let schoolID;
+            let found_teacher = false;
+            let found_student = false;
+
+            for (const studentsDataItem of studentsData) {
+                if (studentsDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        found_student = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+
+            for (const teachersDataItem of teachersData) {
+                if (teachersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        schoolID = teachersDataItem.school_id;
+                        found_teacher = true;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+
+            if (!found_student && !found_teacher) {
+                alert("You shouldn't be here!");
+                window.location.href = '/';
+            }
+        }
+
+        async function displayReservations() {
+            const reservations = await fetchReservations();
+            const tableBody = document.getElementById('reservations-table-body');
+
+            if (!reservations) {
+                tableBody.innerHTML = '<tr><td colspan="9">Error fetching reservations</td></tr>';
+                return;
+            }
+
+            if (reservations.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="9">No reservations found</td></tr>';
+                return;
+            }
+
+            let tableHTML = '';
+            reservations.forEach(reservation => {
+                tableHTML += `
+          <tr>
+            <td>${reservation.reservation_id}</td>
+            <td>${reservation.isbn}</td>
+            <td>${new Date(reservation.date_of_reservation).toLocaleDateString()}</td>
+            <td>${reservation.title}</td>
+            <td>${reservation.publisher}</td>
+            <td>${reservation.summary}</td>
+            <td>${reservation.book_language}</td>
+            <td>${reservation.approved === 1 ? 'Yes' : 'No'}</td>
+            <td><button onclick="deleteReservation(${reservation.reservation_id})">Delete</button></td>
+          </tr>
+        `;
+            });
+
+            tableBody.innerHTML = tableHTML;
+        }
+
+        checkIfValid();
+        displayReservations();
+    </script>
+</body>
+
+</html>

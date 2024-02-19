@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pending Rents</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(234, 234, 185, 0.848);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .user-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user {
+            width: 300px;
+            height: 230px;
+            background-color: rgba(211, 211, 211, 0.595);
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            position: relative;
+        }
+
+        .user h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .user p {
+            margin: 5px 0;
+        }
+
+        .buttons-container {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .delete-button {
+            background-color: #ff5c5c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .approve-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .delete-button:hover {
+            background-color: #ff4242;
+        }
+
+        .approve-button:hover {
+            background-color: #45a049;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 20px;
+        }
+
+        .search-input {
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-button {
+            padding: 5px 10px;
+            background-color: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #backButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ccc;
+            color: #333;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #backButton:hover {
+            background-color: #aaa;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="search-bar">
+        <button id="refreshButton" class="search-button">Refresh</button>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by username">
+        <button id="searchButton" class="search-button">Search</button>
+    </div>
+
+    <h1>Pending Rents</h1>
+
+    <div class="user-container" id="userContainer"></div>
+    <a id="backButton" href="/handler">
+        <span>&#8617;</span>
+    </a>
+    <script type="module" action="http://localhost:3305/update_approves/1/{user_id}" method="GET">
+
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        console.log(user);
+
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            window.location.href = '/handlers';
+        });
+
+        async function fetchHandlers() {
+            try {
+                const response = await fetch('http://localhost:3305/allhandlers');
+                const handlersData = await response.json();
+                return handlersData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+
+        async function fetchRents() {
+            try {
+                const response = await fetch(`http://localhost:3305/all_school_rents/${user.user_id}`);
+                const RentsData = await response.json();
+                return RentsData;
+            } catch (error) {
+                console.error('Error fetching handlers info:', error);
+                return null;
+            }
+        }
+        const refreshButton = document.getElementById('refreshButton');
+        refreshButton.addEventListener('click', () => {
+            location.reload();
+        });
+
+        async function deleteUser(userId) {
+            const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+
+            try {
+                const response = await fetch(approveStudent);
+
+                if (response.ok) {
+                    console.log("student deleted!");
+                    location.reload();
+
+                } else {
+                    console.log("could not delete student!");
+                }
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+        }
+
+        (async () => {
+
+
+
+            const handlersData = await fetchHandlers();
+            let flag = false;
+            for (const handlersDataItem of handlersData) {
+                if (handlersDataItem.user_id === user.user_id) {
+                    if (user.approved === 1) {
+                        flag = true;
+                        let schoolID = handlersDataItem.school_id;
+                        console.log('You are allowed to stay here!');
+                    } else {
+                        alert("You are not approved yet");
+                        window.location.href = '/';
+                    }
+                }
+            }
+            if (!flag) {
+                alert('You are not a Handler!');
+                window.location.href = '/';
+            }
+
+
+            const userData = await fetchRents();
+            const userContainer = document.getElementById('userContainer');
+            const processedRentIds = [];
+            userData.forEach(user => {
+
+                if (user.approved === 0 && !processedRentIds.includes(user.rent_id)) {
+                    processedRentIds.push(user.rent_id);
+                    const userContainer = document.getElementById('userContainer');
+
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
+
+                    const name = document.createElement('h3');
+                    name.textContent = user.username + ": " + user.user_name;
+                    userDiv.appendChild(name);
+
+                    const rent_num = document.createElement('p');
+                    rent_num.textContent = 'Rent #: ' + user.rent_id;
+                    userDiv.appendChild(rent_num);
+
+                    const username = document.createElement('p');
+                    username.textContent = 'Title: ' + user.title;
+                    userDiv.appendChild(username);
+
+                    const birthday = document.createElement('p');
+                    birthday.textContent = 'ISBN: ' + user.isbn;
+                    userDiv.appendChild(birthday);
+
+
+                    const dateOfRent = new Date(user.date_of_rent);
+                    dateOfRent.setDate(dateOfRent.getDate() + 1);
+                    const datee = dateOfRent.toISOString().split("T")[0];
+
+                    const email = document.createElement('p');
+                    email.textContent = 'Date of Rent: ' + datee;
+                    userDiv.appendChild(email);
+
+                    const copies = document.createElement('p');
+                    copies.textContent = 'Copies: ' + user.copys;
+                    userDiv.appendChild(copies);
+
+                    const acopys = document.createElement('p');
+                    acopys.textContent = 'Available Copies: ' + user.available_copys;
+                    userDiv.appendChild(acopys);
+
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.classList.add('buttons-container');
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', () => {
+                        deleteUser(user.rent_id);
+                    });
+                    buttonsContainer.appendChild(deleteButton);
+
+                    const approveButton = document.createElement('button');
+                    approveButton.textContent = 'Approve';
+                    approveButton.classList.add('approve-button');
+                    approveButton.addEventListener('click', () => {
+                        approveUser(user.rent_id, user.isbn, user.available_copys, user.user_id, user.school_id);
+                    });
+
+
+                    async function approveUser(rentid, isbn, copies, usersid, schoolsid) {
+
+                        user = JSON.parse(localStorage.getItem("user"));
+
+                        let approveRent;
+                        console.log(rentid, user.user_id, isbn, copies);
+                        if (copies != 0) {
+                            approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                        } else {
+                            alert("Not enough available copies\nThis request will go to reservations");
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const month = String(today.getMonth() + 1).padStart(2, '0');
+                            const day = String(today.getDate()).padStart(2, '0');
+                            const currentDate = `${year}-${month}-${day}`;
+
+                            const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
+                            try {
+                                const response = await fetch(reservation_req);
+
+                                if (response.ok) {
+
+                                    console.log("Pending approval to reservation the book!");
+
+                                    const approveStudent = `http://localhost:3305/delete_rent/${rentid}`;
+
+                                    try {
+                                        const response = await fetch(approveStudent);
+
+                                        if (response.ok) {
+                                            console.log("student deleted!");
+                                            location.reload();
+
+                                        } else {
+                                            console.log("could not delete student!");
+                                        }
+                                    } catch (error) {
+                                        console.log("An error occurred:", error);
+                                    }
+
+
+                                    location.reload();
+                                } else {
+                                    console.log("could not reserve the book!");
+                                    location.reload();
+                                }
+                            } catch (error) {
+                                console.log("An error occurred:", error);
+                            }
+
+
+
+                        }
+                        try {
+                            const response = await fetch(approveRent);
+
+                            if (response.ok) {
+                                console.log("Rent approved!");
+                                //prepei na meiwsoume ta available copies kata ena
+                                if (copies >= 1) {
+                                    const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+                                    try {
+                                        const response1 = await fetch(reduce_copies);
+                                        if (response1.ok) {
+                                            console.log("Available copies reduced!");
+
+                                            location.reload();
+
+                                        } else {
+                                            console.log("couldnt change available copies!");
+                                            //location.reload();
+                                        }
+
+                                    }
+                                    catch (error) {
+                                        console.log("An error for copies:", error);
+                                    }
+                                }
+
+                            } else {
+                                console.log("couldnt approve rent!");
+                            }
+                        }
+                        catch (error) {
+                            console.log("An error for rents:", error);
+                        }
+                    }
+
+
+
+
+                    async function deleteUser(userId) {
+                        const approveStudent = `http://localhost:3305/delete_rent/${userId}`;
+
+                        try {
+                            const response = await fetch(approveStudent);
+
+                            if (response.ok) {
+                                console.log("student deleted!");
+                                location.reload();
+
+                            } else {
+                                console.log("could not delete student!");
+                            }
+                        } catch (error) {
+                            console.log("An error occurred:", error);
+                        }
+                    }
+
+
+                    buttonsContainer.appendChild(approveButton);
+
+                    userDiv.appendChild(buttonsContainer);
+
+                    userContainer.appendChild(userDiv);
+                }
+            });
+        })();
+        const searchButton = document.getElementById('searchButton');
+        searchButton.addEventListener('click', searchByUsername);
+
+        async function searchByUsername() {
+            const searchInput = document.getElementById('searchInput').value;
+            const userData = await fetchRents();
+
+            // Clear previous search results
+            const userContainer = document.getElementById('userContainer');
+            userContainer.innerHTML = '';
+
+            async function approveUser(rentid, isbn, copies, usersid, schoolsid) {
+
+                user = JSON.parse(localStorage.getItem("user"));
+
+                let approveRent;
+                console.log(rentid, user.user_id, isbn, copies);
+                if (copies != 0) {
+                    approveRent = `http://localhost:3305/approve_rent/1/${rentid}`;
+                } else {
+                    alert("Not enough available copies\nThis request will go to reservations");
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    const day = String(today.getDate()).padStart(2, '0');
+                    const currentDate = `${year}-${month}-${day}`;
+
+                    const reservation_req = `http://localhost:3305/addreservation/${usersid}/${isbn}/${schoolsid}/${currentDate}`;
+                    try {
+                        const response = await fetch(reservation_req);
+
+                        if (response.ok) {
+
+                            console.log("Pending approval to reservation the book!");
+
+                            const approveStudent = `http://localhost:3305/delete_rent/${rentid}`;
+
+                            try {
+                                const response = await fetch(approveStudent);
+
+                                if (response.ok) {
+                                    console.log("student deleted!");
+                                    location.reload();
+
+                                } else {
+                                    console.log("could not delete student!");
+                                }
+                            } catch (error) {
+                                console.log("An error occurred:", error);
+                            }
+
+
+                            location.reload();
+                        } else {
+                            console.log("could not reserve the book!");
+                            location.reload();
+                        }
+                    } catch (error) {
+                        console.log("An error occurred:", error);
+                    }
+
+
+
+                }
+                try {
+                    const response = await fetch(approveRent);
+
+                    if (response.ok) {
+                        console.log("Rent approved!");
+                        //prepei na meiwsoume ta available copies kata ena
+                        if (copies >= 1) {
+                            const reduce_copies = `http://localhost:3305/update_available_copys/${isbn}/${user.user_id}/-1`;
+                            try {
+                                const response1 = await fetch(reduce_copies);
+                                if (response1.ok) {
+                                    console.log("Available copies reduced!");
+
+                                    location.reload();
+
+                                } else {
+                                    console.log("couldnt change available copies!");
+                                    //location.reload();
+                                }
+
+                            }
+                            catch (error) {
+                                console.log("An error for copies:", error);
+                            }
+                        }
+
+                    } else {
+                        console.log("couldnt approve rent!");
+                    }
+                }
+                catch (error) {
+                    console.log("An error for rents:", error);
+                }
+            }
+
+
+
+            const processedRentIds2 = [];
+            userData.forEach(user => {
+
+                if (user.username === searchInput && user.approved === 0 && !processedRentIds2.includes(user.rent_id)) {
+                    processedRentIds2.push(user.rent_id);
+                    const userContainer = document.getElementById('userContainer');
+
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
+
+                    const name = document.createElement('h3');
+                    name.textContent = user.username + ": " + user.user_name;
+                    userDiv.appendChild(name);
+
+                    const rent_num = document.createElement('p');
+                    rent_num.textContent = 'Rent #: ' + user.rent_id;
+                    userDiv.appendChild(rent_num);
+
+                    const username = document.createElement('p');
+                    username.textContent = 'Title: ' + user.title;
+                    userDiv.appendChild(username);
+
+                    const birthday = document.createElement('p');
+                    birthday.textContent = 'ISBN: ' + user.isbn;
+                    userDiv.appendChild(birthday);
+
+
+                    const dateOfRent = new Date(user.date_of_rent);
+                    dateOfRent.setDate(dateOfRent.getDate() + 1);
+                    const datee = dateOfRent.toISOString().split("T")[0];
+
+                    const email = document.createElement('p');
+                    email.textContent = 'Date of Rent: ' + datee;
+                    userDiv.appendChild(email);
+
+                    const copies = document.createElement('p');
+                    copies.textContent = 'Copies: ' + user.copys;
+                    userDiv.appendChild(copies);
+
+                    const acopys = document.createElement('p');
+                    acopys.textContent = 'Available Copies: ' + user.available_copys;
+                    userDiv.appendChild(acopys);
+
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.classList.add('buttons-container');
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', () => {
+                        deleteUser(user.rent_id);
+                    });
+                    buttonsContainer.appendChild(deleteButton);
+
+                    const approveButton = document.createElement('button');
+                    approveButton.textContent = 'Approve';
+                    approveButton.classList.add('approve-button');
+                    approveButton.addEventListener('click', () => {
+                        approveUser(user.rent_id, user.isbn, user.available_copys, user.user_id, user.school_id);
+                    });
+
+
+                    buttonsContainer.appendChild(approveButton);
+
+                    userDiv.appendChild(buttonsContainer);
+
+
+                    userContainer.appendChild(userDiv);
+
+
+
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

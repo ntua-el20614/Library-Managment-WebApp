@@ -1,0 +1,197 @@
+/* CSS styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: lightyellow;
+}
+
+.search-bar {
+    margin-bottom: 10px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 5px;
+}
+
+#book-list {
+    display: grid;
+    gap: 20px;
+}
+
+
+.comment {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+
+.user {
+    width: 300px;
+    height: 200px;
+    background-color: rgba(211, 211, 211, 0.595);
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    position: relative;
+}
+
+.review {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+h1 {
+    text-align: center;
+}
+
+
+.book-item {
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    position: relative;
+    background-color: rgba(56, 56, 56, 0.21);
+}
+
+.book-item h2 {
+    cursor: pointer;
+}
+
+.expand-button {
+    position: absolute;
+    top: 70%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    background-color: gray;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.expand-button.expanded {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.expand-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid white;
+}
+
+.book-details {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f5f5f55d;
+}
+
+
+/* Media queries */
+@media (min-width: 400px) {
+    #book-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 600px) {
+    #book-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 800px) {
+    #book-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1000px) {
+    #book-list {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    #book-list {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+
+.reservation-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reservation-button.max-rented {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+
+
+.rent-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.rent-button.max-rented {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+#backButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ccc;
+    color: #333;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#backButton:hover {
+    background-color: #aaa;
+}
