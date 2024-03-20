@@ -7,10 +7,10 @@ Project for the Databases 2022-2023 class in NTUA ECE that simulates a virtual l
 + Christodoulos Stylianides el20614
 
 ## ER Diagram
-![er](\assets/Papabase%20ER.png)
+![er](assets/Papabase%20ER.png)
 
 ## Relational Diagram
-![relational_papagram](\assets/relational_papagram.png)
+![relational_papagram](assets/relational_papagram.png)
 
 ## Required Imports
 All the required tools for the project to work as shown in the requirements.txt are  
@@ -28,11 +28,11 @@ All the required tools for the project to work as shown in the requirements.txt 
 The user interface (UI) developed for this simulation allows the user, who is assumed to be a handler, teacher or student to access the results of different queries. Additionally, they have the ability to manipulate the entire database, including creating, updating, and deleting tables related to entities and their relationships.
 
 ## User Interface
-![landingpage](\assets/landing.png)
-![signup](\assets/signup.png)
-![handler](\assets/home_page.png)
-![listt](\assets/books.png)
-![delete_deactivate](\assets/delete.png)
+![landingpage](assets/landing.png)
+![signup](assets/signup.png)
+![handler](assets/home_page.png)
+![listt](assets/books.png)
+![delete_deactivate](assets/delete.png)
 
 
 ## Disclaimer
